@@ -1,0 +1,956 @@
+[{
+  "_id": {
+    "$oid": "68c86d1c72392390ab6fc6cb"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_b95922d34b8a",
+    "thread_key": {
+      "m365_conversation_id": "7f3a8393f0cd5ec0d70474d2"
+    },
+    "subject_norm": "Internal Audit Finding - KYC Documentation - Account 789456",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Victoria Alvarez",
+        "email": "victoriaalvarez3269@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "James Hernandez",
+        "email": "jameshernandez2919@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:30:00Z",
+    "last_message_at": "2025-03-15T09:30:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "60fa6467ab9eb765",
+          "conversationId": "7f3a8393f0cd5ec0d70474d2",
+          "internetMessageId": "<d4b2f188a7b46e59963a7c48@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:30:00Z",
+        "subject": "Internal Audit Finding - KYC Documentation - Account 789456",
+        "from": [
+          {
+            "name": "Victoria Alvarez",
+            "email": "victoriaalvarez3269@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "James Hernandez",
+            "email": "jameshernandez2919@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear James,\n\nFollowing the recent internal audit focused on KYC compliance, a finding has been identified regarding account 789456, held by Mr. Jean-Pierre Dubois. The audit revealed that the supporting documentation for the initial ‘Know Your Customer’ verification is incomplete. Specifically, a copy of Mr. Dubois’s passport, as per Article 13 of the GDPR and the requirements of the Fourth Anti-Money Laundering Directive (4AMLD), is missing from the digital file. \n\nThe auditor flagged this as a medium-risk finding, potentially exposing us to regulatory scrutiny from the ECB and the French financial authorities (AMF).  The account is currently active with a balance of €12,500. \n\nCould you please investigate this matter urgently and provide an update on the steps being taken to rectify the missing documentation?  I would appreciate a confirmation of receipt and an estimated timeframe for resolution.  Please also document the investigation process and any communication with Mr. Dubois in the compliance management system.  We need to ensure full adherence to our internal policies and external regulatory requirements. \n\nBest regards,\n\nVictoria Alvarez\nCompliance Officer\nEurobank S.A.\nParis Branch"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Internal Audit",
+  "subtopics": "Audit Finding Response, Committee Escalation Alert",
+  "kmeans_cluster_id": 7,
+  "subcluster_id": "0",
+  "subcluster_label": "Audit & Documentation",
+  "dominant_cluster_label": "General Compliance & Audit",
+  "kmeans_cluster_keyphrase": "Internal Audit",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "This email from Victoria Alvarez, a Compliance Officer at Eurobank S.A., details an internal audit finding regarding incomplete KYC documentation for account 789456, held by Jean-Pierre Dubois. The missing passport copy poses a medium-risk regulatory compliance issue under GDPR and 4AMLD, potentially attracting scrutiny from the ECB and AMF. Victoria requests James Hernandez to investigate the matter, rectify the documentation, and document the process for compliance purposes. The email highlights the need for immediate action to mitigate potential regulatory risks and ensure adherence to internal and external regulations.",
+  "follow_up_date": "2025-03-18T10:00:00Z",
+  "follow_up_reason": "Confirm investigation progress and documentation status.\nEnsure the missing documentation is obtained and filed within regulatory timelines.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement automated KYC documentation checks to proactively identify missing information. Enhance staff training on KYC requirements and documentation procedures. Regularly audit a sample of accounts to ensure ongoing compliance and mitigate future risks.",
+  "overall_sentiment": 2,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 2
+  },
+  "stages": "Escalate/Investigate",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1c72392390ab6fc6cc"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_b1014ac35f75",
+    "thread_key": {
+      "m365_conversation_id": "d5961b7a32264ff1abeff128"
+    },
+    "subject_norm": "Cross-Border Transfer - EUR Settlement Discrepancy - Ref: 20250418-001",
+    "participants": [
+      {
+        "type": "from",
+        "name": "James Davidson",
+        "email": "jamesdavidson5023@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Shawn Robertson",
+        "email": "shawnrobertson9890@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Stefanie Phillips",
+        "email": "stefaniephillips4611@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Lindsay Hall",
+        "email": "lindsayhall8406@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-04-18T09:32:00Z",
+    "last_message_at": "2025-04-18T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "7630fd8e8afec207",
+          "conversationId": "d5961b7a32264ff1abeff128",
+          "internetMessageId": "<9c953c10a461a0bdfe06b5cd@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-04-18T09:32:00Z",
+        "subject": "Cross-Border Transfer - EUR Settlement Discrepancy - Ref: 20250418-001",
+        "from": [
+          {
+            "name": "James Davidson",
+            "email": "jamesdavidson5023@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Shawn Robertson",
+            "email": "shawnrobertson9890@gmail.com"
+          },
+          {
+            "name": "Stefanie Phillips",
+            "email": "stefaniephillips4611@gmail.com"
+          },
+          {
+            "name": "Lindsay Hall",
+            "email": "lindsayhall8406@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Sehr geehrte Damen und Herren,\n\nI am writing regarding a recent EUR cross-border transfer initiated on 15/04/2025 from our branch in Frankfurt to a beneficiary account held with your institution in Dublin. The transfer reference is BXF-20250415-007, for a total amount of EUR 25,000.00.\n\nOur records indicate the transfer was successfully dispatched via the Single Euro Payments Area (SEPA) network. However, the beneficiary has reported a discrepancy in the received amount. They confirm only EUR 24,750.00 was credited to their account. \n\nWe have reviewed our internal systems and confirmed the full EUR 25,000.00 was debited from the originating account and sent via the SWIFT network. We suspect a potential issue with the FX settlement or intermediary bank charges, despite the transfer being denominated in EUR. \n\nCould you please investigate this discrepancy and provide a detailed breakdown of the funds flow, including any associated fees or exchange rate applied during the settlement process?  We are operating under PSD2 regulations and require a clear audit trail to resolve this matter for our client.  Please also confirm the exact time of receipt of the funds into your system.\n\nThank you for your prompt attention to this issue.\n\nMit freundlichen Grüßen,\n\nJames Davidson\nSenior International Payments Officer\nDeutsche Finanzbank AG\nFrankfurt, Germany\nTel: +49 69 12345678\nEmail: jamesdavidson5023@gmail.com"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Cross-Border Transfer Problem",
+  "subtopics": "FX Settlement Error",
+  "kmeans_cluster_id": 1,
+  "subcluster_id": "0",
+  "subcluster_label": "Cross-Border Transfer Issues",
+  "dominant_cluster_label": "International & Wire Transfers",
+  "kmeans_cluster_keyphrase": "Cross-Border Transfer Problem",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "This email thread consists of a single message from James Davidson of Deutsche Finanzbank AG to an Irish bank regarding a EUR 25,000 cross-border transfer. The beneficiary reported receiving only EUR 24,750, creating a discrepancy. James requests an investigation into the funds flow, a breakdown of fees, and confirmation of receipt time, citing PSD2 regulations and the need for a clear audit trail to resolve the issue for their client. The issue appears to be a potential FX settlement error or unexpected intermediary bank charges despite the transfer being in EUR.",
+  "follow_up_date": "2025-04-22T10:00:00Z",
+  "follow_up_reason": "The Irish bank needs to investigate the discrepancy and provide a detailed funds flow breakdown. Follow-up is required to ensure the investigation is progressing and a resolution is being reached.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a proactive monitoring system for cross-border transfers to identify discrepancies early. Enhance internal training on SEPA and SWIFT regulations to minimize errors.  Consider automating funds flow tracing for faster issue resolution.",
+  "overall_sentiment": 2,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 2
+  },
+  "stages": "Attempt Resolution",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1d72392390ab6fc6cd"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_30d11d7521a5",
+    "thread_key": {
+      "m365_conversation_id": "d944f93993f9a25dba4186d5"
+    },
+    "subject_norm": "Covenant Breach Notification - Loan Agreement DE4567890",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Justin Wright",
+        "email": "justinwright3585@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Jennifer Valdez",
+        "email": "jennifervaldez5574@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Richard Choi",
+        "email": "richardchoi9388@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Jennifer Randolph",
+        "email": "jenniferrandolph4816@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:30:00Z",
+    "last_message_at": "2025-03-15T09:30:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "ad745305861fd697",
+          "conversationId": "d944f93993f9a25dba4186d5",
+          "internetMessageId": "<eba22065c448c9c8a604703b@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:30:00Z",
+        "subject": "Covenant Breach Notification - Loan Agreement DE4567890",
+        "from": [
+          {
+            "name": "Justin Wright",
+            "email": "justinwright3585@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Jennifer Valdez",
+            "email": "jennifervaldez5574@gmail.com"
+          },
+          {
+            "name": "Richard Choi",
+            "email": "richardchoi9388@gmail.com"
+          },
+          {
+            "name": "Jennifer Randolph",
+            "email": "jenniferrandolph4816@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Ms. Valdez,\n\nI am writing to inform you that our routine covenant monitoring has identified a potential breach of financial covenants within your loan agreement DE4567890, specifically concerning the Debt Service Coverage Ratio (DSCR).  As of the latest quarterly reporting period ending 31/12/2024, the calculated DSCR is 1.25, falling below the stipulated minimum of 1.50 as outlined in Section 5.2 of the agreement.\n\nWe understand that unforeseen circumstances can sometimes impact financial performance.  To gain a clearer understanding of the situation, could you please provide a detailed explanation for this variance, along with updated financial projections for the next two quarters?  Specifically, we are interested in understanding the factors contributing to the lower DSCR and the mitigating actions your company is taking to restore compliance.\n\nUnder the terms of the agreement, this breach triggers a notification requirement and a review period. We are committed to working constructively with you to find a mutually acceptable solution.  We would appreciate receiving the requested information by 22/03/2025 to allow sufficient time for analysis.  Please also confirm receipt of this notification.\n\nPlease do not hesitate to contact me if you require any clarification or wish to discuss this matter further.\n\nSincerely,\nJustin Wright\nRelationship Manager\nEuroBank AG\nFrankfurt, Germany"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Covenant Breach Alert",
+  "subtopics": "Covenant Monitoring Alert, Financial Ratio Problem, Loan Condition Issue",
+  "kmeans_cluster_id": 11,
+  "subcluster_id": "1",
+  "subcluster_label": "Covenant Issues",
+  "dominant_cluster_label": "Credit & Lending Services",
+  "kmeans_cluster_keyphrase": "Covenant Breach Alert",
+  "domain": "banking",
+  "action_pending_from": "customer",
+  "action_pending_status": "yes",
+  "email_summary": "This email thread consists of a single message from EuroBank's Relationship Manager, Justin Wright, to Jennifer Valdez regarding a potential covenant breach on loan agreement DE4567890. The Debt Service Coverage Ratio (DSCR) has fallen below the agreed minimum. The email formally notifies Ms. Valdez of the breach, requests an explanation for the variance, and asks for updated financial projections to assess the situation and explore potential solutions. The bank is initiating the process of understanding the issue and working with the borrower to restore compliance.",
+  "follow_up_date": "2025-03-22T00:00:00Z",
+  "follow_up_reason": "Await customer's explanation and updated financial projections regarding the DSCR breach.\nConfirm receipt of the notification and ensure timely submission of requested information.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a proactive customer communication strategy to build trust and demonstrate a commitment to finding mutually beneficial solutions. Offer support and guidance to the customer in preparing the requested financial projections. This fosters a stronger relationship and increases the likelihood of successful resolution.",
+  "overall_sentiment": 2,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 2
+  },
+  "stages": "Attempt Resolution",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1d72392390ab6fc6ce"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_e3b872ca3b3e",
+    "thread_key": {
+      "m365_conversation_id": "f0f7fc7f827cdc40fc8d0b4d"
+    },
+    "subject_norm": "Account Opening - Application Status Inquiry - Barry Thomas",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Barry Thomas",
+        "email": "barrythomas9409@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Laura Ferguson",
+        "email": "lauraferguson3786@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:32:00Z",
+    "last_message_at": "2025-03-15T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "27c2da4e5dd0610d",
+          "conversationId": "f0f7fc7f827cdc40fc8d0b4d",
+          "internetMessageId": "<b77b502e91a3b0b5d458a862@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:32:00Z",
+        "subject": "Account Opening - Application Status Inquiry - Barry Thomas",
+        "from": [
+          {
+            "name": "Barry Thomas",
+            "email": "barrythomas9409@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Laura Ferguson",
+            "email": "lauraferguson3786@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Laura Ferguson,\n\nI am writing to inquire about the status of my account opening application. I submitted my application online on 01/03/2025, reference number APPL-2025-03-01-789. I have not yet received confirmation of approval or any further instructions regarding the next steps.\n\nI understand that account opening processes can take some time, particularly with the necessary KYC (Know Your Customer) and AML (Anti-Money Laundering) checks. However, I would appreciate an update on the progress of my application and an estimated timeframe for completion.\n\nI am eager to begin banking with your institution and would be grateful for your assistance in resolving this matter. I have ensured all documentation provided was compliant with PSD2 regulations and in the correct format as outlined on your website.\n\nThank you for your time and attention to this request.\n\nSincerely,\nBarry Thomas\nbarrythomas9409@gmail.com"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Account Opening Issue",
+  "subtopics": "Account Setup Issue, Customer Onboarding Error, Registration Process Problem",
+  "kmeans_cluster_id": 10,
+  "subcluster_id": "0",
+  "subcluster_label": "Corporate & Account Opening",
+  "dominant_cluster_label": "Account Management",
+  "kmeans_cluster_keyphrase": "Account Opening Issue",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "Barry Thomas sent an email inquiring about the status of his account opening application submitted on 01/03/2025. He provided his application reference number and expressed eagerness to begin banking with the institution. He confirmed compliance with PSD2 regulations and requested an update on the progress of his application, as he has not received any confirmation or further instructions. The email is a standard inquiry regarding a pending application and seeks clarification on the next steps.",
+  "follow_up_date": "2025-03-18T10:00:00Z",
+  "follow_up_reason": "Investigate the application status and provide an update to the customer. Confirm if any additional documentation is required.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a proactive application status notification system to reduce customer inquiries. This will improve customer satisfaction and reduce the workload on customer service representatives. Consider integrating with the core banking system for real-time updates.",
+  "overall_sentiment": 1,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 1
+  },
+  "stages": "Categorize",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1d72392390ab6fc6cf"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_cafc4146ffa3",
+    "thread_key": {
+      "m365_conversation_id": "a7d03dfe65bc119d1e252a9e"
+    },
+    "subject_norm": "Urgent: Access Request - New Role - Wayne Alexander",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Wayne Alexander",
+        "email": "waynealexander3389@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Nicole Jones",
+        "email": "nicolejones4340@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Chelsea Pennington",
+        "email": "chelseapennington6370@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:32:00Z",
+    "last_message_at": "2025-03-15T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "2f0cf9de931c2306",
+          "conversationId": "a7d03dfe65bc119d1e252a9e",
+          "internetMessageId": "<ce7536d1cbae9bdd5b4cd17a@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:32:00Z",
+        "subject": "Urgent: Access Request - New Role - Wayne Alexander",
+        "from": [
+          {
+            "name": "Wayne Alexander",
+            "email": "waynealexander3389@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Nicole Jones",
+            "email": "nicolejones4340@gmail.com"
+          },
+          {
+            "name": "Chelsea Pennington",
+            "email": "chelseapennington6370@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Nicole,\n\nI hope this email finds you well.\n\nI am writing to request an urgent update to my user access privileges within the core banking system. As of 01/03/2025, I have transitioned to a new role as Senior Analyst within the Financial Risk Management department, reporting to Mr. Jean-Pierre Dubois. My previous role was as a Junior Analyst in the Transaction Monitoring unit.\n\nCurrently, my system access reflects my previous responsibilities, and I require the necessary permissions to perform my new duties, specifically access to the 'Risk Assessment Module' and 'Stress Testing Data'. I understand the importance of maintaining strict access controls in compliance with GDPR and PSD2 regulations, and I have already completed the mandatory training for my new role, certificate number FRM-2025-03-10. \n\nI would be grateful if you could expedite this request, as it is impacting my ability to meet critical deadlines for the upcoming quarterly risk report, due on 22/03/2025. Please let me know if you require any further information or documentation from my side. I have attached a copy of the internal role change notification for your reference.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nWayne Alexander\nwaynealexander3389@gmail.com"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "User Access Approval",
+  "subtopics": "Role Change Request, Account Setup Urgent",
+  "kmeans_cluster_id": 26,
+  "subcluster_id": "1",
+  "subcluster_label": "User Access",
+  "dominant_cluster_label": "Internal Access & Approvals",
+  "kmeans_cluster_keyphrase": "User Access Approval",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "Wayne Alexander has transitioned to a Senior Analyst role in Financial Risk Management and requires updated system access privileges to perform his new duties. He requests access to the 'Risk Assessment Module' and 'Stress Testing Data' within the core banking system, citing the need to meet a critical deadline for the quarterly risk report. He has completed the necessary training and provided documentation of his role change, emphasizing compliance with GDPR and PSD2 regulations. The email is requesting urgent attention due to the impending deadline.",
+  "follow_up_date": "2025-03-18T10:00:00Z",
+  "follow_up_reason": "Verify training completion and role change notification. Initiate access update process.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement automated workflow for role-based access control updates. This will reduce manual processing time and improve compliance. Integrate with HR systems for seamless role change notifications and access updates.",
+  "overall_sentiment": 2,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 2
+  },
+  "stages": "Categorize",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1e72392390ab6fc6d0"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_d223c6ab57ff",
+    "thread_key": {
+      "m365_conversation_id": "469434a27b8f5a3e7a0838c0"
+    },
+    "subject_norm": "Campaign System Outage - Urgent Investigation Required",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Barry Frazier",
+        "email": "barryfrazier5084@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Brett Bruce",
+        "email": "brettbruce2346@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Thomas Fritz",
+        "email": "thomasfritz2908@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Kevin Wiggins",
+        "email": "kevinwiggins2419@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:15:00Z",
+    "last_message_at": "2025-03-15T09:15:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "a15d1ed45c0ee00d",
+          "conversationId": "469434a27b8f5a3e7a0838c0",
+          "internetMessageId": "<4e7543d349df6ddb4916f1ce@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:15:00Z",
+        "subject": "Campaign System Outage - Urgent Investigation Required",
+        "from": [
+          {
+            "name": "Barry Frazier",
+            "email": "barryfrazier5084@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Brett Bruce",
+            "email": "brettbruce2346@gmail.com"
+          },
+          {
+            "name": "Thomas Fritz",
+            "email": "thomasfritz2908@gmail.com"
+          },
+          {
+            "name": "Kevin Wiggins",
+            "email": "kevinwiggins2419@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Brett,\n\nI am writing to inform you of a critical outage affecting our automated marketing campaign system. Since approximately 07:00 CET this morning, the system has been unable to process customer communications related to our new 'SecureSave' account promotion. This impacts our ability to deliver personalized offers and maintain compliance with GDPR regulations regarding marketing consent.\n\nInitial diagnostics suggest a potential database connectivity issue, however, the IT support team is currently investigating the root cause. We are seeing a significant backlog of undelivered communications, and this is likely to result in customer dissatisfaction and potential regulatory scrutiny if not resolved swiftly. \n\nI have already alerted the Head of Marketing, Isabelle Dubois, and she has requested a full incident report within two hours. Could you please prioritize this issue and provide me with an estimated time to resolution?  We need to assess the potential impact on our Q2 customer acquisition targets.  Please also confirm if any data integrity checks have been performed.\n\nFurthermore, could you please coordinate with the Communications team to prepare a holding statement for customer service representatives, acknowledging the potential delays and assuring customers that we are working to resolve the issue?  We need to be proactive in managing customer expectations.\n\nBest regards,\n\nBarry Frazier\nSenior Manager, Digital Banking\nEuroBank AG"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "IT Marketing Unresolved",
+  "subtopics": "Campaign System Failure, Customer Communication Problem, Marketing System Error",
+  "kmeans_cluster_id": 32,
+  "subcluster_id": "0",
+  "subcluster_label": "Unresolved IT Marketing",
+  "dominant_cluster_label": "Unresolved IT & Marketing Issues",
+  "kmeans_cluster_keyphrase": "IT Marketing Unresolved",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "This email details a critical outage of EuroBank AG's automated marketing campaign system, impacting the delivery of personalized offers for the 'SecureSave' account. The outage began around 07:00 CET and is causing a backlog of undelivered communications, potentially leading to customer dissatisfaction and GDPR compliance issues. Barry Frazier, Senior Manager of Digital Banking, is requesting Brett Bruce to prioritize investigation, provide an estimated resolution time, confirm data integrity checks, and coordinate a holding statement for customer service. The issue is considered high priority due to its potential impact on Q2 customer acquisition targets and regulatory compliance.",
+  "follow_up_date": "2025-03-16T09:00:00Z",
+  "follow_up_reason": "Confirm root cause analysis and estimated time to resolution.  Also, verify data integrity checks were completed and documented to ensure GDPR compliance.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a robust system monitoring solution to proactively detect and prevent future outages.  Develop a detailed incident response plan with clear escalation procedures and communication protocols to minimize disruption and maintain customer trust.",
+  "overall_sentiment": 2,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 2
+  },
+  "stages": "Attempt Resolution",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1e72392390ab6fc6d1"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_9db1590b1177",
+    "thread_key": {
+      "m365_conversation_id": "294b9df10df202df63abe8b7"
+    },
+    "subject_norm": "SEPA Direct Debit Mandate Validation - Account 789456123",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Jamie Charles",
+        "email": "jamiecharles2725@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Christopher Townsend",
+        "email": "christophertownsend9652@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Zachary Rice",
+        "email": "zacharyrice6147@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:32:00Z",
+    "last_message_at": "2025-03-15T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "d21c431f6321e6bc",
+          "conversationId": "294b9df10df202df63abe8b7",
+          "internetMessageId": "<18a9260aa24fdc8c9c369fbc@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:32:00Z",
+        "subject": "SEPA Direct Debit Mandate Validation - Account 789456123",
+        "from": [
+          {
+            "name": "Jamie Charles",
+            "email": "jamiecharles2725@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Christopher Townsend",
+            "email": "christophertownsend9652@gmail.com"
+          },
+          {
+            "name": "Zachary Rice",
+            "email": "zacharyrice6147@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Sehr geehrte Damen und Herren,\n\nI am writing regarding a recent SEPA Direct Debit mandate submitted for account number 789456123, held with your institution. Our internal validation process has flagged a potential discrepancy with the IBAN format. Specifically, the check digit appears to be invalid according to the Modulus 10 algorithm. \n\nWe understand that occasional errors can occur during data entry, and we wish to resolve this swiftly to avoid any disruption to the intended recurring payments. Could you please verify the accuracy of the IBAN associated with this mandate? We require confirmation that the IBAN is correctly registered and active within the SEPA zone. \n\nWe are adhering to the Payment Services Directive 2 (PSD2) and require this verification to ensure compliance with Strong Customer Authentication (SCA) requirements. Any supporting documentation you can provide regarding the account’s status would be greatly appreciated. \n\nThank you for your prompt attention to this matter. We look forward to your confirmation.\n\nMit freundlichen Grüßen,\n\nJamie Charles\nCompliance Officer\nEuroClear Solutions\njamiecharles2725@gmail.com"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Euro Clearing Problem",
+  "subtopics": "Currency Settlement Problem, SEPA Zone Error, European Clearing Problem",
+  "kmeans_cluster_id": 0,
+  "subcluster_id": "1",
+  "subcluster_label": "Clearing & Settlement Issues",
+  "dominant_cluster_label": "Regional Payment Issues",
+  "kmeans_cluster_keyphrase": "Euro Clearing Problem",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "This email from EuroClear Solutions' Compliance Officer, Jamie Charles, concerns a potential issue with a SEPA Direct Debit mandate. The internal validation process flagged an invalid check digit in the IBAN format for account 789456123. Jamie requests verification of the IBAN's accuracy to ensure compliance with PSD2 and SCA regulations, preventing potential payment disruptions. The email is a proactive measure to resolve a potential data entry error before it impacts recurring payments and maintain regulatory compliance.",
+  "follow_up_date": "2025-03-18T09:00:00Z",
+  "follow_up_reason": "Confirm IBAN validity.\nInvestigate potential data entry error and update mandate if necessary.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement automated IBAN validation at the point of mandate submission to reduce errors. Integrate with SEPA clearing systems for real-time IBAN verification. This will improve data quality and reduce compliance risks.",
+  "overall_sentiment": 1,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 1
+  },
+  "stages": "Categorize",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1e72392390ab6fc6d2"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_e41e9197f527",
+    "thread_key": {
+      "m365_conversation_id": "c31dcee646023ec15aa350b6"
+    },
+    "subject_norm": "Open Banking API - Third Party Connection Request - Ref: TP-2025-04-12",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Rebecca Yu",
+        "email": "rebeccayu4958@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Timothy Collier",
+        "email": "timothycollier8988@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "George Simmons",
+        "email": "georgesimmons9142@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Adrian Shaw",
+        "email": "adrianshaw7069@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-04-12T09:30:00Z",
+    "last_message_at": "2025-04-12T09:30:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "e160c58ce17cc68a",
+          "conversationId": "c31dcee646023ec15aa350b6",
+          "internetMessageId": "<e1fb403c566e79261f04808e@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-04-12T09:30:00Z",
+        "subject": "Open Banking API - Third Party Connection Request - Ref: TP-2025-04-12",
+        "from": [
+          {
+            "name": "Rebecca Yu",
+            "email": "rebeccayu4958@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Timothy Collier",
+            "email": "timothycollier8988@gmail.com"
+          },
+          {
+            "name": "George Simmons",
+            "email": "georgesimmons9142@gmail.com"
+          },
+          {
+            "name": "Adrian Shaw",
+            "email": "adrianshaw7069@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Sehr geehrter Herr Collier,\n\nI hope this email finds you well.\n\nMy name is Rebecca Yu, and I am a Business Development Manager at Stellar Financial Services. We are currently integrating with several European banks to offer our clients a seamless account aggregation service, leveraging the PSD2 Open Banking directive. \n\nWe are initiating a connection request via your Open Banking API to access account information on behalf of our users, with explicit user consent obtained through our secure platform.  Our application ID is 'SF-AGG-007', and we have reviewed and agree to all terms and conditions outlined in your developer documentation, specifically regarding data security and user privacy as mandated by GDPR. \n\nCould you please confirm the correct endpoint for initiating a third-party connection request and any specific authentication requirements beyond the standard OAuth 2.0 flow? We are particularly interested in understanding your rate limiting policies to ensure a smooth integration process.  We anticipate a moderate volume of requests initially, scaling up as our user base grows. \n\nWe have attached our API integration plan for your review. Please let me know if you require any further information from our side. \n\nMit freundlichen Grüßen,\nRebecca Yu\nBusiness Development Manager\nStellar Financial Services\nrebeccayu4958@gmail.com"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Open Banking API",
+  "subtopics": "Third Party Connection",
+  "kmeans_cluster_id": 4,
+  "subcluster_id": "1",
+  "subcluster_label": "Open Banking & API Issues",
+  "dominant_cluster_label": "Digital Access & Authentication",
+  "kmeans_cluster_keyphrase": "Open Banking API",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "Rebecca Yu from Stellar Financial Services has initiated a connection request via the bank's Open Banking API to access account information for their account aggregation service. The email details their application ID, confirmation of adherence to PSD2 and GDPR regulations, and requests clarification on the connection endpoint, authentication requirements, and rate limiting policies. This is an initial outreach to establish a third-party connection and ensure compliance with EU banking regulations.",
+  "follow_up_date": "2025-04-15T09:00:00Z",
+  "follow_up_reason": "The bank needs to respond to Rebecca's request for API endpoint details and authentication requirements. A prompt response is crucial for a smooth integration process.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Prioritize responding to Rebecca's request with clear documentation and support. A positive initial experience will foster a strong partnership and encourage further integration with the bank's Open Banking platform.",
+  "overall_sentiment": 1,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 1
+  },
+  "stages": "Categorize",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1f72392390ab6fc6d3"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_1664ec5618c9",
+    "thread_key": {
+      "m365_conversation_id": "96e59406b376821755864c6b"
+    },
+    "subject_norm": "Approval Request: Cross-Border Payment Directive Compliance Update - Project Nightingale",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Ethan Sutton",
+        "email": "ethansutton2896@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Joshua Martinez",
+        "email": "joshuamartinez2560@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "John Cruz",
+        "email": "johncruz3952@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Michele Black",
+        "email": "micheleblack1435@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-03-15T09:32:00Z",
+    "last_message_at": "2025-03-15T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "72b7a07ec35c5576",
+          "conversationId": "96e59406b376821755864c6b",
+          "internetMessageId": "<9bba51e31802b81ebeb50663@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-03-15T09:32:00Z",
+        "subject": "Approval Request: Cross-Border Payment Directive Compliance Update - Project Nightingale",
+        "from": [
+          {
+            "name": "Ethan Sutton",
+            "email": "ethansutton2896@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Joshua Martinez",
+            "email": "joshuamartinez2560@gmail.com"
+          },
+          {
+            "name": "John Cruz",
+            "email": "johncruz3952@gmail.com"
+          },
+          {
+            "name": "Michele Black",
+            "email": "micheleblack1435@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Joshua,\n\nI hope this email finds you well.\n\nFollowing the recent regulatory updates regarding the revised Cross-Border Payments Directive (CBPD) and its implications for our SEPA transfers, the Project Nightingale team has completed the implementation of the necessary system upgrades and procedural changes. These updates ensure full compliance with the new requirements, specifically regarding enhanced customer due diligence for cross-border transactions exceeding €10,000 and the revised reporting standards to the relevant National Competent Authorities.\n\nWe have conducted thorough testing, including simulations of various transaction scenarios and data validation checks, and the results confirm that the system is functioning as expected. However, before we officially roll out these changes to all customers, we require your final approval to proceed. The implementation impacts approximately 3,500 corporate clients and necessitates a communication campaign outlining the updated terms and conditions.\n\nThe detailed implementation report, including the risk assessment and mitigation strategies, is attached for your review.  We anticipate a minimal disruption to customer transactions during the rollout, but proactive communication is crucial.  The estimated cost of the rollout, including communication and potential minor system adjustments, is €18,500.  This falls within the approved budget for regulatory compliance initiatives.\n\nPlease advise at your earliest convenience whether you approve the rollout.  We are prepared to begin the communication campaign immediately upon receiving your confirmation.\n\nBest regards,\n\nEthan Sutton\nSenior Compliance Officer\nEurobank AG\nFrankfurt"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Executive Decision Required",
+  "subtopics": "Senior Management Approval",
+  "kmeans_cluster_id": 23,
+  "subcluster_id": "1",
+  "subcluster_label": "Decision-Making",
+  "dominant_cluster_label": "Executive Communications",
+  "kmeans_cluster_keyphrase": "Executive Decision Required",
+  "domain": "banking",
+  "action_pending_from": "company",
+  "action_pending_status": "yes",
+  "email_summary": "Ethan Sutton, a Senior Compliance Officer at Eurobank AG, is requesting final approval from Joshua Martinez to roll out updates to their systems to comply with the revised Cross-Border Payments Directive (CBPD). The project, 'Nightingale', involves system upgrades, procedural changes, and customer communication to ensure compliance with new regulations regarding due diligence and reporting for cross-border transactions exceeding €10,000.  The implementation report and risk assessment are attached, with an estimated rollout cost of €18,500.  Ethan is awaiting Joshua's approval to initiate the customer communication campaign.",
+  "follow_up_date": "2025-03-18T10:00:00Z",
+  "follow_up_reason": "Joshua needs to review the implementation report and provide approval for the rollout. A reminder should be sent if no response is received within 3 business days.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a standardized approval workflow for regulatory compliance initiatives to reduce bottlenecks and ensure timely rollout of critical updates. This will improve operational efficiency and minimize potential compliance risks.",
+  "overall_sentiment": 1,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 1
+  },
+  "stages": "Escalate/Investigate",
+  "urgency": false
+},
+{
+  "_id": {
+    "$oid": "68c86d1f72392390ab6fc6d4"
+  },
+  "provider": "m365",
+  "thread": {
+    "thread_id": "conv_m365_7a0c7fc57aa6",
+    "thread_key": {
+      "m365_conversation_id": "7915fc0f84c8fd957b9536cc"
+    },
+    "subject_norm": "Documentary Collection Discrepancy - Invoice No. 20250418-FR",
+    "participants": [
+      {
+        "type": "from",
+        "name": "Craig Garcia",
+        "email": "craiggarcia9087@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Melissa Hughes",
+        "email": "melissahughes6503@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Sean Johnson",
+        "email": "seanjohnson5410@gmail.com"
+      },
+      {
+        "type": "to",
+        "name": "Michael Fox",
+        "email": "michaelfox7076@gmail.com"
+      }
+    ],
+    "first_message_at": "2025-04-18T09:32:00Z",
+    "last_message_at": "2025-04-18T09:32:00Z",
+    "message_count": 1
+  },
+  "messages": [
+    {
+      "provider_ids": {
+        "m365": {
+          "id": "2ae3c9ee875d6c96",
+          "conversationId": "7915fc0f84c8fd957b9536cc",
+          "internetMessageId": "<9ddf02cf04fe7fdd24f264ab@domain.com>"
+        }
+      },
+      "headers": {
+        "date": "2025-04-18T09:32:00Z",
+        "subject": "Documentary Collection Discrepancy - Invoice No. 20250418-FR",
+        "from": [
+          {
+            "name": "Craig Garcia",
+            "email": "craiggarcia9087@gmail.com"
+          }
+        ],
+        "to": [
+          {
+            "name": "Melissa Hughes",
+            "email": "melissahughes6503@gmail.com"
+          },
+          {
+            "name": "Sean Johnson",
+            "email": "seanjohnson5410@gmail.com"
+          },
+          {
+            "name": "Michael Fox",
+            "email": "michaelfox7076@gmail.com"
+          }
+        ]
+      },
+      "body": {
+        "mime_type": "text/plain",
+        "text": {
+          "plain": "Dear Melissa Hughes,\n\nI hope this email finds you well.\n\nWe are currently processing a documentary collection under reference number DC-20250418-FR, related to invoice number 20250418-FR from our client, Société Générale in Lyon, France. The documents received through the collecting bank, Deutsche Bank Frankfurt, present a discrepancy. The invoice value stated on the commercial invoice (€12,500.00) does not reconcile with the amount indicated on the accompanying bill of exchange (€13,000.00). \n\nAs per UCP 600 guidelines, this constitutes a discrepancy, and we require your instructions on how to proceed.  We have contacted Deutsche Bank Frankfurt to confirm the documents received, and they confirm the discrepancy exists.  We understand the exporter, 'Boulangerie Artisanale', may have inadvertently entered the incorrect amount.  \n\nCould you please advise if you wish us to negotiate the documents despite the discrepancy, seek a waiver from the applicant, or return the documents to the collecting bank?  We have placed a hold on the funds pending your instructions to avoid any potential payment delays.  Please respond at your earliest convenience. \n\nThank you for your attention to this matter.\n\nSincerely,\nCraig Garcia\nTrade Finance Officer\nBanco Santander Madrid\n+34 91 418 2000"
+        }
+      }
+    }
+  ],
+  "dominant_topic": "Documentary Collection Issue",
+  "subtopics": "Export Document Issue, Import Letter Problem, Trade Document Discrepancy",
+  "kmeans_cluster_id": 13,
+  "subcluster_id": "2",
+  "subcluster_label": "Documentation & Import/Export",
+  "dominant_cluster_label": "Trade Finance Services",
+  "kmeans_cluster_keyphrase": "Documentary Collection Issue",
+  "domain": "banking",
+  "action_pending_from": "customer",
+  "action_pending_status": "yes",
+  "email_summary": "This email from Craig Garcia at Banco Santander Madrid details a discrepancy in a documentary collection initiated by Société Générale in Lyon, France. The invoice value (€12,500.00) does not match the bill of exchange amount (€13,000.00). Craig is seeking instructions from Melissa Hughes regarding how to proceed under UCP 600 guidelines – whether to negotiate despite the discrepancy, seek a waiver, or return the documents. The funds are currently held pending instructions to prevent payment delays. The issue requires a decision to resolve the trade finance transaction.",
+  "follow_up_date": "2025-04-21T09:00:00Z",
+  "follow_up_reason": "Melissa needs to provide instructions on how to proceed with the discrepant documents. A prompt response is crucial to avoid delays in the trade finance transaction.",
+  "follow_up_required": "yes",
+  "next_action_suggestion": "Implement a proactive discrepancy flagging system within the documentary collection process. This could involve automated checks comparing invoice and bill of exchange amounts, reducing manual errors and improving efficiency. Consider offering clients a discrepancy resolution service.",
+  "overall_sentiment": 1,
+  "resolution_status": "open",
+  "sentiment": {
+    "0": 1
+  },
+  "stages": "Attempt Resolution",
+  "urgency": false
+}]
