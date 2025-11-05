@@ -1,21 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-
 export default function HomePage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    // Redirect to email dashboard
-    router.push("/email");
-  }, [router]);
-
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--sidebar)' }}>
       <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-        <p className="text-white">Redirecting to Email Dashboard...</p>
+        <h1 className="text-3xl font-bold text-white mb-4">Welcome</h1>
+        <p className="text-gray-400">Select a page from the sidebar to get started</p>
       </div>
     </div>
   );
