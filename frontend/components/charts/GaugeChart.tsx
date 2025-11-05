@@ -26,7 +26,10 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
   }, []);
 
   // Calculate total for percentage display
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  // If percentage is provided, use it; otherwise calculate from values
+  const total = data[0]?.percentage !== undefined 
+    ? data[0].percentage 
+    : data.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <div className={`bg-[#010101] border border-[#b90abd]/30 rounded-2xl p-6 shadow-lg shadow-[#b90abd]/20 relative overflow-hidden ${className}`}>
@@ -99,7 +102,12 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
             </defs>
             
             <Pie
-              data={data}
+              data={data[0]?.percentage !== undefined 
+                ? [
+                    { name: data[0].name, value: data[0].percentage, color: data[0].color },
+                    { name: 'Remaining', value: 100 - data[0].percentage, color: '#1f2937' }
+                  ]
+                : data}
               cx="50%"
               cy="50%"
               innerRadius={70}
@@ -112,21 +120,47 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
               startAngle={180}
               endAngle={0}
             >
-              {data.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={`url(#${entry.name.toLowerCase()}Gradient)`}
-                  className={`transition-all duration-800 hover:scale-110 cursor-pointer ${
-                    isVisible ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    filter: 'url(#gaugeGlow)',
-                    transform: isVisible ? 'translateZ(0) rotateX(0deg)' : 'translateZ(-40px) rotateX(-20deg)',
-                    transition: `all 1s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.2}s`,
-                    transformOrigin: 'center center'
-                  }}
-                />
-              ))}
+              {data[0]?.percentage !== undefined ? (
+                <>
+                  <Cell 
+                    key="main"
+                    fill={data[0].color}
+                    className={`transition-all duration-800 hover:scale-110 cursor-pointer ${
+                      isVisible ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      filter: 'url(#gaugeGlow)',
+                      transform: isVisible ? 'translateZ(0) rotateX(0deg)' : 'translateZ(-40px) rotateX(-20deg)',
+                      transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transformOrigin: 'center center'
+                    }}
+                  />
+                  <Cell 
+                    key="remaining"
+                    fill="#1f2937"
+                    className={isVisible ? 'opacity-30' : 'opacity-0'}
+                    style={{
+                      transition: 'opacity 1s ease-in-out 0.5s'
+                    }}
+                  />
+                </>
+              ) : (
+                data.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={`url(#${entry.name.toLowerCase()}Gradient)`}
+                    className={`transition-all duration-800 hover:scale-110 cursor-pointer ${
+                      isVisible ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      filter: 'url(#gaugeGlow)',
+                      transform: isVisible ? 'translateZ(0) rotateX(0deg)' : 'translateZ(-40px) rotateX(-20deg)',
+                      transition: `all 1s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.2}s`,
+                      transformOrigin: 'center center'
+                    }}
+                  />
+                ))
+              )}
             </Pie>
             
             <Tooltip 
@@ -154,16 +188,18 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
         <div className="text-center transform-gpu">
           <div className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
-            {total}
+            {data[0]?.percentage !== undefined ? `${data[0].percentage.toFixed(1)}%` : `${total}`}
           </div>
-          <div className="text-[#939394] text-sm font-medium">Total Items</div>
+          <div className="text-[#939394] text-sm font-medium">
+            {data[0]?.percentage !== undefined ? 'Queue Health' : 'Total Items'}
+          </div>
         </div>
       </div>
       
       {/* Enhanced 3D Legend */}
       <div className="relative z-10 mt-8">
         <div className="flex justify-center space-x-8">
-          {data.map((item, index) => (
+          {(data[0]?.percentage !== undefined ? [data[0]] : data).map((item, index) => (
             <div 
               key={item.name}
               className={`flex items-center space-x-3 transition-all duration-800 hover:scale-105 ${
@@ -174,7 +210,7 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
               <div 
                 className="w-6 h-6 rounded-full shadow-xl relative"
                 style={{ 
-                  background: `url(#${item.name.toLowerCase()}Gradient)`,
+                  background: item.color || `url(#${item.name.toLowerCase()}Gradient)`,
                   filter: 'url(#gaugeGlow)',
                   boxShadow: '0 6px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(185, 10, 189, 0.2)'
                 }}
@@ -183,7 +219,11 @@ export default function GaugeChart({ data, title, className = '' }: GaugeChartPr
               </div>
               <div className="flex flex-col">
                 <span className="text-white text-sm font-semibold capitalize">{item.name}</span>
-                <span className="text-[#939394] text-xs font-medium">{item.value} items</span>
+                <span className="text-[#939394] text-xs font-medium">
+                  {item.percentage !== undefined 
+                    ? `${item.percentage.toFixed(1)}%` 
+                    : `${item.value} items`}
+                </span>
               </div>
             </div>
           ))}

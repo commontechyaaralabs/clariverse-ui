@@ -11,8 +11,7 @@ import {
   Percent,
   Heart,
   Target,
-  Briefcase,
-  Sparkles
+  Briefcase
 } from 'lucide-react';
 
 interface KPICardsProps {
@@ -128,8 +127,8 @@ export function KPICards({ data }: KPICardsProps) {
           >
             {/* AI Sparkle Indicator */}
             {item.showAI && (
-              <div className="absolute top-2 right-2 z-10">
-                <Sparkles className="h-4 w-4 text-purple-400 animate-pulse" />
+              <div className="absolute top-2 left-2 z-10">
+                <span className="text-lg animate-pulse">✨</span>
               </div>
             )}
             
@@ -138,7 +137,7 @@ export function KPICards({ data }: KPICardsProps) {
               item.showAI ? 'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent' : ''
             }`} />
             
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 ${item.showAI ? 'pt-8' : ''}`}>
               <CardTitle className="text-sm font-medium text-gray-300">
                 {item.title}
               </CardTitle>

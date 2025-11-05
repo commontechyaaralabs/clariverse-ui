@@ -81,34 +81,38 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
   const totalClosed = data.reduce((sum, d) => sum + d.closed, 0);
   const totalThreads = totalOpen + totalInProgress + totalClosed;
 
-  // Calculate topic distribution for selected quadrant and priority
-  const topicDistribution = useMemo(() => {
-    if (!threads.length || !selectedQuadrant) return [];
+  // Calculate topic distribution grouped by priority
+  const topicsByPriority = useMemo(() => {
+    if (!threads.length || !selectedQuadrant) return {};
 
     // Filter threads by quadrant
     let filteredThreads = threads.filter(thread => thread.quadrant === selectedQuadrant);
 
-    // If a specific priority is selected, filter by that priority
-    if (selectedPriority) {
-      filteredThreads = filteredThreads.filter(thread => thread.priority === selectedPriority);
-    } else {
-      // If no specific priority selected, include all priorities from the data
-      const prioritiesInData = data.map(d => d.priority);
-      filteredThreads = filteredThreads.filter(thread => prioritiesInData.includes(thread.priority));
-    }
+    // Get priorities from the data
+    const prioritiesInData = data.map(d => d.priority);
 
-    // Count topics
-    const topicCounts: Record<string, number> = {};
-    filteredThreads.forEach(thread => {
-      const topic = thread.topic || 'Unknown';
-      topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+    // Group topics by priority
+    const topicsByPriorityMap: Record<string, Array<{ topic: string; count: number }>> = {};
+
+    prioritiesInData.forEach(priority => {
+      // Filter threads for this specific priority
+      const priorityThreads = filteredThreads.filter(thread => thread.priority === priority);
+      
+      // Count topics for this priority
+      const topicCounts: Record<string, number> = {};
+      priorityThreads.forEach(thread => {
+        const topic = thread.topic || 'Unknown';
+        topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+      });
+
+      // Convert to array and sort by count (descending)
+      topicsByPriorityMap[priority] = Object.entries(topicCounts)
+        .map(([topic, count]) => ({ topic, count }))
+        .sort((a, b) => b.count - a.count);
     });
 
-    // Convert to array and sort by count (descending)
-    return Object.entries(topicCounts)
-      .map(([topic, count]) => ({ topic, count }))
-      .sort((a, b) => b.count - a.count);
-  }, [threads, selectedQuadrant, selectedPriority, data]);
+    return topicsByPriorityMap;
+  }, [threads, selectedQuadrant, data]);
 
   return (
     <Card>
@@ -160,25 +164,47 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
           </ResponsiveContainer>
         </div>
 
-        {/* Topics Summary */}
-        <div className="mt-6 space-y-4">
-          <h4 className="text-sm font-medium text-gray-300">Topics</h4>
-          {topicDistribution.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {topicDistribution.map((item) => (
-                <div
-                  key={item.topic}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
-                >
-                  <Target className="h-3.5 w-3.5 text-purple-400 flex-shrink-0" />
-                  <span className="text-sm font-medium text-white">
-                    {item.topic}
-                  </span>
-                  <span className="text-xs font-semibold text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded-full">
-                    {item.count}
-                  </span>
-                </div>
-              ))}
+        {/* Topics Summary - Grouped by Priority */}
+        <div className="mt-6 space-y-6">
+          <h4 className="text-sm font-medium text-gray-300">Topics by Priority</h4>
+          {Object.keys(topicsByPriority).length > 0 ? (
+            <div className="space-y-4">
+              {data.map((priorityData) => {
+                const priority = priorityData.priority;
+                const topics = topicsByPriority[priority] || [];
+                
+                if (topics.length === 0) return null;
+
+                return (
+                  <div key={priority} className="space-y-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      {getPriorityIcon(priority)}
+                      <h5 className="text-sm font-semibold text-white">
+                        {priority} Topics
+                      </h5>
+                      <span className="text-xs text-gray-400">
+                        ({topics.length} {topics.length === 1 ? 'topic' : 'topics'})
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {topics.map((item) => (
+                        <div
+                          key={`${priority}-${item.topic}`}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
+                        >
+                          <Target className="h-3.5 w-3.5 text-purple-400 flex-shrink-0" />
+                          <span className="text-sm font-medium text-white">
+                            {item.topic}
+                          </span>
+                          <span className="text-xs font-semibold text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded-full">
+                            {item.count}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-8 text-gray-400 text-sm">

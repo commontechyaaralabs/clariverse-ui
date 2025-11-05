@@ -36,7 +36,8 @@ import { RiskAssessmentCard } from '@/components/email/RiskAssessmentCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RefreshCw, Target, AlertCircle, CheckCircle, Clock, ArrowUpRight, ArrowRight, Sparkles, Bot, Wand2, Zap, MessageSquare } from 'lucide-react';
+import { RefreshCw, Target, AlertCircle, CheckCircle, Clock, ArrowUpRight, ArrowRight, Bot, Wand2, Zap, MessageSquare } from 'lucide-react';
+import Link from 'next/link';
 
 export default function EmailDashboard() {
   // Data states
@@ -70,7 +71,7 @@ export default function EmailDashboard() {
   const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
   
   // Calculate date range based on preset
-  const calculateDateRange = useCallback((preset: string) => {
+  const calculateDateRange = useCallback((preset: string, currentDateRange?: { start: string; end: string }) => {
     const today = new Date();
     const endDate = new Date(today);
     endDate.setHours(23, 59, 59, 999);
@@ -97,8 +98,8 @@ export default function EmailDashboard() {
         startDate.setHours(0, 0, 0, 0);
         break;
       case 'Custom':
-        // Don't auto-calculate for custom
-        return { start: filters.dateRange.start, end: filters.dateRange.end };
+        // Don't auto-calculate for custom - use provided range or return empty
+        return currentDateRange || { start: '', end: '' };
       default:
         startDate.setMonth(today.getMonth() - 1);
         startDate.setHours(0, 0, 0, 0);
@@ -116,7 +117,7 @@ export default function EmailDashboard() {
       start: formatDate(startDate),
       end: formatDate(endDate)
     };
-  }, [filters.dateRange]);
+  }, []); // Removed filters.dateRange dependency to prevent re-renders
   
   // Handle preset change
   const handlePresetChange = useCallback((preset: string) => {
@@ -131,7 +132,7 @@ export default function EmailDashboard() {
       // For Custom, keep existing date range
       // Date range will be updated when user selects dates
     }
-  }, [calculateDateRange]);
+  }, [calculateDateRange]); // calculateDateRange is now stable (no dependencies)
 
   // Initialize date range on mount
   useEffect(() => {
@@ -143,7 +144,7 @@ export default function EmailDashboard() {
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  }, []); // Only run on mount - calculateDateRange is stable
   
   // Load initial data
   useEffect(() => {
@@ -286,12 +287,12 @@ export default function EmailDashboard() {
     console.log(`Priority clicked: ${priority}, Status: ${status}`);
     // Set selected priority for topic filtering
     setSelectedPriorityForTopics(priority === selectedPriorityForTopics ? null : priority);
-    setFilters(prev => ({
-      ...prev,
-      priority: prev.priority.includes(priority)
+    setFilters(prev => ({ 
+      ...prev, 
+      priority: prev.priority.includes(priority) 
         ? prev.priority.filter(p => p !== priority)
         : [...prev.priority, priority],
-      status: prev.status.includes(status)
+      status: prev.status.includes(status) 
         ? prev.status.filter(s => s !== status)
         : [...prev.status, status]
     }));
@@ -389,9 +390,56 @@ export default function EmailDashboard() {
               </h1>
             </div>
             <p className="text-gray-400 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-purple-400" />
+              <span className="text-lg">✨</span>
               AI-powered insights for email threads, priorities, and team performance
             </p>
+            <div className="flex items-center gap-2 mt-3">
+              <Link href="/email">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-indigo-600/10 border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/20 border-2"
+                >
+                  📊 Executive Summary
+                </Button>
+              </Link>
+              <Link href="/email/executive">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+                >
+                  🧭 Executive Cockpit
+                </Button>
+              </Link>
+              <Link href="/email/manager">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-blue-600/10 border-blue-500/30 text-blue-300 hover:bg-blue-600/20"
+                >
+                  ⚙️ Manager View
+                </Button>
+              </Link>
+              <Link href="/email/finance">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-green-600/10 border-green-500/30 text-green-300 hover:bg-green-600/20"
+                >
+                  🧑‍💼 Finance View
+                </Button>
+              </Link>
+              <Link href="/email/ops">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-yellow-600/10 border-yellow-500/30 text-yellow-300 hover:bg-yellow-600/20"
+                >
+                  🧑‍💼 Ops View
+                </Button>
+              </Link>
+            </div>
           </div>
           <div className="flex flex-col gap-3">
             {/* AI Insights Button */}
@@ -399,12 +447,12 @@ export default function EmailDashboard() {
               <Button
                 onClick={() => {
                   // Handle AI insights generation
-                  console.log('Get Today\'s AI Insights on Email');
+                  console.log('Generate your day in 2 minutes');
                 }}
                 className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 group h-[38px] px-6"
               >
-                <Sparkles className="h-4 w-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
-                Get Today's AI Insights on Email
+                <span className="text-lg mr-2 group-hover:rotate-180 transition-transform duration-500 inline-block">✨</span>
+                Generate your day in 2 minutes
               </Button>
             </div>
             
@@ -485,7 +533,7 @@ export default function EmailDashboard() {
                         Eisenhower Quadrant Distribution
                       </CardTitle>
                       <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
-                        <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+                        <span className="text-sm">✨</span>
                         <span className="text-xs text-purple-300 font-medium">AI Priority Analysis</span>
                       </div>
                     </div>
@@ -510,7 +558,7 @@ export default function EmailDashboard() {
                           delete: { bg: 'bg-gray-500' }
                         }[quadrant] || { bg: 'bg-gray-500' };
                         
-                                                const labels = {
+                        const labels = {
                           do: 'Do - Now',
                           schedule: 'Schedule - Later',
                           delegate: 'Delegate - Team',
@@ -551,7 +599,7 @@ export default function EmailDashboard() {
                             )}
                             <div className="flex items-center justify-center mb-2 relative z-10">
                               {hasHighPriority && (
-                                <Sparkles className="absolute -left-2 h-3 w-3 text-purple-400 animate-pulse" />
+                                <span className="absolute -left-2 text-sm animate-pulse">✨</span>
                               )}
                               <div className={`w-4 h-4 rounded-full ${colors.bg} mr-2 relative z-10`} />
                               <span className="text-sm font-medium text-gray-300 relative z-10">
@@ -618,17 +666,17 @@ export default function EmailDashboard() {
                         Analysis for {selectedQuadrant} quadrant threads ({eisenhowerThreads.filter(thread => thread.quadrant === selectedQuadrant).length} threads)
                       </CardDescription>
                     </CardHeader>
-                      <CardContent className="pt-0">
-                        {quadrantPriorityData.length > 0 && (
-                          <PriorityResolutionChart 
-                            data={quadrantPriorityData} 
+                    <CardContent className="pt-0">
+                      {quadrantPriorityData.length > 0 && (
+                        <PriorityResolutionChart 
+                          data={quadrantPriorityData} 
                             threads={eisenhowerThreads}
                             selectedQuadrant={selectedQuadrant}
                             selectedPriority={selectedPriorityForTopics}
-                            onPriorityClick={handlePriorityClick}
-                          />
-                        )}
-                      </CardContent>
+                          onPriorityClick={handlePriorityClick}
+                        />
+                      )}
+                    </CardContent>
                   </Card>
                 )}
               </div>
