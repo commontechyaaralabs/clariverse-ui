@@ -2,16 +2,17 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { KPIData } from '@/lib/api';
-import { 
-  CheckCircle, 
-  AlertTriangle, 
-  Users, 
-  Clock, 
-  TrendingUp, 
-  TrendingDown,
+import {
+  CheckCircle,
+  AlertTriangle,
+  Users,
+  Clock,
+  TrendingUp,
   Percent,
   Heart,
-  Target
+  Target,
+  Briefcase,
+  Sparkles
 } from 'lucide-react';
 
 interface KPICardsProps {
@@ -23,12 +24,9 @@ export function KPICards({ data }: KPICardsProps) {
   const closedPercentage = data.closed_vs_open_percentage || 78.5;
   const openPercentage = 100 - closedPercentage;
 
-  // Calculate urgent threads percentage
-  const urgentPercentage = (data.urgent_threads_count / data.total_threads) * 100;
-  const isUrgentHigh = urgentPercentage > 20;
-
-  // Calculate customer waiting percentage
-  const customerWaitingPercentage = data.customer_waiting_percentage || 15.2;
+  // Calculate customer waiting
+  const customerWaitingCount = data.customer_waiting_count || 0;
+  const customerWaitingPercentage = data.customer_waiting_percentage || 0;
   const isWaitingHigh = customerWaitingPercentage > 30;
 
   // Calculate escalation rate
@@ -38,145 +36,129 @@ export function KPICards({ data }: KPICardsProps) {
   // Calculate customer sentiment index (scale 0-100)
   const sentimentIndex = Math.round((data.customer_sentiment_index || 4) * 20);
 
-  // Calculate average resolution time in hours
-  const avgResolutionTimeHours = Math.round((data.avg_resolution_time_days || 2.3) * 24);
-  const maxResolutionTime = Math.round(avgResolutionTimeHours * 1.8); // Simulated max
-  const minResolutionTime = Math.round(avgResolutionTimeHours * 0.4); // Simulated min
-  const medianResolutionTime = Math.round(avgResolutionTimeHours * 0.9); // Simulated median
+  // Calculate internal pending
+  const internalPendingCount = data.internal_pending_count || 0;
+  const internalPendingPercentage = data.internal_pending_percentage || 0;
+  const isInternalPendingHigh = internalPendingPercentage > 15;
 
+  // Calculate insights and actions
+  const criticalThreads = Math.round(data.total_threads * (escalationRate / 100) * 0.1);
+  const urgentAttention = Math.round(data.total_threads * (closedPercentage < 30 ? 0.05 : 0.02));
+  
   const kpiItems = [
     {
       title: '% Closed vs Open',
       value: `${closedPercentage.toFixed(1)}%`,
       subtext: `vs ${openPercentage.toFixed(1)}% Open`,
+      insight: closedPercentage < 30 ? `${urgentAttention} threads need urgent attention` : 'Resolution rate on track',
       description: 'Thread resolution status',
       icon: CheckCircle,
       color: 'text-green-400',
       bgColor: 'bg-green-500/10',
       tooltip: 'Breakdown per cluster',
       trend: closedPercentage > 75 ? 'up' : 'down',
-    },
-    {
-      title: 'Urgent Threads',
-      value: data.urgent_threads_count.toLocaleString(),
-      subtext: `${urgentPercentage.toFixed(1)}% of total`,
-      description: 'Requiring immediate attention',
-      icon: AlertTriangle,
-      color: isUrgentHigh ? 'text-red-400' : 'text-orange-400',
-      bgColor: isUrgentHigh ? 'bg-red-500/10' : 'bg-orange-500/10',
-      tooltip: '% urgent by priority',
-      badge: isUrgentHigh ? 'High' : null,
-      trend: urgentPercentage > 20 ? 'up' : 'down',
-    },
-    {
-      title: 'Critical Issues',
-      value: data.critical_issues_count.toLocaleString(),
-      subtext: 'P1 Priority',
-      description: 'High-priority problems',
-      icon: AlertTriangle,
-      color: 'text-red-400',
-      bgColor: 'bg-red-500/10',
-      tooltip: 'Top 3 subjects (show list on hover)',
-      trend: 'up',
-    },
-    {
-      title: 'Customer-Waiting %',
-      value: `${customerWaitingPercentage.toFixed(1)}%`,
-      subtext: 'Pending customer action',
-      description: 'Awaiting customer response',
-      icon: Clock,
-      color: isWaitingHigh ? 'text-red-400' : 'text-yellow-400',
-      bgColor: isWaitingHigh ? 'bg-red-500/10' : 'bg-yellow-500/10',
-      tooltip: 'Avg resolution time for customer threads',
-      badge: isWaitingHigh ? 'Waiting' : null,
-      trend: customerWaitingPercentage > 30 ? 'up' : 'down',
+      showAI: closedPercentage < 30,
     },
     {
       title: 'Escalation Rate',
       value: `${escalationRate.toFixed(1)}%`,
       subtext: 'Escalated threads',
+      insight: isEscalationHigh ? `High escalation trend detected - ${criticalThreads} threads need immediate intervention` : 'Escalation levels manageable',
       description: 'Threads requiring escalation',
       icon: TrendingUp,
       color: isEscalationHigh ? 'text-red-400' : 'text-blue-400',
       bgColor: isEscalationHigh ? 'bg-red-500/10' : 'bg-blue-500/10',
       tooltip: 'Avg sentiment of escalated threads',
       trend: escalationRate > 10 ? 'up' : 'down',
+      showAI: isEscalationHigh,
     },
     {
       title: 'Customer Sentiment Index',
       value: `${sentimentIndex}/100`,
       subtext: 'Overall satisfaction',
+      insight: sentimentIndex < 60 ? 'Customer satisfaction declining - proactive engagement needed' : 'Sentiment stable - maintain quality',
       description: 'Customer satisfaction score',
       icon: Heart,
       color: sentimentIndex > 70 ? 'text-green-400' : sentimentIndex > 50 ? 'text-yellow-400' : 'text-red-400',
       bgColor: sentimentIndex > 70 ? 'bg-green-500/10' : sentimentIndex > 50 ? 'bg-yellow-500/10' : 'bg-red-500/10',
       tooltip: 'Show best/worst thread IDs',
       trend: sentimentIndex > 70 ? 'up' : 'down',
-      progress: sentimentIndex,
+      showAI: sentimentIndex < 60,
     },
     {
-      title: 'Avg Resolution Time',
-      value: `${avgResolutionTimeHours}h`,
-      subtext: 'in hours',
-      description: 'Average time to resolve',
+      title: 'Pending - Customer',
+      value: customerWaitingCount.toLocaleString(),
+      subtext: `${customerWaitingPercentage.toFixed(1)}% of total`,
+      insight: isWaitingHigh ? `${Math.round(customerWaitingCount * 0.3)} customers waiting >24 hours - Draft responses now` : 'Customer responses manageable',
+      description: 'Awaiting customer response',
       icon: Clock,
-      color: avgResolutionTimeHours < 24 ? 'text-green-400' : avgResolutionTimeHours < 72 ? 'text-yellow-400' : 'text-red-400',
-      bgColor: avgResolutionTimeHours < 24 ? 'bg-green-500/10' : avgResolutionTimeHours < 72 ? 'bg-yellow-500/10' : 'bg-red-500/10',
-      tooltip: `Max: ${maxResolutionTime}h, Min: ${minResolutionTime}h, Median: ${medianResolutionTime}h`,
-      trend: avgResolutionTimeHours < 48 ? 'down' : 'up',
+      color: isWaitingHigh ? 'text-red-400' : 'text-yellow-400',
+      bgColor: isWaitingHigh ? 'bg-red-500/10' : 'bg-yellow-500/10',
+      tooltip: 'Threads awaiting customer action',
+      trend: customerWaitingPercentage > 30 ? 'up' : 'down',
+      showAI: isWaitingHigh,
+    },
+    {
+      title: 'Pending - Internal',
+      value: internalPendingCount.toLocaleString(),
+      subtext: `${internalPendingPercentage.toFixed(1)}% of total`,
+      insight: isInternalPendingHigh ? `${Math.round(internalPendingCount * 0.2)} items can be auto-delegated - Optimize workload` : 'Internal workflow balanced',
+      description: 'Awaiting internal action',
+      icon: Briefcase,
+      color: isInternalPendingHigh ? 'text-red-400' : 'text-orange-400',
+      bgColor: isInternalPendingHigh ? 'bg-red-500/10' : 'bg-orange-500/10',
+      tooltip: 'Threads requiring internal company action',
+      trend: internalPendingPercentage > 15 ? 'up' : 'down',
+      showAI: isInternalPendingHigh,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-      {kpiItems.map((item, index) => {
+    <div className="grid grid-cols-5 gap-4 mb-8">
+            {kpiItems.map((item, index) => {
         const Icon = item.icon;
-        const TrendIcon = item.trend === 'up' ? TrendingUp : TrendingDown;
-        const trendColor = item.trend === 'up' ? 'text-green-400' : 'text-red-400';
-        
+
         return (
           <Card 
             key={index} 
-            className="relative overflow-hidden group hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl bg-gray-900 border-gray-700"
+            className={`relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl bg-gray-900 border-gray-700 ${
+              item.showAI ? 'border-l-4 border-l-purple-500 hover:border-l-purple-400' : 'hover:border-purple-500/30'
+            } hover:scale-[1.02] hover:-translate-y-1`}
             title={item.tooltip}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            {/* AI Sparkle Indicator */}
+            {item.showAI && (
+              <div className="absolute top-2 right-2 z-10">
+                <Sparkles className="h-4 w-4 text-purple-400 animate-pulse" />
+              </div>
+            )}
+            
+            {/* Purple glow effect on hover */}
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${
+              item.showAI ? 'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent' : ''
+            }`} />
+            
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
               <CardTitle className="text-sm font-medium text-gray-300">
                 {item.title}
               </CardTitle>
-              <div className="flex items-center gap-2">
-                {item.badge && (
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    item.badge === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
-                  }`}>
-                    {item.badge}
-                  </span>
-                )}
-                <div className={`p-2 rounded-lg ${item.bgColor}`}>
-                  <Icon className={`h-4 w-4 ${item.color}`} />
-                </div>
+              <div className={`p-2 rounded-lg ${item.bgColor} group-hover:scale-110 transition-transform duration-200`}>
+                <Icon className={`h-4 w-4 ${item.color}`} />
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               <div>
                 <div className="text-2xl font-bold text-white mb-1">{item.value}</div>
                 <div className="text-sm text-gray-400 mb-2">{item.subtext}</div>
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-500">{item.description}</p>
-                  <div className="flex items-center gap-1">
-                    <TrendIcon className={`h-3 w-3 ${trendColor}`} />
-                    {item.progress && (
-                      <div className="w-12 bg-gray-700 rounded-full h-1.5">
-                        <div 
-                          className={`h-1.5 rounded-full ${
-                            item.progress > 70 ? 'bg-green-400' : item.progress > 50 ? 'bg-yellow-400' : 'bg-red-400'
-                          }`}
-                          style={{ width: `${item.progress}%` }}
-                        />
-                      </div>
-                    )}
+                
+                {/* AI Insight */}
+                {item.insight && (
+                  <div className={`mb-3 p-2 rounded-md text-xs ${
+                    item.showAI ? 'bg-purple-500/10 border border-purple-500/20 text-purple-200' : 'bg-gray-800/50 text-gray-400'
+                  }`}>
+                    {item.insight}
                   </div>
-                </div>
+                                )}
               </div>
             </CardContent>
           </Card>
@@ -200,21 +182,21 @@ export function EisenhowerDistributionCard({ data }: { data: KPIData }) {
 
   const quadrants = [
     {
-      name: 'Do',
+      name: 'Do - Now',
       value: distribution.do,
       percentage: Math.round((distribution.do / total) * 100),
       color: 'bg-red-500',
       description: 'Important & Urgent',
     },
     {
-      name: 'Schedule',
+      name: 'Schedule - Later',
       value: distribution.schedule,
       percentage: Math.round((distribution.schedule / total) * 100),
       color: 'bg-yellow-500',
       description: 'Important, Not Urgent',
     },
     {
-      name: 'Delegate',
+      name: 'Delegate - Team',
       value: distribution.delegate,
       percentage: Math.round((distribution.delegate / total) * 100),
       color: 'bg-blue-500',

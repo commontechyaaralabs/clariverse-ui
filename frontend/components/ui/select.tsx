@@ -10,6 +10,7 @@ interface SelectContextValue {
   onValueChange: (value: string) => void
   open: boolean
   setOpen: (open: boolean) => void
+  triggerRef: React.RefObject<HTMLButtonElement | null>
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null)
@@ -31,9 +32,10 @@ interface SelectProps {
 
 export function Select({ value, onValueChange, children }: SelectProps) {
   const [open, setOpen] = React.useState(false)
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
 
   return (
-    <SelectContext.Provider value={{ value, onValueChange, open, setOpen }}>
+    <SelectContext.Provider value={{ value, onValueChange, open, setOpen, triggerRef }}>
       <div className="relative">
         {children}
       </div>
@@ -54,10 +56,11 @@ export function SelectTrigger({
   "aria-label": ariaLabel,
   ...props 
 }: SelectTriggerProps) {
-  const { open, setOpen } = useSelectContext()
+  const { open, setOpen, triggerRef } = useSelectContext()
 
   return (
     <button
+      ref={triggerRef}
       type="button"
       role="combobox"
       aria-expanded={open}
@@ -101,23 +104,29 @@ interface SelectContentProps {
 }
 
 export function SelectContent({ children, className }: SelectContentProps) {
-  const { open, setOpen } = useSelectContext()
+  const { open, setOpen, triggerRef } = useSelectContext()
   const [position, setPosition] = React.useState({ top: 0, left: 0 })
-  const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const contentRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     if (open && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
+      // Use viewport coordinates for fixed positioning
       setPosition({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
+        top: rect.bottom + 4,
+        left: rect.left,
       })
     }
   }, [open])
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
+      if (
+        triggerRef.current && 
+        contentRef.current &&
+        !triggerRef.current.contains(event.target as Node) &&
+        !contentRef.current.contains(event.target as Node)
+      ) {
         setOpen(false)
       }
     }
@@ -132,8 +141,9 @@ export function SelectContent({ children, className }: SelectContentProps) {
 
   return (
     <div
+      ref={contentRef}
       className={clsx(
-        "neu-raised absolute z-50 min-w-[8rem] overflow-hidden rounded-md border border-border",
+        "neu-raised fixed z-[9999] min-w-[8rem] overflow-visible rounded-md border border-border",
         "bg-card text-card-foreground shadow-md",
         className
       )}
@@ -142,7 +152,7 @@ export function SelectContent({ children, className }: SelectContentProps) {
         left: position.left,
       }}
     >
-      <div className="p-1">
+      <div className="p-1 overflow-visible">
         {children}
       </div>
     </div>
@@ -172,8 +182,10 @@ export function SelectItem({
   return (
     <div
       className={clsx(
-        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none",
-        "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none",
+        "transition-all duration-200 ease-in-out border border-transparent",
+        "hover:bg-accent hover:text-accent-foreground hover:scale-105 hover:shadow-md hover:z-10 hover:border-gray-400 hover:border-2",
+        "focus:bg-accent focus:text-accent-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         selectedValue === value && "bg-accent text-accent-foreground",
         className

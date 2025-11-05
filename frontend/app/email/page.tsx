@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { 
   getKPIs, 
   getEisenhowerThreads, 
@@ -36,7 +35,8 @@ import { EisenhowerMatrix } from '@/components/email/EisenhowerMatrix';
 import { RiskAssessmentCard } from '@/components/email/RiskAssessmentCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Target, AlertCircle, CheckCircle, Clock, ArrowUpRight } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RefreshCw, Target, AlertCircle, CheckCircle, Clock, ArrowUpRight, ArrowRight, Sparkles, Bot, Wand2, Zap, MessageSquare } from 'lucide-react';
 
 export default function EmailDashboard() {
   // Data states
@@ -54,6 +54,7 @@ export default function EmailDashboard() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuadrant, setSelectedQuadrant] = useState<string | null>(null);
+  const [selectedPriorityForTopics, setSelectedPriorityForTopics] = useState<string | null>(null);
   
   // Filters state
   const [filters, setFilters] = useState<FilterState>({
@@ -64,7 +65,86 @@ export default function EmailDashboard() {
     topic: [],
     search: '',
   });
+  
+  // Date filter preset state
+  const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
+  
+  // Calculate date range based on preset
+  const calculateDateRange = useCallback((preset: string) => {
+    const today = new Date();
+    const endDate = new Date(today);
+    endDate.setHours(23, 59, 59, 999);
+    
+    let startDate = new Date(today);
+    
+    switch (preset) {
+      case 'All':
+        // Return empty date range to show all data
+        return { start: '', end: '' };
+      case 'Current day':
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      case 'One Week':
+        startDate.setDate(today.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      case 'One Month':
+        startDate.setMonth(today.getMonth() - 1);
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      case '6 Months':
+        startDate.setMonth(today.getMonth() - 6);
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      case 'Custom':
+        // Don't auto-calculate for custom
+        return { start: filters.dateRange.start, end: filters.dateRange.end };
+      default:
+        startDate.setMonth(today.getMonth() - 1);
+        startDate.setHours(0, 0, 0, 0);
+    }
+    
+    // Format dates as YYYY-MM-DD for date inputs
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    return {
+      start: formatDate(startDate),
+      end: formatDate(endDate)
+    };
+  }, [filters.dateRange]);
+  
+  // Handle preset change
+  const handlePresetChange = useCallback((preset: string) => {
+    setDateFilterPreset(preset);
+    if (preset !== 'Custom') {
+      const dateRange = calculateDateRange(preset);
+      setFilters(prev => ({
+        ...prev,
+        dateRange
+      }));
+    } else {
+      // For Custom, keep existing date range
+      // Date range will be updated when user selects dates
+    }
+  }, [calculateDateRange]);
 
+  // Initialize date range on mount
+  useEffect(() => {
+    if (dateFilterPreset !== 'Custom') {
+      const dateRange = calculateDateRange(dateFilterPreset);
+      setFilters(prev => ({
+        ...prev,
+        dateRange
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
+  
   // Load initial data
   useEffect(() => {
     loadDashboardData();
@@ -147,53 +227,6 @@ export default function EmailDashboard() {
     return generatePriorityResolutionDataForQuadrant(eisenhowerThreads, selectedQuadrant);
   }, [selectedQuadrant, eisenhowerThreads]);
 
-  // Prepare radar chart data for quadrant performance
-  const radarData = useMemo(() => {
-    const quadrants = ['do', 'schedule', 'delegate', 'delete'] as const;
-    
-    return quadrants.map(quadrant => {
-      const quadrantThreads = eisenhowerThreads.filter(thread => thread.quadrant === quadrant);
-      
-      // Calculate performance metrics for this quadrant
-      const avgImportance = quadrantThreads.reduce((sum, thread) => sum + thread.importance_score, 0) / quadrantThreads.length || 0;
-      const avgUrgency = quadrantThreads.reduce((sum, thread) => sum + thread.urgency_flag, 0) / quadrantThreads.length || 0;
-      const avgBusinessImpact = quadrantThreads.reduce((sum, thread) => sum + thread.business_impact_score, 0) / quadrantThreads.length || 0;
-      const avgSentiment = quadrantThreads.reduce((sum, thread) => sum + thread.overall_sentiment, 0) / quadrantThreads.length || 0;
-      const escalationRate = quadrantThreads.filter(thread => thread.escalation_count > 0).length / quadrantThreads.length || 0;
-
-      // Normalize metrics to 0-100 scale
-      const normalizedMetrics = {
-        importance: Math.round(avgImportance * 100),
-        urgency: Math.round(avgUrgency * 100),
-        businessImpact: Math.round(avgBusinessImpact),
-        sentiment: Math.round((avgSentiment / 5) * 100),
-        escalationRate: Math.round(escalationRate * 100),
-        resolutionRate: Math.round((quadrantThreads.filter(t => t.resolution_status === 'closed').length / quadrantThreads.length) * 100),
-        efficiency: Math.round((100 - escalationRate * 100) * (avgSentiment / 5)),
-        workload: Math.round(Math.min(100, quadrantThreads.length * 2)) // Scale thread count to 0-100
-      };
-
-      return {
-        quadrant: quadrant.charAt(0).toUpperCase() + quadrant.slice(1),
-        ...normalizedMetrics,
-        threadCount: quadrantThreads.length
-      };
-    });
-  }, [eisenhowerThreads]);
-
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      const value = payload[0].value;
-      const name = payload[0].name;
-      return (
-        <div className="bg-blue-500 text-white px-3 py-2 rounded-lg shadow-lg">
-          <div className="font-medium">{name}: {value}</div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   // Event handlers
   const handleThreadClick = useCallback(async (thread: EisenhowerThread) => {
@@ -234,12 +267,6 @@ export default function EmailDashboard() {
     console.log(`KPI action: ${action} for ${kpiType}`);
     // Apply KPI-based filtering
     switch (kpiType) {
-      case 'Urgent Threads':
-        setFilters(prev => ({ ...prev, urgency: ['critical', 'high'] }));
-        break;
-      case 'Critical Issues':
-        setFilters(prev => ({ ...prev, priority: ['P1'] }));
-        break;
       default:
         break;
     }
@@ -257,16 +284,18 @@ export default function EmailDashboard() {
 
   const handlePriorityClick = useCallback((priority: string, status: string) => {
     console.log(`Priority clicked: ${priority}, Status: ${status}`);
-    setFilters(prev => ({ 
-      ...prev, 
-      priority: prev.priority.includes(priority) 
+    // Set selected priority for topic filtering
+    setSelectedPriorityForTopics(priority === selectedPriorityForTopics ? null : priority);
+    setFilters(prev => ({
+      ...prev,
+      priority: prev.priority.includes(priority)
         ? prev.priority.filter(p => p !== priority)
         : [...prev.priority, priority],
-      status: prev.status.includes(status) 
+      status: prev.status.includes(status)
         ? prev.status.filter(s => s !== status)
         : [...prev.status, status]
     }));
-  }, []);
+  }, [selectedPriorityForTopics]);
 
   const handleActionableCardAction = useCallback((action: string, cardId: string) => {
     console.log(`Actionable card action: ${action} for card ${cardId}`);
@@ -354,47 +383,83 @@ export default function EmailDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Email Management Dashboard
-            </h1>
-            <p className="text-gray-400">
-              Comprehensive view of email threads, priorities, and team performance
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold text-white">
+                Fluid Intelligence Dashboard - Email
+              </h1>
+            </div>
+            <p className="text-gray-400 flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-purple-400" />
+              AI-powered insights for email threads, priorities, and team performance
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3">
+            {/* AI Insights Button */}
+            <div className="flex justify-end">
+              <Button
+                onClick={() => {
+                  // Handle AI insights generation
+                  console.log('Get Today\'s AI Insights on Email');
+                }}
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 group h-[38px] px-6"
+              >
+                <Sparkles className="h-4 w-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
+                Get Today's AI Insights on Email
+              </Button>
+            </div>
+            
             {/* Date Filters */}
-            <div className="flex items-end gap-2">
-              <div className="flex flex-col">
-                <label className="text-xs text-gray-400 mb-1">Start Date</label>
-                <input
-                  type="date"
-                  value={filters.dateRange.start}
-                  onChange={(e) => handleFiltersChange({
-                    ...filters,
-                    dateRange: { ...filters.dateRange, start: e.target.value }
-                  })}
-                  className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            <div className="flex items-center gap-2 justify-end">
+              <label className="text-xs text-gray-400 whitespace-nowrap">Filters:</label>
+              <div className="relative z-50">
+                <Select value={dateFilterPreset} onValueChange={handlePresetChange}>
+                  <SelectTrigger className="w-[180px] bg-gray-800 border-gray-600 text-white text-sm h-[38px]">
+                    <SelectValue placeholder="Select period" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600 text-white z-[9999]">
+                    <SelectItem value="All">All</SelectItem>
+                    <SelectItem value="Current day">Current day</SelectItem>
+                    <SelectItem value="One Week">One Week</SelectItem>
+                    <SelectItem value="One Month">One Month</SelectItem>
+                    <SelectItem value="6 Months">6 Months</SelectItem>
+                    <SelectItem value="Custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex flex-col">
-                <label className="text-xs text-gray-400 mb-1">End Date</label>
-                <input
-                  type="date"
-                  value={filters.dateRange.end}
-                  onChange={(e) => handleFiltersChange({
-                    ...filters,
-                    dateRange: { ...filters.dateRange, end: e.target.value }
-                  })}
-                  className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+              
+              {/* Custom Date Pickers - Only show when Custom is selected */}
+              {dateFilterPreset === 'Custom' && (
+                <>
+                  <label className="text-xs text-gray-400 whitespace-nowrap">Start Date:</label>
+                  <input
+                    type="date"
+                    value={filters.dateRange.start}
+                    onChange={(e) => handleFiltersChange({
+                      ...filters,
+                      dateRange: { ...filters.dateRange, start: e.target.value }
+                    })}
+                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[38px]"
+                  />
+                  <label className="text-xs text-gray-400 whitespace-nowrap">End Date:</label>
+                  <input
+                    type="date"
+                    value={filters.dateRange.end}
+                    onChange={(e) => handleFiltersChange({
+                      ...filters,
+                      dateRange: { ...filters.dateRange, end: e.target.value }
+                    })}
+                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[38px]"
+                  />
+                </>
+              )}
+              
               <Button
                 size="sm"
                 onClick={handleApplyFilters}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 h-[38px]"
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
                 Apply
+                <RefreshCw className="h-4 w-4 ml-2" />
               </Button>
             </div>
           </div>
@@ -408,226 +473,163 @@ export default function EmailDashboard() {
                 <KPICards data={kpiData} />
             )}
 
-            {/* Radar Chart Section - Can split when quadrant selected */}
+            {/* Eisenhower Quadrant Distribution with Side Panel */}
             {eisenhowerThreads.length > 0 && (
-              <div className={`${selectedQuadrant ? 'grid grid-cols-1 xl:grid-cols-2 gap-6 items-start' : 'w-full'}`}>
-                {/* Left Side - Radar Chart Only */}
-                <div className={`${selectedQuadrant ? 'w-full' : 'w-full'}`}>
-                  <Card className="bg-gray-900 border-gray-700">
-                    <CardHeader>
+              <div className={`grid gap-6 ${selectedQuadrant ? 'grid-cols-1 xl:grid-cols-2 items-stretch' : 'grid-cols-1'}`}>
+                {/* Left Side - Eisenhower Quadrant Distribution */}
+                <Card className={`bg-gray-900 border-gray-700 ${selectedQuadrant ? 'h-full flex flex-col' : ''}`}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
                       <CardTitle className="flex items-center gap-2 text-white">
                         <Target className="h-5 w-5 text-purple-400" />
-                        Email Thread Analysis Dashboard
+                        Eisenhower Quadrant Distribution
                       </CardTitle>
-                      <CardDescription className="text-gray-400">
-                        Comprehensive performance metrics and quadrant distribution
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Quadrant Summary at Top */}
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                      <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
+                        <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+                        <span className="text-xs text-purple-300 font-medium">AI Priority Analysis</span>
+                      </div>
+                    </div>
+                    <CardDescription className="text-gray-400 flex items-center gap-2">
+                      <span>Focus on critical items first</span>
+                      <span className="text-purple-400">•</span>
+                      <span>Thread distribution across priority quadrants</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className={selectedQuadrant ? 'flex-1 flex flex-col' : ''}>
+                    <div className={`relative ${selectedQuadrant ? 'flex-1' : ''}`}>
+                      {/* Quadrant Grid */}
+                      <div className={`grid grid-cols-2 gap-0 border border-gray-600 rounded-lg overflow-hidden ${selectedQuadrant ? 'h-full' : ''}`}>
                         {['do', 'schedule', 'delegate', 'delete'].map((quadrant) => {
-                          const quadrantThreads = eisenhowerThreads.filter(thread => thread.quadrant === quadrant);
-                          const percentage = Math.round((quadrantThreads.length / eisenhowerThreads.length) * 100);
-                          const colors = {
-                            do: { color: 'text-red-400', bg: 'bg-red-500' },
-                            schedule: { color: 'text-yellow-400', bg: 'bg-yellow-500' },
-                            delegate: { color: 'text-blue-400', bg: 'bg-blue-500' },
-                            delete: { color: 'text-gray-400', bg: 'bg-gray-500' }
-                          }[quadrant] || { color: 'text-gray-400', bg: 'bg-gray-500' };
-                          
-                          const labels = {
-                            do: 'Do',
-                            schedule: 'Schedule', 
-                            delegate: 'Delegate',
-                            delete: 'Delete'
-                          };
-                          
-                          const isSelected = selectedQuadrant === quadrant;
-                          
-                          return (
-                            <div 
-                              key={quadrant} 
-                              className={`text-center cursor-pointer hover:bg-gray-800/50 rounded-lg p-4 transition-all duration-200 ${
-                                isSelected ? 'bg-gray-800/70 ring-2 ring-purple-400 shadow-lg' : ''
-                              }`}
-                              onClick={() => handleQuadrantClick(quadrant)}
-                            >
-                              <div className="flex items-center justify-center mb-3">
-                                <div className={`w-4 h-4 rounded-full ${colors.bg} mr-2 flex-shrink-0`} />
-                                <span className="text-sm font-medium text-gray-300">
-                                  {labels[quadrant as keyof typeof labels]}
-                                </span>
-                              </div>
-                              <div className="text-3xl font-bold text-white mb-2">
-                                {quadrantThreads.length}
-                              </div>
-                              <div className="text-sm text-gray-400 mb-3">
-                                {percentage}%
-                              </div>
-                              <div className="text-xs text-gray-500 leading-tight">
-                                {quadrant === 'do' && 'Important & Urgent'}
-                                {quadrant === 'schedule' && 'Important, Not Urgent'}
-                                {quadrant === 'delegate' && 'Not Important, Urgent'}
-                                {quadrant === 'delete' && 'Not Important, Not Urgent'}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {/* Radar Chart Visualization */}
-                      <div className="h-[500px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <RadarChart 
-                            data={radarData} 
-                            margin={{ top: 40, right: 60, bottom: 40, left: 60 }}
-                            startAngle={45}
+                        const quadrantThreads = eisenhowerThreads.filter(thread => thread.quadrant === quadrant);
+                        const percentageValue = (quadrantThreads.length / eisenhowerThreads.length) * 100;
+                        const percentage = percentageValue < 1 ? parseFloat(percentageValue.toFixed(1)) : Math.round(percentageValue);
+                        const colors = {
+                          do: { bg: 'bg-red-500' },
+                          schedule: { bg: 'bg-yellow-500' },
+                          delegate: { bg: 'bg-blue-500' },
+                          delete: { bg: 'bg-gray-500' }
+                        }[quadrant] || { bg: 'bg-gray-500' };
+                        
+                                                const labels = {
+                          do: 'Do - Now',
+                          schedule: 'Schedule - Later',
+                          delegate: 'Delegate - Team',
+                          delete: 'Postponed'
+                        };
+                        
+                        const descriptions = {
+                          do: 'Important & Urgent',
+                          schedule: 'Important, Not Urgent',
+                          delegate: 'Not Important, Urgent',
+                          delete: 'Not Important, Not Urgent'
+                        };
+                        
+                        const isSelected = selectedQuadrant === quadrant;
+                        // Add borders for separators: right border for left column, bottom border for top row
+                        const isLeftColumn = quadrant === 'do' || quadrant === 'delegate';
+                        const isTopRow = quadrant === 'do' || quadrant === 'schedule';
+                        const isDoQuadrant = quadrant === 'do';
+                        const hasHighPriority = isDoQuadrant && quadrantThreads.length > 500;
+                        
+                        return (
+                          <div 
+                            key={quadrant} 
+                            className={`relative text-center cursor-pointer hover:bg-gray-800/50 p-4 transition-all duration-200 group ${
+                              isSelected ? 'bg-gray-800/70 ring-2 ring-purple-400 shadow-lg' : ''
+                            } ${
+                              isLeftColumn ? 'border-r border-gray-600' : ''
+                            } ${
+                              isTopRow ? 'border-b border-gray-600' : ''
+                            } ${
+                              hasHighPriority ? 'hover:ring-2 hover:ring-purple-400/50' : ''
+                            }`}
+                            onClick={() => handleQuadrantClick(quadrant)}
                           >
-                            <PolarGrid 
-                              stroke="#374151" 
-                              strokeWidth={1}
-                              radialLines={true}
-                            />
-                            <PolarAngleAxis 
-                              dataKey="quadrant" 
-                              tick={{ 
-                                fill: '#ffffff', 
-                                fontSize: 14, 
-                                fontWeight: 'bold'
-                              }}
-                              axisLine={false}
-                              tickLine={false}
-                            />
-                            <PolarRadiusAxis 
-                              angle={90} 
-                              domain={[0, 100]} 
-                              tick={{ 
-                                fill: '#9ca3af', 
-                                fontSize: 11
-                              }}
-                              axisLine={false}
-                              tickLine={false}
-                              tickCount={5}
-                            />
+                            {/* Purple glow for Do quadrant when high priority */}
+                            {hasHighPriority && (
+                              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg" />
+                            )}
+                            <div className="flex items-center justify-center mb-2 relative z-10">
+                              {hasHighPriority && (
+                                <Sparkles className="absolute -left-2 h-3 w-3 text-purple-400 animate-pulse" />
+                              )}
+                              <div className={`w-4 h-4 rounded-full ${colors.bg} mr-2 relative z-10`} />
+                              <span className="text-sm font-medium text-gray-300 relative z-10">
+                                {labels[quadrant as keyof typeof labels]}
+                              </span>
+                            </div>
+                            <div className="text-2xl font-bold text-white mb-1">
+                              {quadrantThreads.length}
+                            </div>
+                            <div className="text-xs text-gray-400 mb-2">
+                              {percentage}%
+                            </div>
+                            <div className="text-xs text-gray-500 mb-3">
+                              {descriptions[quadrant as keyof typeof descriptions]}
+                            </div>
                             
-                            {/* Performance metrics as colored segments */}
-                            <Radar
-                              name="Importance"
-                              dataKey="importance"
-                              stroke="#3b82f6"
-                              fill="#3b82f6"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Urgency"
-                              dataKey="urgency"
-                              stroke="#10b981"
-                              fill="#10b981"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Business Impact"
-                              dataKey="businessImpact"
-                              stroke="#f59e0b"
-                              fill="#f59e0b"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Sentiment"
-                              dataKey="sentiment"
-                              stroke="#ec4899"
-                              fill="#ec4899"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#ec4899', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Resolution Rate"
-                              dataKey="resolutionRate"
-                              stroke="#8b5cf6"
-                              fill="#8b5cf6"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Efficiency"
-                              dataKey="efficiency"
-                              stroke="#06b6d4"
-                              fill="#06b6d4"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#06b6d4', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Workload"
-                              dataKey="workload"
-                              stroke="#84cc16"
-                              fill="#84cc16"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#84cc16', strokeWidth: 2, r: 4 }}
-                            />
-                            <Radar
-                              name="Escalation Rate"
-                              dataKey="escalationRate"
-                              stroke="#f97316"
-                              fill="#f97316"
-                              fillOpacity={0.8}
-                              strokeWidth={2}
-                              dot={{ fill: '#f97316', strokeWidth: 2, r: 4 }}
-                            />
-                              
-                            <Tooltip content={<CustomTooltip />} />
-                          </RadarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                            {/* Action Button for Do quadrant */}
+                            {quadrant === 'do' && quadrantThreads.length > 0 && (
+                              <Button
+                                size="sm"
+                                className="w-full mt-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-xs border-0 shadow-lg hover:shadow-purple-500/30 transition-all duration-200"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleQuadrantClick(quadrant);
+                                }}
+                              >
+                                <Target className="h-3 w-3 mr-1.5" />
+                                Work on Top Priority
+                                <ArrowRight className="h-3 w-3 ml-1.5" />
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
                 {/* Right Side - Priority vs Resolution Status (only when quadrant selected) */}
                 {selectedQuadrant && (
-                  <div className="w-full h-full">
-                    <Card className="h-full">
-                      <CardHeader className="pb-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <Target className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                            <CardTitle className="text-lg truncate">
-                              Priority vs Resolution Status - {selectedQuadrant.charAt(0).toUpperCase() + selectedQuadrant.slice(1)}
-                            </CardTitle>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedQuadrant(null)}
-                            className="text-gray-400 hover:text-white flex-shrink-0 ml-2"
-                          >
-                            ✕ Close
-                          </Button>
+                  <Card className="h-full">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Target className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                          <CardTitle className="text-lg truncate">
+                            Priority vs Resolution Status - {selectedQuadrant.charAt(0).toUpperCase() + selectedQuadrant.slice(1)}
+                          </CardTitle>
                         </div>
-                        <CardDescription className="text-sm">
-                          Analysis for {selectedQuadrant} quadrant threads ({eisenhowerThreads.filter(thread => thread.quadrant === selectedQuadrant).length} threads)
-                        </CardDescription>
-                      </CardHeader>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedQuadrant(null);
+                            setSelectedPriorityForTopics(null);
+                          }}
+                          className="text-gray-400 hover:text-white flex-shrink-0 ml-2"
+                        >
+                          ✕ Close
+                        </Button>
+                      </div>
+                      <CardDescription className="text-sm">
+                        Analysis for {selectedQuadrant} quadrant threads ({eisenhowerThreads.filter(thread => thread.quadrant === selectedQuadrant).length} threads)
+                      </CardDescription>
+                    </CardHeader>
                       <CardContent className="pt-0">
                         {quadrantPriorityData.length > 0 && (
                           <PriorityResolutionChart 
                             data={quadrantPriorityData} 
+                            threads={eisenhowerThreads}
+                            selectedQuadrant={selectedQuadrant}
+                            selectedPriority={selectedPriorityForTopics}
                             onPriorityClick={handlePriorityClick}
                           />
                         )}
                       </CardContent>
-                    </Card>
-                  </div>
+                  </Card>
                 )}
               </div>
             )}

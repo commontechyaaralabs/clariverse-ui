@@ -33,10 +33,18 @@ const quadrantColors = {
 };
 
 const quadrantLabels = {
-  do: 'Do',
-  schedule: 'Schedule',
-  delegate: 'Delegate',
+  do: 'Do - Now',
+  schedule: 'Schedule - Later',
+  delegate: 'Delegate - Team',
   delete: 'Delete',
+};
+
+// Define allowed priorities for each quadrant
+const quadrantPriorities: Record<string, string[]> = {
+  do: ['P1', 'P2'],
+  schedule: ['P2', 'P3'],
+  delegate: ['P3', 'P4'],
+  delete: ['P4', 'P5']
 };
 
 export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selectedQuadrant }: EisenhowerMatrixProps) {
@@ -368,14 +376,14 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
               </CardHeader>
               
               <CardContent className="space-y-4">
-                {/* Priority Filter Buttons - Individual for each quadrant */}
-                <div className="space-y-2">
-                  <div className="text-xs font-medium text-gray-300">Filter by Priority</div>
-                  <div className="flex flex-wrap gap-2">
-                    {['P1', 'P2', 'P3', 'P4', 'P5'].map((priority) => {
-                      const priorityCount = quadrantThreads.filter(t => t.priority === priority).length;
-                      const isSelected = selectedPriority === priority;
-                      const baseColors = getPriorityFilterColor(priority);
+                  {/* Priority Filter Buttons - Individual for each quadrant */}
+                  <div className="space-y-2">
+                    <div className="text-xs font-medium text-gray-300">Filter by Priority</div>
+                    <div className="flex flex-wrap gap-2">
+                      {(quadrantPriorities[quadrant] || []).map((priority) => {
+                        const priorityCount = quadrantThreads.filter(t => t.priority === priority).length;
+                        const isSelected = selectedPriority === priority;
+                        const baseColors = getPriorityFilterColor(priority);
                       
                       return (
                         <button
@@ -580,7 +588,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
                       
                       {/* Page numbers */}
                       {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNum;
+                        let pageNum: number;
                         if (totalPages <= 5) {
                           pageNum = i + 1;
                         } else if (currentPage <= 3) {

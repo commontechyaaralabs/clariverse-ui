@@ -1,16 +1,20 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { PriorityResolutionData } from '@/lib/api';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';                                                    
+import { PriorityResolutionData, EisenhowerThread } from '@/lib/api';
 import { AlertTriangle, CheckCircle, Clock, Target } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface PriorityResolutionChartProps {
   data: PriorityResolutionData[];
+  threads?: EisenhowerThread[];
+  selectedQuadrant?: string | null;
+  selectedPriority?: string | null;
   onPriorityClick?: (priority: string, status: string) => void;
 }
 
-export function PriorityResolutionChart({ data, onPriorityClick }: PriorityResolutionChartProps) {
+export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, selectedPriority, onPriorityClick }: PriorityResolutionChartProps) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -72,10 +76,39 @@ export function PriorityResolutionChart({ data, onPriorityClick }: PriorityResol
     }
   };
 
-  const totalOpen = data.reduce((sum, d) => sum + d.openCustomer + d.openCompany, 0);
+  const totalOpen = data.reduce((sum, d) => sum + d.openCustomer + d.openCompany, 0);                                                                           
   const totalInProgress = 0; // No inProgress property in the interface
   const totalClosed = data.reduce((sum, d) => sum + d.closed, 0);
   const totalThreads = totalOpen + totalInProgress + totalClosed;
+
+  // Calculate topic distribution for selected quadrant and priority
+  const topicDistribution = useMemo(() => {
+    if (!threads.length || !selectedQuadrant) return [];
+
+    // Filter threads by quadrant
+    let filteredThreads = threads.filter(thread => thread.quadrant === selectedQuadrant);
+
+    // If a specific priority is selected, filter by that priority
+    if (selectedPriority) {
+      filteredThreads = filteredThreads.filter(thread => thread.priority === selectedPriority);
+    } else {
+      // If no specific priority selected, include all priorities from the data
+      const prioritiesInData = data.map(d => d.priority);
+      filteredThreads = filteredThreads.filter(thread => prioritiesInData.includes(thread.priority));
+    }
+
+    // Count topics
+    const topicCounts: Record<string, number> = {};
+    filteredThreads.forEach(thread => {
+      const topic = thread.topic || 'Unknown';
+      topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+    });
+
+    // Convert to array and sort by count (descending)
+    return Object.entries(topicCounts)
+      .map(([topic, count]) => ({ topic, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [threads, selectedQuadrant, selectedPriority, data]);
 
   return (
     <Card>
@@ -98,6 +131,7 @@ export function PriorityResolutionChart({ data, onPriorityClick }: PriorityResol
                 tick={{ fill: '#9ca3af', fontSize: 12 }}
                 axisLine={{ stroke: '#4b5563' }}
                 tickLine={{ stroke: '#4b5563' }}
+                domain={[0, 'auto']}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
@@ -126,67 +160,31 @@ export function PriorityResolutionChart({ data, onPriorityClick }: PriorityResol
           </ResponsiveContainer>
         </div>
 
-        {/* Priority Summary */}
+        {/* Topics Summary */}
         <div className="mt-6 space-y-4">
-          <h4 className="text-sm font-medium text-gray-300">Priority Breakdown</h4>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-            {data.map((priority) => {
-              const total = priority.openCustomer + priority.openCompany + priority.closed;
-              const openCustomerPercentage = Math.round((priority.openCustomer / total) * 100);
-              const isCritical = priority.priority === 'P1' && priority.openCustomer > 0;
-              
-              return (
+          <h4 className="text-sm font-medium text-gray-300">Topics</h4>
+          {topicDistribution.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {topicDistribution.map((item) => (
                 <div
-                  key={priority.priority}
-                  className={`p-3 rounded-lg border transition-colors cursor-pointer ${
-                    isCritical 
-                      ? 'bg-red-500/10 border-red-500/20 hover:bg-red-500/20' 
-                      : 'bg-gray-800 border-gray-700 hover:bg-gray-700'
-                  }`}
-                  onClick={() => onPriorityClick?.(priority.priority, 'open')}
+                  key={item.topic}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    {getPriorityIcon(priority.priority)}
-                    <span className="text-sm font-medium text-white">
-                      {priority.priority}
-                    </span>
-                    {isCritical && (
-                      <AlertTriangle className="h-3 w-3 text-red-400" />
-                    )}
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-400">Open - Customer:</span>
-                      <span className={`font-medium ${isCritical ? 'text-red-400' : 'text-blue-400'}`}>
-                        {priority.openCustomer}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-400">Open - Company:</span>
-                      <span className="text-orange-400 font-medium">{priority.openCompany}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-400">Closed:</span>
-                      <span className="text-green-400 font-medium">{priority.closed}</span>
-                    </div>
-                    <div className="pt-1 mt-1 border-t border-gray-600">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-gray-400">Total:</span>
-                        <span className="text-white font-medium">{total}</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-gray-400">Open Customer %:</span>
-                        <span className={`font-medium ${isCritical ? 'text-red-400' : 'text-gray-300'}`}>
-                          {openCustomerPercentage}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                  <Target className="h-3.5 w-3.5 text-purple-400 flex-shrink-0" />
+                  <span className="text-sm font-medium text-white">
+                    {item.topic}
+                  </span>
+                  <span className="text-xs font-semibold text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded-full">
+                    {item.count}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-400 text-sm">
+              No topics found for the selected criteria
+            </div>
+          )}
         </div>
 
       </CardContent>
