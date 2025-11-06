@@ -10,6 +10,15 @@ interface KPIRibbonProps {
 }
 
 export function KPIRibbon({ data }: KPIRibbonProps) {
+      const complianceCategories = Object.values(data.euComplianceScore.byRegulation);
+      const primaryComplianceCategory = complianceCategories[0];
+      const complianceTrend = primaryComplianceCategory && primaryComplianceCategory.trend.length > 1
+        ? primaryComplianceCategory.trend[primaryComplianceCategory.trend.length - 1] > primaryComplianceCategory.trend[0]
+          ? 'up'
+          : primaryComplianceCategory.trend[primaryComplianceCategory.trend.length - 1] < primaryComplianceCategory.trend[0]
+            ? 'down'
+            : 'stable'
+        : 'stable';
       const kpis = [
         {
           label: 'Team QA Score',
@@ -20,12 +29,12 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
           trend: data.overallTeamQAScore.trend[6] > data.overallTeamQAScore.trend[0] ? 'up' : 'down'
         },
         {
-          label: 'EU Compliance Score',
-          description: 'Granular European compliance score across GDPR, PSD2, MiFID, and AML regulations. Shows weighted average with financial risk tracking. Lower scores indicate higher regulatory risk and potential fines.',
+          label: 'Compliance Score',
+          description: 'Weighted compliance score built from transcript-detectable checks: consent disclosures, identity challenges, sanctions refusals, and suitability conversations. Highlights conversational gaps that create regulatory risk.',
           value: data.euComplianceScore.overallScore.toFixed(1),
           unit: '%',
           chart: null,
-          trend: data.euComplianceScore.byRegulation.gdpr.trend[6] > data.euComplianceScore.byRegulation.gdpr.trend[0] ? 'up' : 'down'
+          trend: complianceTrend
         },
         {
           label: 'Customer Emotion',

@@ -1,8 +1,10 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Clock, Euro, FileText, TrendingUp, CheckCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertTriangle, Clock, Euro, FileText, CheckCircle } from 'lucide-react';
 import { Violation } from '@/lib/voiceData';
 
 interface ViolationCenterProps {
@@ -46,16 +48,35 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'GDPR':
+      case 'CONSENT':
         return 'bg-purple-500/20 text-purple-400';
-      case 'PSD2':
+      case 'IDENTITY':
         return 'bg-blue-500/20 text-blue-400';
-      case 'MiFID':
-        return 'bg-green-500/20 text-green-400';
-      case 'AML':
+      case 'SANCTIONS':
         return 'bg-red-500/20 text-red-400';
+      case 'SUITABILITY':
+        return 'bg-green-500/20 text-green-400';
+      case 'CDD':
+        return 'bg-yellow-500/20 text-yellow-400';
       default:
         return 'bg-gray-500/20 text-gray-400';
+    }
+  };
+
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'CONSENT':
+        return 'Consent';
+      case 'IDENTITY':
+        return 'Identity';
+      case 'SANCTIONS':
+        return 'Sanctions';
+      case 'SUITABILITY':
+        return 'Suitability';
+      case 'CDD':
+        return 'Beneficial Ownership';
+      default:
+        return category;
     }
   };
 
@@ -72,6 +93,75 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
     }
   };
 
+  const [selectedViolation, setSelectedViolation] = useState<Violation | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleViolationClick = (violation: Violation) => {
+    setSelectedViolation(violation);
+    setIsDialogOpen(true);
+  };
+
+  const renderTranscriptSnippet = useMemo(() => {
+    if (!selectedViolation) return null;
+    const { transcriptExcerpt } = selectedViolation.evidence;
+    const parts = transcriptExcerpt.split(/(\[[^\]]+\])/g);
+    return (
+      <p className="text-sm leading-relaxed">
+        {parts.map((part, index) => {
+          if (/^\[.*\]$/.test(part)) {
+            return (
+              <span
+                key={index}
+                className="mx-1 rounded bg-[#b90abd]/20 px-1.5 py-0.5 text-[#b90abd]"
+              >
+                {part.replace(/\[|\]/g, '')}
+              </span>
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </p>
+    );
+  }, [selectedViolation]);
+
+  const renderFullTranscript = useMemo(() => {
+    if (!selectedViolation || !selectedViolation.evidence.fullTranscript) return null;
+    const segments = selectedViolation.evidence.fullTranscript;
+    return (
+      <div className="space-y-2">
+        {segments.map((segment, index) => (
+          <div
+            key={`${segment.speaker}-${index}`}
+            className={`flex items-start gap-3 rounded-lg border px-3 py-2 transition-all ${
+              segment.violation
+                ? 'border-[#b90abd]/60 bg-[#b90abd]/10 shadow-[0_0_18px_rgba(185,10,189,0.15)]'
+                : 'border-white/10 bg-white/5'
+            }`}
+          >
+            <div className={`text-[11px] font-semibold uppercase tracking-wide ${
+              segment.speaker === 'agent'
+                ? 'text-[#b90abd]'
+                : segment.speaker === 'customer'
+                  ? 'text-teal-300'
+                  : 'text-white/50'
+            }`}
+            >
+              {segment.speaker}
+            </div>
+            <div className="flex-1 text-sm text-white/80">
+              {segment.text}
+            </div>
+            {segment.timestamp !== undefined && (
+              <div className="text-[10px] text-white/40">
+                {segment.timestamp}s
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }, [selectedViolation]);
+
   return (
     <Card>
       <CardHeader>
@@ -85,10 +175,10 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          Granular compliance violations with financial impact tracking and remediation status
+          Transcript-detected compliance violations with financial impact tracking and remediation status
         </p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 max-h-[32rem] overflow-y-auto pr-2">
         {/* Summary Stats */}
         <div className="grid grid-cols-4 gap-3">
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 hover:bg-red-500/15 transition-colors">
@@ -115,16 +205,17 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
         </div>
 
         {/* Violations List */}
-        <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
+        <div className="space-y-2">
           {violations.slice(0, 10).map((violation) => (
             <div
               key={violation.violationId}
-              className="bg-white/5 border border-white/10 rounded-lg p-3 hover:border-[#b90abd]/50 hover:bg-white/10 transition-all"
+              className="bg-white/5 border border-white/10 rounded-lg p-3 hover:border-[#b90abd]/50 hover:bg-white/10 transition-all cursor-pointer"
+              onClick={() => handleViolationClick(violation)}
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge className={getCategoryColor(violation.category)}>
-                    {violation.category}
+                    {getCategoryLabel(violation.category)}
                   </Badge>
                   <Badge className={getSeverityColor(violation.severity)}>
                     {violation.severity.toUpperCase()}
@@ -205,6 +296,106 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
           </div>
         )}
       </CardContent>
+
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) setSelectedViolation(null);
+      }}>
+        <DialogContent className="max-w-3xl bg-gray-950 border border-white/10 text-white max-h-[85vh] overflow-y-auto">
+          {selectedViolation && (
+            <div className="space-y-6">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400" />
+                  {getCategoryLabel(selectedViolation.category)} Violation
+                </DialogTitle>
+                <p className="text-xs text-white/60">
+                  Detected automatically from voice transcript at {formatDate(selectedViolation.timestamp)}
+                </p>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-semibold text-white">Violation Details</h4>
+                  <div className="space-y-1 text-sm text-white/70">
+                    <div>
+                      <span className="text-white/40">Regulation:</span> {selectedViolation.regulation}
+                    </div>
+                    <div>
+                      <span className="text-white/40">Severity:</span> {selectedViolation.severity.toUpperCase()}
+                    </div>
+                    <div>
+                      <span className="text-white/40">Agent:</span> {selectedViolation.agentName}
+                    </div>
+                    <div>
+                      <span className="text-white/40">Financial Impact:</span> €{(selectedViolation.financialImpact.expectedLoss / 1000).toFixed(0)}K expected
+                    </div>
+                    <div>
+                      <span className="text-white/40">Probability:</span> {selectedViolation.financialImpact.probability}%
+                    </div>
+                    <div>
+                      <span className="text-white/40">Occurrence:</span> {selectedViolation.recurrence.pattern}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-semibold text-white">Remediation & Reporting</h4>
+                  <div className="space-y-2 text-sm text-white/70">
+                    <div>
+                      <span className="text-white/40">Action:</span> {selectedViolation.remediation.action}
+                    </div>
+                    <div>
+                      <span className="text-white/40">Deadline:</span> {selectedViolation.remediation.deadline ? formatDate(selectedViolation.remediation.deadline, 'date') : 'N/A'}
+                    </div>
+                    <div>
+                      <span className="text-white/40">Responsible:</span> {selectedViolation.remediation.responsibleTeam}
+                    </div>
+                    {selectedViolation.reporting.reportable && (
+                      <div>
+                        <span className="text-white/40">Report To:</span> {selectedViolation.reporting.regulator} by {formatDate(selectedViolation.reporting.reportDeadline, 'date')}
+                      </div>
+                    )}
+                    {selectedViolation.customerNotification.required && (
+                      <div>
+                        <span className="text-white/40">Customer Notification Due:</span> {formatDate(selectedViolation.customerNotification.deadline, 'date')}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+                    <FileText className="w-4 h-4" /> Consent Violation Transcript
+                  </h4>
+                  <div className="text-xs text-white/50">Reference timestamp: {selectedViolation.evidence.timestamp}s</div>
+                </div>
+                <div className="text-[10px] uppercase tracking-wide text-white/40">
+                  {renderFullTranscript ? 'Highlighted turns show exactly where the violation occurred.' : 'Summary excerpt from the call.'}
+                </div>
+                <div className="max-h-72 overflow-y-auto pr-2">
+                  {renderFullTranscript ? (
+                    renderFullTranscript
+                  ) : (
+                    <div className="rounded-lg border border-[#b90abd]/30 bg-[#b90abd]/5 p-4 text-sm text-white/80">
+                      {renderTranscriptSnippet}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+                <h4 className="text-sm font-semibold text-white mb-2">Why this was flagged</h4>
+                <p className="text-sm text-white/70">
+                  {selectedViolation.severityReason}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

@@ -38,7 +38,7 @@ export interface Violation {
   agentId: string;
   agentName: string;
   timestamp: string;
-  category: 'GDPR' | 'PSD2' | 'MiFID' | 'AML' | 'KYC' | 'Local';
+  category: 'CONSENT' | 'IDENTITY' | 'SANCTIONS' | 'SUITABILITY' | 'CDD';
   subCategory: string;
   regulation: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
@@ -53,6 +53,12 @@ export interface Violation {
   evidence: {
     transcriptExcerpt: string;
     timestamp: number;
+    fullTranscript?: Array<{
+      speaker: 'agent' | 'customer' | 'system';
+      text: string;
+      timestamp?: number;
+      violation?: boolean;
+    }>;
   };
   remediation: {
     required: boolean;
@@ -79,64 +85,25 @@ export interface Violation {
   };
 }
 
+export interface ComplianceCategoryBreakdown {
+  label: string;
+  regulatoryReference: string;
+  score: number;
+  weight: number;
+  violations: number;
+  criticalViolations: number;
+  trend: number[];
+  transcriptSignals: string[];
+  focusAreas: {
+    label: string;
+    score: number;
+  }[];
+}
+
 export interface GranularComplianceScore {
   overallScore: number;
   lastUpdated: string;
-  byRegulation: {
-    gdpr: {
-      score: number;
-      weight: number;
-      violations: number;
-      criticalViolations: number;
-      trend: number[];
-      subScores: {
-        consentManagement: number;
-        dataMinimization: number;
-        purposeLimitation: number;
-        storageCompliance: number;
-        customerRights: number;
-      };
-    };
-    psd2: {
-      score: number;
-      weight: number;
-      violations: number;
-      criticalViolations: number;
-      trend: number[];
-      subScores: {
-        scaImplementation: number;
-        fraudPrevention: number;
-        disputeHandling: number;
-        transparency: number;
-      };
-    };
-    mifid: {
-      score: number;
-      weight: number;
-      violations: number;
-      criticalViolations: number;
-      trend: number[];
-      subScores: {
-        suitabilityAssessment: number;
-        costDisclosure: number;
-        bestExecution: number;
-        recordingCompliance: number;
-      };
-    };
-    aml: {
-      score: number;
-      weight: number;
-      violations: number;
-      criticalViolations: number;
-      trend: number[];
-      subScores: {
-        customerDueDiligence: number;
-        transactionMonitoring: number;
-        suspiciousActivityReporting: number;
-        recordKeeping: number;
-      };
-    };
-  };
+  byRegulation: Record<string, ComplianceCategoryBreakdown>;
   financialRisk: {
     totalPotentialFines: number;
     expectedLoss: number;
@@ -146,6 +113,7 @@ export interface GranularComplianceScore {
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
   riskFactors: Array<{
     factor: string;
+    transcriptCue: string;
     impact: number;
     urgency: 'immediate' | 'high' | 'medium' | 'low';
   }>;
@@ -445,58 +413,81 @@ export function getGranularComplianceScore(): GranularComplianceScore {
     overallScore: 87.5,
     lastUpdated: new Date().toISOString(),
     byRegulation: {
-      gdpr: {
-        score: 85,
+      consentDisclosure: {
+        label: 'Consent & Disclosure (GDPR)',
+        regulatoryReference: 'GDPR Articles 6, 7 & 13',
+        score: 84,
         weight: 0.30,
-        violations: 5,
+        violations: 4,
         criticalViolations: 2,
-        trend: [82, 83, 84, 84.5, 85, 85, 85],
-        subScores: {
-          consentManagement: 80,
-          dataMinimization: 90,
-          purposeLimitation: 88,
-          storageCompliance: 85,
-          customerRights: 87
-        }
+        trend: [80, 81, 82, 83, 83.5, 84, 84],
+        transcriptSignals: [
+          'Recording disclosure stated',
+          'Legal basis explained before processing',
+          'Rights & retention period communicated'
+        ],
+        focusAreas: [
+          { label: 'Recording disclosure within 10s', score: 78 },
+          { label: 'Legal basis explained', score: 82 },
+          { label: 'Data rights & retention mentioned', score: 86 }
+        ]
       },
-      psd2: {
-        score: 92,
+      identityVerification: {
+        label: 'Identity & CDD Questions (AML/KYC)',
+        regulatoryReference: 'EU AMLD Art. 13',
+        score: 89,
         weight: 0.25,
         violations: 3,
         criticalViolations: 0,
-        trend: [90, 91, 91.5, 92, 92, 92, 92],
-        subScores: {
-          scaImplementation: 95,
-          fraudPrevention: 90,
-          disputeHandling: 92,
-          transparency: 91
-        }
+        trend: [86, 87, 87.5, 88, 88.5, 89, 89],
+        transcriptSignals: [
+          'Two-factor identity challenge completed',
+          'Purpose of relationship clarified',
+          'Source of funds requested for high-risk calls'
+        ],
+        focusAreas: [
+          { label: 'Identity verification before account access', score: 90 },
+          { label: 'Purpose & expected activity questions', score: 87 },
+          { label: 'Beneficial ownership follow-up', score: 82 }
+        ]
       },
-      mifid: {
-        score: 88,
+      sanctionsHandling: {
+        label: 'Sanctions & High-Risk Jurisdictions',
+        regulatoryReference: 'EU Sanctions Regime & AMLD',
+        score: 91,
         weight: 0.20,
+        violations: 1,
+        criticalViolations: 0,
+        trend: [88, 88.5, 89, 89.5, 90, 90.5, 91],
+        transcriptSignals: [
+          'Restricted jurisdiction detected and declined',
+          'Customer informed of sanctions rationale',
+          'Escalation to compliance mentioned'
+        ],
+        focusAreas: [
+          { label: 'Sanctioned country mentions declined', score: 94 },
+          { label: 'Explanation of sanctions obligations', score: 90 },
+          { label: 'Escalation confirmation', score: 88 }
+        ]
+      },
+      suitabilityAndAdvice: {
+        label: 'Product Suitability & Risk Disclosure',
+        regulatoryReference: 'MiFID II Art. 25 & Consumer Duty',
+        score: 86,
+        weight: 0.25,
         violations: 2,
         criticalViolations: 1,
-        trend: [86, 87, 87.5, 88, 88, 88, 88],
-        subScores: {
-          suitabilityAssessment: 85,
-          costDisclosure: 90,
-          bestExecution: 89,
-          recordingCompliance: 88
-        }
-      },
-      aml: {
-        score: 90,
-        weight: 0.15,
-        violations: 2,
-        criticalViolations: 0,
-        trend: [88, 89, 89.5, 90, 90, 90, 90],
-        subScores: {
-          customerDueDiligence: 92,
-          transactionMonitoring: 89,
-          suspiciousActivityReporting: 90,
-          recordKeeping: 89
-        }
+        trend: [84, 84.5, 85, 85.5, 86, 86, 86],
+        transcriptSignals: [
+          'Customer objectives discussed before recommendation',
+          'Risk warnings delivered verbatim',
+          'Cooling-off and complaint rights stated'
+        ],
+        focusAreas: [
+          { label: 'Needs assessment questions asked', score: 88 },
+          { label: 'Risk & cost disclosures', score: 84 },
+          { label: 'Right-to-cancel reminders', score: 83 }
+        ]
       }
     },
     financialRisk: {
@@ -508,17 +499,20 @@ export function getGranularComplianceScore(): GranularComplianceScore {
     riskLevel: 'high',
     riskFactors: [
       {
-        factor: 'GDPR Consent Management - 2 critical violations',
+        factor: 'Consent script missed at call opening',
+        transcriptCue: "Agent begins data capture before saying 'This call may be recorded...'",
         impact: 20000000,
         urgency: 'immediate'
       },
       {
-        factor: 'MiFID Suitability Assessment - 1 critical violation',
-        impact: 10000000,
+        factor: 'Identity verification skipped before account access',
+        transcriptCue: "Agent discusses balance without asking for security passphrase",
+        impact: 12000000,
         urgency: 'high'
       },
       {
-        factor: 'PSD2 SCA Implementation gaps',
+        factor: 'Sanctions warning not delivered on restricted country request',
+        transcriptCue: "Customer mentions Iran wire transfer and agent proceeds without decline",
         impact: 5000000,
         urgency: 'medium'
       }
@@ -537,11 +531,11 @@ export function getViolations(): Violation[] {
       agentId: agentIds[0],
       agentName: agentNames[0],
       timestamp: new Date(Date.now() - 2 * 3600000).toISOString(),
-      category: 'GDPR',
-      subCategory: 'missing_consent',
-      regulation: 'GDPR Art. 13 - Information to be provided',
+      category: 'CONSENT',
+      subCategory: 'missing_recording_disclosure',
+      regulation: 'GDPR Art. 13 - Recording disclosure & purpose notice',
       severity: 'critical',
-      severityReason: 'Recording consent not obtained before call recording',
+      severityReason: 'Agent collected personal data before informing customer of recording or legal basis',
       financialImpact: {
         potentialFine: 20000000,
         currency: 'EUR',
@@ -550,25 +544,34 @@ export function getViolations(): Violation[] {
         expectedLoss: 3000000
       },
       evidence: {
-        transcriptExcerpt: "Agent: 'I can help with that account issue...' [No consent mentioned]",
-        timestamp: 5
+        transcriptExcerpt: "Agent: 'Sure, can I take your card number?' Customer: 'Is this call recorded?' Agent: 'Yes, it is.' [Disclosure happens after data capture]",
+        timestamp: 12,
+        fullTranscript: [
+          { speaker: 'agent', text: "Good afternoon, you're through to Clariverse Bank, Sarah speaking.", timestamp: 0 },
+          { speaker: 'customer', text: 'Hi Sarah, I need to check a card payment that looks unfamiliar.', timestamp: 4 },
+          { speaker: 'agent', text: 'Sure, can I take your card number?', timestamp: 8, violation: true },
+          { speaker: 'customer', text: 'Before I give you that, is this call recorded?', timestamp: 12 },
+          { speaker: 'agent', text: 'Yes, it is recorded for quality and training purposes.', timestamp: 13 },
+          { speaker: 'agent', text: 'I just need the 16 digits on the front of the card when you are ready.', timestamp: 15, violation: true },
+          { speaker: 'system', text: 'Compliance script: recording disclosure triggered after data collection request.', timestamp: 16, violation: true }
+        ]
       },
       remediation: {
         required: true,
-        action: 'Retrain agent on GDPR consent requirements. Implement real-time consent prompts.',
+        action: 'Coach agent to deliver recording disclosure and legal basis before data collection. Enable pre-call script checks.',
         deadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
         responsibleTeam: 'Compliance Training',
         status: 'pending'
       },
       reporting: {
-        reportable: true,
-        regulator: 'ECB',
-        reportDeadline: new Date(Date.now() + 14 * 24 * 3600000).toISOString(),
+        reportable: false,
+        regulator: '',
+        reportDeadline: '',
         reported: false
       },
       customerNotification: {
-        required: true,
-        deadline: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
+        required: false,
+        deadline: '',
         notified: false
       },
       recurrence: {
@@ -583,33 +586,41 @@ export function getViolations(): Violation[] {
       agentId: agentIds[1],
       agentName: agentNames[1],
       timestamp: new Date(Date.now() - 5 * 3600000).toISOString(),
-      category: 'PSD2',
-      subCategory: 'sca_failure',
-      regulation: 'PSD2 Art. 97 - Strong customer authentication',
+      category: 'IDENTITY',
+      subCategory: 'verification_skipped',
+      regulation: 'AML/KYC - Identity verification before account access',
       severity: 'high',
-      severityReason: 'SCA not completed for payment transaction over €30',
+      severityReason: 'Agent provided account balance without completing mandatory identity challenge',
       financialImpact: {
-        potentialFine: 5000000,
+        potentialFine: 10000000,
         currency: 'EUR',
-        fineCalculation: '2% of annual turnover or €5M',
-        probability: 25,
-        expectedLoss: 1250000
+        fineCalculation: 'AML breach proxy estimate',
+        probability: 20,
+        expectedLoss: 2000000
       },
       evidence: {
-        transcriptExcerpt: "Agent: 'I'll process that payment now...' [No SCA verification performed]",
-        timestamp: 120
+        transcriptExcerpt: "Agent: 'Let me pull up your balance... it looks like €4,200.' [No security questions asked prior]",
+        timestamp: 65,
+        fullTranscript: [
+          { speaker: 'agent', text: 'Fraud prevention desk, this is Michael. How can I help you today?', timestamp: 0 },
+          { speaker: 'customer', text: 'Hi, I just need to know what my current balance is.', timestamp: 6 },
+          { speaker: 'agent', text: 'Let me check... you are at €4,200 available right now.', timestamp: 12, violation: true },
+          { speaker: 'customer', text: 'Wait, you didn\'t verify anything yet.', timestamp: 18 },
+          { speaker: 'agent', text: 'Ah, you\'re right, let\'s do that security check. Can you confirm your postcode and memorable word?', timestamp: 20 },
+          { speaker: 'system', text: 'Identity verification completed after account information disclosed.', timestamp: 22, violation: true }
+        ]
       },
       remediation: {
         required: true,
-        action: 'Block payment processing until SCA completed. Agent training on PSD2 requirements.',
+        action: 'Reinforce two-step verification script and enable real-time alerts when access occurs without challenge.',
         deadline: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
-        responsibleTeam: 'Payment Security',
+        responsibleTeam: 'AML Compliance',
         status: 'pending'
       },
       reporting: {
-        reportable: true,
-        regulator: 'ECB',
-        reportDeadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+        reportable: false,
+        regulator: '',
+        reportDeadline: '',
         reported: false
       },
       customerNotification: {
@@ -629,11 +640,11 @@ export function getViolations(): Violation[] {
       agentId: agentIds[2],
       agentName: agentNames[2],
       timestamp: new Date(Date.now() - 8 * 3600000).toISOString(),
-      category: 'MiFID',
-      subCategory: 'suitability_miss',
-      regulation: 'MiFID II Art. 25 - Suitability and appropriateness',
+      category: 'SUITABILITY',
+      subCategory: 'risk_warning_missing',
+      regulation: 'MiFID II Art. 25 - Suitability & risk disclosure',
       severity: 'critical',
-      severityReason: 'Investment product recommended without suitability assessment',
+      severityReason: 'Agent recommended structured note without discussing risk profile, costs, or loss scenarios',
       financialImpact: {
         potentialFine: 10000000,
         currency: 'EUR',
@@ -642,12 +653,22 @@ export function getViolations(): Violation[] {
         expectedLoss: 2000000
       },
       evidence: {
-        transcriptExcerpt: "Agent: 'This investment product would be perfect for you...' [No risk profile discussed]",
-        timestamp: 180
+        transcriptExcerpt: "Agent: 'This structured note is perfect—guaranteed returns.' Customer: 'What are the risks?' Agent: 'It’s very safe, don’t worry.'",
+        timestamp: 205,
+        fullTranscript: [
+          { speaker: 'agent', text: 'Thanks for waiting, Emily here from the wealth team.', timestamp: 0 },
+          { speaker: 'customer', text: 'Hi, I\'m looking for something low risk to put €50,000 into.', timestamp: 9 },
+          { speaker: 'agent', text: 'This structured note is perfect—guaranteed returns over three years.', timestamp: 30, violation: true },
+          { speaker: 'customer', text: 'What are the risks if markets drop?', timestamp: 38 },
+          { speaker: 'agent', text: "It\'s very safe, don\'t worry about losses.", timestamp: 41, violation: true },
+          { speaker: 'customer', text: 'Do I need to answer any questions about my goals?', timestamp: 47 },
+          { speaker: 'agent', text: 'No, this works for everyone who wants stability.', timestamp: 50, violation: true },
+          { speaker: 'system', text: 'Suitability assessment skipped and risk warnings suppressed.', timestamp: 55, violation: true }
+        ]
       },
       remediation: {
         required: true,
-        action: 'Immediate suspension of investment product sales. Mandatory MiFID training.',
+        action: 'Pause outbound investment sales until advisors retrain on suitability scripts and risk disclosures.',
         deadline: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
         responsibleTeam: 'Investment Compliance',
         status: 'in_progress'
@@ -675,27 +696,34 @@ export function getViolations(): Violation[] {
       agentId: agentIds[0],
       agentName: agentNames[0],
       timestamp: new Date(Date.now() - 12 * 3600000).toISOString(),
-      category: 'GDPR',
-      subCategory: 'data_retention_breach',
-      regulation: 'GDPR Art. 5 - Storage limitation',
+      category: 'SANCTIONS',
+      subCategory: 'restricted_country_not_declined',
+      regulation: 'EU Sanctions Regime - Prohibited jurisdictions',
       severity: 'high',
-      severityReason: 'Customer data retained beyond legal retention period',
+      severityReason: 'Agent agreed to route transfer to sanctioned country without escalating or declining',
       financialImpact: {
-        potentialFine: 20000000,
+        potentialFine: 25000000,
         currency: 'EUR',
-        fineCalculation: '4% of annual turnover or €20M',
-        probability: 10,
-        expectedLoss: 2000000
+        fineCalculation: 'Sanctions violation maximum penalty proxy',
+        probability: 18,
+        expectedLoss: 4500000
       },
       evidence: {
-        transcriptExcerpt: "System: [Data retention period exceeded by 45 days]",
-        timestamp: 0
+        transcriptExcerpt: "Customer: 'The supplier account is in Tehran.' Agent: 'No problem, we can send the funds today.'",
+        timestamp: 140,
+        fullTranscript: [
+          { speaker: 'agent', text: 'Sarah again—let\'s finish setting up your wire transfer.', timestamp: 0 },
+          { speaker: 'customer', text: 'Great, the supplier account is in Tehran, Iran.', timestamp: 22, violation: true },
+          { speaker: 'agent', text: 'No problem, we can send the funds today once you approve.', timestamp: 27, violation: true },
+          { speaker: 'customer', text: 'Perfect, thanks for turning that around fast.', timestamp: 34 },
+          { speaker: 'system', text: 'Sanctions screening: restricted jurisdiction mentioned without decline or escalation.', timestamp: 36, violation: true }
+        ]
       },
       remediation: {
         required: true,
-        action: 'Immediate data deletion. Review all customer records for retention compliance.',
+        action: 'Reinforce sanctions refusal script, push real-time country detection alerts, escalate incident to sanctions desk.',
         deadline: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
-        responsibleTeam: 'Data Protection',
+        responsibleTeam: 'Sanctions Desk',
         status: 'in_progress'
       },
       reporting: {
@@ -712,7 +740,7 @@ export function getViolations(): Violation[] {
       recurrence: {
         isRecurring: true,
         occurrenceCount: 12,
-        pattern: 'Systematic retention policy non-compliance'
+        pattern: 'Repeated failures to decline restricted corridors'
       }
     },
     {
@@ -721,11 +749,11 @@ export function getViolations(): Violation[] {
       agentId: agentIds[3],
       agentName: agentNames[3],
       timestamp: new Date(Date.now() - 1 * 3600000).toISOString(),
-      category: 'AML',
-      subCategory: 'cdd_incomplete',
-      regulation: 'AML Directive Art. 13 - Customer due diligence',
+      category: 'CDD',
+      subCategory: 'beneficial_ownership_missing',
+      regulation: 'AML Directive Art. 13 - Beneficial ownership identification',
       severity: 'medium',
-      severityReason: 'Incomplete customer due diligence for high-value transaction',
+      severityReason: 'Agent approved corporate onboarding without identifying or verifying ultimate beneficial owners',
       financialImpact: {
         potentialFine: 5000000,
         currency: 'EUR',
@@ -734,12 +762,22 @@ export function getViolations(): Violation[] {
         expectedLoss: 750000
       },
       evidence: {
-        transcriptExcerpt: "Agent: 'I can process that €50,000 transfer...' [CDD checks incomplete]",
-        timestamp: 90
+        transcriptExcerpt: "Agent: 'Is your company owned by anyone else?' Customer: 'Yes, a holding company.' Agent: 'Okay, that’s fine.' [No follow-up on individuals]",
+        timestamp: 190,
+        fullTranscript: [
+          { speaker: 'agent', text: 'David here, thanks for confirming the business account details.', timestamp: 0 },
+          { speaker: 'customer', text: 'We just need the account ready for incoming payments next week.', timestamp: 12 },
+          { speaker: 'agent', text: 'Is your company owned by anyone else?', timestamp: 24 },
+          { speaker: 'customer', text: 'Yes, a holding company in Luxembourg.', timestamp: 28 },
+          { speaker: 'agent', text: 'Okay, that\'s fine, I\'ll mark it down as majority owned.', timestamp: 32, violation: true },
+          { speaker: 'customer', text: 'Do you need the names of the individuals?', timestamp: 38 },
+          { speaker: 'agent', text: 'No, that\'s okay for now—we can collect later if needed.', timestamp: 40, violation: true },
+          { speaker: 'system', text: 'Beneficial ownership details not captured before onboarding approval.', timestamp: 42, violation: true }
+        ]
       },
       remediation: {
         required: true,
-        action: 'Complete CDD verification. Review transaction monitoring procedures.',
+        action: 'Require scripted follow-up for ownership chains and enforce UBO capture before approval.',
         deadline: new Date(Date.now() + 5 * 24 * 3600000).toISOString(),
         responsibleTeam: 'AML Compliance',
         status: 'pending'

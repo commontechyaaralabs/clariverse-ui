@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type ReactElement } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { X, Send, Bot, User, Sparkles } from 'lucide-react';
@@ -72,7 +72,7 @@ export function AIDayGeneratorChat({ isOpen, onClose, kpiData, threads }: AIDayG
       
       const escalationRate = kpiData.escalation_rate || 0;
       const sentiment = kpiData.customer_sentiment_index || 0;
-      const closedRate = kpiData.closed_vs_open?.closed || 0;
+      const closedRate = 100 - (kpiData.open_pct ?? 0);
       
       return `Here are today's key insights:\n\n` +
         `📊 **Escalation Rate**: ${escalationRate.toFixed(1)}% - ${escalationRate > 50 ? '⚠️ High escalation trend detected' : '✅ Within normal range'}\n` +
@@ -243,7 +243,7 @@ export function AIDayGeneratorChat({ isOpen, onClose, kpiData, threads }: AIDayG
     const lines = text.split('\n');
     
     return lines.map((line, lineIndex) => {
-      const elements: (string | JSX.Element)[] = [];
+      const elements: (string | ReactElement)[] = [];
       let lastIndex = 0;
       let elementKey = 0;
 

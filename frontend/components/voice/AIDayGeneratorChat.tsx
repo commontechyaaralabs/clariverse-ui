@@ -225,20 +225,18 @@ export function AIDayGeneratorChat({
       if (!kpiData?.euComplianceScore) return "I don't have access to compliance data at the moment.";
       
       const compliance = kpiData.euComplianceScore;
-      const violations = Object.entries(compliance.byRegulation).filter(([key, reg]: [string, any]) => reg.score < 90);
+      const categories = Object.values(compliance.byRegulation);
+      const violations = categories.filter((reg) => reg.score < 90);
       
       return `**Compliance Insights**\n\n` +
         `🛡️ **Overall Compliance Score**: ${compliance.overallScore.toFixed(1)}%\n\n` +
-        `**By Regulation**:\n` +
-        `• GDPR: ${compliance.byRegulation.gdpr.score.toFixed(1)}%\n` +
-        `• PSD2: ${compliance.byRegulation.psd2.score.toFixed(1)}%\n` +
-        `• MiFID: ${compliance.byRegulation.mifid.score.toFixed(1)}%\n` +
-        `• AML: ${compliance.byRegulation.aml.score.toFixed(1)}%\n\n` +
-        `**Areas Needing Attention**:\n` +
+        `**Transcript Checks**:\n` +
+        categories.map((reg) => `• ${reg.label}: ${reg.score.toFixed(1)}%`).join('\n') + '\n\n' +
+        `**Needs Attention**:\n` +
         (violations.length > 0 
-          ? violations.map(([key, reg]: [string, any]) => `• ${key.toUpperCase()}: ${reg.score.toFixed(1)}% - Review required`).join('\n')
+          ? violations.map((reg) => `• ${reg.label}: ${reg.score.toFixed(1)}% - Investigate ${reg.transcriptSignals[0].toLowerCase()}`).join('\n')
           : '✅ All regulations are compliant') + '\n\n' +
-        `**Recommendation**: ${compliance.overallScore < 90 ? 'Focus on improving compliance scores through targeted training and monitoring.' : 'Maintain current compliance levels and continue monitoring.'}`;
+        `**Recommendation**: ${compliance.overallScore < 90 ? 'Coach agents on the flagged transcript cues and reinforce call-open scripts.' : 'Maintain current coaching cadence and continue monitoring transcript cues.'}`;
     }
 
     if (lowerMessage.includes('coaching') || lowerMessage.includes('opportunity')) {

@@ -87,6 +87,8 @@ export interface KPIData {
   risk_score: number;
   sla_compliance_rate: number;
   urgent_unresolved_count: number;
+  pending_customer?: number;
+  pending_internal?: number;
 }
 
 export interface ThreadsOverTimeData {
@@ -1698,8 +1700,8 @@ function generateSocialMediaEisenhowerThreads(): EisenhowerThread[] {
       owner: quadrant !== 'delete' ? assignedTo[Math.floor(Math.random() * assignedTo.length)] : undefined,
       topic: topics[i % topics.length],
       dominant_cluster_name: dominantClusters[i % dominantClusters.length],
-      last_message_at: lastMessageAt.toISOString(),
       first_message_at: firstMessageAt.toISOString(),
+      last_message_at: lastMessageAt.toISOString(),
     });
   }
   

@@ -162,7 +162,7 @@ export function TeamHealthColumn({
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">EU Compliance Health</CardTitle>
+            <CardTitle className="text-lg">Compliance Health</CardTitle>
             {granularCompliance && (
               <div className="text-right">
                 <div className="text-2xl font-bold text-white">
@@ -172,6 +172,11 @@ export function TeamHealthColumn({
               </div>
             )}
           </div>
+          {granularCompliance && (
+            <p className="text-[10px] uppercase tracking-wide text-white/40 mt-1">
+              Derived from voice transcript compliance checks
+            </p>
+          )}
           {granularCompliance && (
             <p className="text-xs text-muted-foreground mt-2">
               Expected Loss: €{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M | 
@@ -183,13 +188,13 @@ export function TeamHealthColumn({
             </p>
           )}
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 max-h-[26rem] overflow-y-auto pr-2">
           {granularCompliance ? (
             <>
               {/* Regulation Breakdown */}
               <div className="space-y-3">
                 {Object.entries(granularCompliance.byRegulation).map(([key, regulation]) => {
-                  const label = key.toUpperCase();
+                  const label = regulation.label;
                   const getColor = (score: number) => {
                     if (score >= 90) return 'text-green-400';
                     if (score >= 80) return 'text-yellow-400';
@@ -202,8 +207,8 @@ export function TeamHealthColumn({
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-white">{label}</span>
-                          <Badge className={`${getColor(regulation.score)} bg-opacity-20 border-${getColor(regulation.score).split('-')[1]}-500/50`}>
-                            {regulation.violations} violations
+                          <Badge className="bg-white/10 text-xs text-white/80 border border-white/10" title={regulation.regulatoryReference}>
+                            {regulation.violations} voice flags
                           </Badge>
                           {regulation.criticalViolations > 0 && (
                             <Badge className="bg-red-500/20 text-red-400 border-red-500/50">
@@ -229,6 +234,17 @@ export function TeamHealthColumn({
                           }`}
                           style={{ width: `${regulation.score}%` }}
                         />
+                      </div>
+                      <div className="mt-2 grid grid-cols-1 gap-1">
+                        {regulation.focusAreas.map((area) => (
+                          <div key={area.label} className="flex items-center justify-between text-xs text-muted-foreground bg-white/5 border border-white/10 rounded px-2 py-1">
+                            <span>{area.label}</span>
+                            <span className={getColor(area.score)}>{area.score}%</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-2 text-[10px] text-white/40 uppercase tracking-wide">
+                        Transcript cues: {regulation.transcriptSignals.join(' • ')}
                       </div>
                     </div>
                   );
