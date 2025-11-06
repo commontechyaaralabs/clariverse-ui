@@ -25,6 +25,13 @@ export default function Sidebar() {
       href: "/email",
       hasSubItems: false,
     },
+    {
+      id: "social",
+      label: "Social Media",
+      icon: Share2,
+      href: "/social",
+      hasSubItems: false,
+    },
     // {
     //   id: "chat",
     //   label: "Chat",
@@ -37,13 +44,6 @@ export default function Sidebar() {
     //   label: "Ticket",
     //   icon: Ticket,
     //   href: "/ticket",
-    //   hasSubItems: false,
-    // },
-    // {
-    //   id: "social",
-    //   label: "Social Media",
-    //   icon: Share2,
-    //   href: "/social",
     //   hasSubItems: false,
     // },
     {

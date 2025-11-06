@@ -4,14 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, AreaChart, Area } from 'recharts';
-import { HighRiskCall, IntentDistribution, IssueHeatmapData, SkillGapData } from '@/lib/voiceData';
+import { HighRiskCall, IntentDistribution, IssueHeatmapData, Violation } from '@/lib/voiceData';
 import { AlertTriangle, ExternalLink } from 'lucide-react';
+import { ViolationCenter } from './ViolationCenter';
 
 interface CoreIntelligenceColumnProps {
   highRiskCalls: HighRiskCall[];
   intentDistribution: IntentDistribution[];
   issueHeatmap: IssueHeatmapData[];
-  skillGapData: SkillGapData[];
+  violations: Violation[];
   onCallClick: (callId: string) => void;
 }
 
@@ -21,7 +22,7 @@ export function CoreIntelligenceColumn({
   highRiskCalls,
   intentDistribution,
   issueHeatmap,
-  skillGapData,
+  violations,
   onCallClick
 }: CoreIntelligenceColumnProps) {
   const getRiskColor = (score: number) => {
@@ -38,7 +39,10 @@ export function CoreIntelligenceColumn({
   };
 
   return (
-    <div className="space-y-4 w-[50%]">
+    <div className="space-y-4 w-[50%] flex-shrink-0">
+      {/* Violation Center */}
+      <ViolationCenter violations={violations} />
+
       {/* High-Risk Calls Carousel */}
       <Card>
         <CardHeader>
@@ -48,7 +52,7 @@ export function CoreIntelligenceColumn({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+          <div className="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
             {highRiskCalls.slice(0, 6).map((call) => (
               <Card key={call.callId} className="p-3 border-red-500/30">
                 <div className="space-y-2">
@@ -279,123 +283,6 @@ export function CoreIntelligenceColumn({
         </CardContent>
       </Card>
 
-      {/* Team Skill Gap Matrix */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Team Skill Gap Matrix</CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            Compares current team performance vs. target goals. Shows where training is needed to reach excellence.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* Legend */}
-            <div className="flex items-center gap-4 text-xs pb-2 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-3 rounded bg-gradient-to-r from-[#b90abd] to-[#5332ff]"></div>
-                <span className="text-muted-foreground">Current Performance</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-3 rounded bg-gray-600"></div>
-                <span className="text-muted-foreground">Target Goal</span>
-              </div>
-            </div>
-
-            {/* Skills List */}
-            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-              {skillGapData.map((skill, idx) => {
-                const gap = skill.expected - skill.current;
-                const gapPercent = (gap / skill.expected) * 100;
-                const currentPercent = (skill.current / skill.expected) * 100;
-                const isCritical = gapPercent > 10;
-                const isModerate = gapPercent > 5 && gapPercent <= 10;
-                
-                return (
-                  <div key={idx} className="space-y-2 p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-white">{skill.skill}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {skill.skill === 'Empathy' && 'Ability to understand and respond to customer emotions'}
-                          {skill.skill === 'Product Knowledge' && 'Understanding of banking products and services'}
-                          {skill.skill === 'Fraud Handling' && 'Expertise in detecting and handling fraud cases'}
-                          {skill.skill === 'Clarity of Explanation' && 'How clearly agents explain complex information'}
-                          {skill.skill === 'Process Accuracy' && 'Following correct procedures and workflows'}
-                          {skill.skill === 'Listening Skill' && 'Active listening and understanding customer needs'}
-                          {skill.skill === 'Tone Stability' && 'Consistent professional tone throughout calls'}
-                        </p>
-                      </div>
-                      <div className="text-right ml-4">
-                        <p className="text-sm font-bold text-white">
-                          {skill.current}<span className="text-muted-foreground">/{skill.expected}</span>
-                        </p>
-                        <p className="text-xs text-muted-foreground">{currentPercent.toFixed(0)}% of target</p>
-                      </div>
-                    </div>
-                    
-                    {/* Progress Bars */}
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-muted-foreground">Current: {skill.current} points</span>
-                          <span className="text-white font-semibold">{currentPercent.toFixed(1)}%</span>
-                        </div>
-                        <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-[#b90abd] to-[#5332ff] transition-all" 
-                            style={{ width: `${currentPercent}%` }} 
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-muted-foreground">Target: {skill.expected} points</span>
-                          <span className="text-muted-foreground">100%</span>
-                        </div>
-                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-gray-600" style={{ width: '100%' }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Gap Information */}
-                    {gap > 0 && (
-                      <div className={`pt-2 border-t border-white/10 ${isCritical ? 'bg-red-500/10' : isModerate ? 'bg-orange-500/10' : 'bg-yellow-500/10'} rounded p-2`}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {isCritical && <span className="text-red-400">🔴</span>}
-                            {isModerate && <span className="text-orange-400">🟡</span>}
-                            {!isCritical && !isModerate && <span className="text-yellow-400">🟢</span>}
-                            <span className="text-xs font-semibold text-white">
-                              Gap: {gap.toFixed(1)} points ({gapPercent.toFixed(1)}% below target)
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {isCritical 
-                            ? '⚠️ Critical gap - Priority training needed'
-                            : isModerate
-                            ? 'Training recommended to close gap'
-                            : 'Minor gap - Monitor and provide feedback'}
-                        </p>
-                      </div>
-                    )}
-                    {gap === 0 && (
-                      <div className="pt-2 border-t border-white/10 bg-green-500/10 rounded p-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-green-400">✓</span>
-                          <span className="text-xs font-semibold text-green-400">Target achieved!</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Issue Heatmap */}
       <Card>
         <CardHeader>
@@ -473,7 +360,7 @@ export function CoreIntelligenceColumn({
               </div>
               
               {/* Heatmap Rows */}
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 max-h-[500px] overflow-y-auto">
                 {issueHeatmap.map((item, idx) => (
                   <div key={idx} className="grid gap-3 items-start py-1.5 hover:bg-white/5 rounded px-1 transition-colors" style={{ gridTemplateColumns: '140px repeat(5, 1fr)' }}>
                     <Tooltip>

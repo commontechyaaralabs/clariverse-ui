@@ -20,6 +20,7 @@ import {
   getCallList,
   getCallDetail,
   getTeamHealthData,
+  getViolations,
   KPIData,
   IntentDistribution,
   IssueHeatmapData,
@@ -30,6 +31,7 @@ import {
   CallListItem,
   CallDetail
 } from '@/lib/voiceData';
+import { ViolationCenter } from '@/components/voice/ViolationCenter';
 
 export default function VoiceTranscript() {
   const [kpiData, setKpiData] = useState<KPIData | null>(null);
@@ -43,6 +45,7 @@ export default function VoiceTranscript() {
   const [selectedCall, setSelectedCall] = useState<CallDetail | null>(null);
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
   const [teamHealthData, setTeamHealthData] = useState<any>(null);
+  const [violations, setViolations] = useState<any[]>([]);
   const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
@@ -63,10 +66,11 @@ export default function VoiceTranscript() {
     setAgentLeaderboard(getAgentLeaderboard());
     setHighRiskCalls(getHighRiskCalls());
     setSkillGapData(getSkillGapData());
-    setCoachingTickets(getCoachingTickets());
-    setCallList(getCallList());
-    setTeamHealthData(getTeamHealthData());
-  }, []);
+        setCoachingTickets(getCoachingTickets());
+        setCallList(getCallList());
+        setTeamHealthData(getTeamHealthData());
+        setViolations(getViolations());
+      }, []);
 
   const handleCallClick = (callId: string) => {
     const detail = getCallDetail(callId);
@@ -142,10 +146,11 @@ export default function VoiceTranscript() {
     setAgentLeaderboard(getAgentLeaderboard());
     setHighRiskCalls(getHighRiskCalls());
     setSkillGapData(getSkillGapData());
-    setCoachingTickets(getCoachingTickets());
-    setCallList(getCallList());
-    setTeamHealthData(getTeamHealthData());
-  };
+        setCoachingTickets(getCoachingTickets());
+        setCallList(getCallList());
+        setTeamHealthData(getTeamHealthData());
+        setViolations(getViolations());
+      };
 
   if (!kpiData || !teamHealthData) {
     return (
@@ -159,7 +164,7 @@ export default function VoiceTranscript() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in pb-72">
+    <div className="space-y-6 animate-fade-in pb-6">
       {/* Header */}
       <div className="space-y-4 animate-slide-down">
         <div className="flex items-center justify-between">
@@ -238,15 +243,17 @@ export default function VoiceTranscript() {
       <KPIRibbon data={kpiData} />
 
       {/* Main Dashboard Grid */}
-      <div className="flex gap-4">
+      <div className="flex gap-4 items-start w-full">
         {/* Left Column - Team Health */}
         <TeamHealthColumn
           qaScore={teamHealthData.qaScore}
           qaBreakdown={teamHealthData.qaBreakdown}
           qaTrend={teamHealthData.qaTrend}
           complianceData={teamHealthData.complianceData}
+          granularCompliance={kpiData?.euComplianceScore}
           emotionData={teamHealthData.emotionData}
           escalationData={teamHealthData.escalationData}
+          dateRange={dateRange}
         />
 
         {/* Center Column - Core Intelligence */}
@@ -254,7 +261,7 @@ export default function VoiceTranscript() {
           highRiskCalls={highRiskCalls}
           intentDistribution={intentDistribution}
           issueHeatmap={issueHeatmap}
-          skillGapData={skillGapData}
+          violations={violations}
           onCallClick={handleCallClick}
         />
 
@@ -263,6 +270,7 @@ export default function VoiceTranscript() {
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}
           coachingTickets={coachingTickets}
+          skillGapData={skillGapData}
           onAgentClick={handleAgentClick}
         />
       </div>

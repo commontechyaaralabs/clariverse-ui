@@ -1,9 +1,160 @@
 // Voice QA Dashboard - Mock Data Functions
 // All data functions for the Manager Dashboard
 
+// Enhanced Compliance Interfaces
+export interface ComplianceItem {
+  id: string;
+  category: 'GDPR' | 'PSD2' | 'MiFID' | 'AML' | 'KYC' | 'Local_Regulation';
+  regulation: string;
+  item: string;
+  passed: boolean;
+  details: {
+    timestamp?: number;
+    method: 'verbal' | 'written' | 'electronic' | 'not_obtained';
+    scriptVersion: string;
+    language: string;
+    evidence: {
+      transcriptExcerpt: string;
+      confidence: number;
+    };
+  };
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  financialImpact: {
+    potentialFine: number;
+    currency: 'EUR' | 'GBP' | 'CHF';
+    fineCalculation: string;
+  };
+  remediation: {
+    required: boolean;
+    action: string;
+    deadline: string;
+    status: 'pending' | 'in_progress' | 'completed';
+  };
+}
+
+export interface Violation {
+  violationId: string;
+  callId: string;
+  agentId: string;
+  agentName: string;
+  timestamp: string;
+  category: 'GDPR' | 'PSD2' | 'MiFID' | 'AML' | 'KYC' | 'Local';
+  subCategory: string;
+  regulation: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  severityReason: string;
+  financialImpact: {
+    potentialFine: number;
+    currency: 'EUR' | 'GBP' | 'CHF';
+    fineCalculation: string;
+    probability: number;
+    expectedLoss: number;
+  };
+  evidence: {
+    transcriptExcerpt: string;
+    timestamp: number;
+  };
+  remediation: {
+    required: boolean;
+    action: string;
+    deadline: string;
+    responsibleTeam: string;
+    status: 'pending' | 'in_progress' | 'completed' | 'overdue';
+  };
+  reporting: {
+    reportable: boolean;
+    regulator: string;
+    reportDeadline: string;
+    reported: boolean;
+  };
+  customerNotification: {
+    required: boolean;
+    deadline: string;
+    notified: boolean;
+  };
+  recurrence: {
+    isRecurring: boolean;
+    occurrenceCount: number;
+    pattern: string;
+  };
+}
+
+export interface GranularComplianceScore {
+  overallScore: number;
+  lastUpdated: string;
+  byRegulation: {
+    gdpr: {
+      score: number;
+      weight: number;
+      violations: number;
+      criticalViolations: number;
+      trend: number[];
+      subScores: {
+        consentManagement: number;
+        dataMinimization: number;
+        purposeLimitation: number;
+        storageCompliance: number;
+        customerRights: number;
+      };
+    };
+    psd2: {
+      score: number;
+      weight: number;
+      violations: number;
+      criticalViolations: number;
+      trend: number[];
+      subScores: {
+        scaImplementation: number;
+        fraudPrevention: number;
+        disputeHandling: number;
+        transparency: number;
+      };
+    };
+    mifid: {
+      score: number;
+      weight: number;
+      violations: number;
+      criticalViolations: number;
+      trend: number[];
+      subScores: {
+        suitabilityAssessment: number;
+        costDisclosure: number;
+        bestExecution: number;
+        recordingCompliance: number;
+      };
+    };
+    aml: {
+      score: number;
+      weight: number;
+      violations: number;
+      criticalViolations: number;
+      trend: number[];
+      subScores: {
+        customerDueDiligence: number;
+        transactionMonitoring: number;
+        suspiciousActivityReporting: number;
+        recordKeeping: number;
+      };
+    };
+  };
+  financialRisk: {
+    totalPotentialFines: number;
+    expectedLoss: number;
+    worstCaseScenario: number;
+    currency: 'EUR';
+  };
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskFactors: Array<{
+    factor: string;
+    impact: number;
+    urgency: 'immediate' | 'high' | 'medium' | 'low';
+  }>;
+}
+
 export interface KPIData {
   overallTeamQAScore: { value: number; trend: number[] };
   complianceAdherence: { value: number; breakdown: { fully: number; partial: number; non: number } };
+  euComplianceScore: GranularComplianceScore;
   customerEmotionIndex: { value: number; trend: number[] };
   highRiskCallsCount: { value: number; trend: 'up' | 'down' | 'stable' };
   averageHandlingTime: { value: number; hourly: number[] };
@@ -20,6 +171,7 @@ export interface IntentDistribution {
   intent: string;
   percentage: number;
   count: number;
+  [key: string]: any;
 }
 
 export interface IssueHeatmapData {
@@ -78,11 +230,17 @@ export interface CallDetail {
   duration: number;
   emotionTimeline: Array<{ time: number; emotion: number }>;
   silenceTimeline: Array<{ time: number; duration: number }>;
-  complianceChecklist: Array<{ item: string; passed: boolean }>;
+  complianceChecklist: ComplianceItem[];
+  violations: Violation[];
   speakingRatio: { agent: number; customer: number };
   transcript: Array<{ speaker: 'agent' | 'customer'; text: string; timestamp: number }>;
   aiSummary: string;
   recommendedAction: string;
+  financialRisk: {
+    potentialFines: number;
+    expectedLoss: number;
+    currency: 'EUR';
+  };
 }
 
 export interface CallListItem {
@@ -282,6 +440,330 @@ export interface CallListItem {
  *    Range: 0+ (tracking volume trends)
  */
 
+export function getGranularComplianceScore(): GranularComplianceScore {
+  return {
+    overallScore: 87.5,
+    lastUpdated: new Date().toISOString(),
+    byRegulation: {
+      gdpr: {
+        score: 85,
+        weight: 0.30,
+        violations: 5,
+        criticalViolations: 2,
+        trend: [82, 83, 84, 84.5, 85, 85, 85],
+        subScores: {
+          consentManagement: 80,
+          dataMinimization: 90,
+          purposeLimitation: 88,
+          storageCompliance: 85,
+          customerRights: 87
+        }
+      },
+      psd2: {
+        score: 92,
+        weight: 0.25,
+        violations: 3,
+        criticalViolations: 0,
+        trend: [90, 91, 91.5, 92, 92, 92, 92],
+        subScores: {
+          scaImplementation: 95,
+          fraudPrevention: 90,
+          disputeHandling: 92,
+          transparency: 91
+        }
+      },
+      mifid: {
+        score: 88,
+        weight: 0.20,
+        violations: 2,
+        criticalViolations: 1,
+        trend: [86, 87, 87.5, 88, 88, 88, 88],
+        subScores: {
+          suitabilityAssessment: 85,
+          costDisclosure: 90,
+          bestExecution: 89,
+          recordingCompliance: 88
+        }
+      },
+      aml: {
+        score: 90,
+        weight: 0.15,
+        violations: 2,
+        criticalViolations: 0,
+        trend: [88, 89, 89.5, 90, 90, 90, 90],
+        subScores: {
+          customerDueDiligence: 92,
+          transactionMonitoring: 89,
+          suspiciousActivityReporting: 90,
+          recordKeeping: 89
+        }
+      }
+    },
+    financialRisk: {
+      totalPotentialFines: 50000000,
+      expectedLoss: 8000000,
+      worstCaseScenario: 50000000,
+      currency: 'EUR'
+    },
+    riskLevel: 'high',
+    riskFactors: [
+      {
+        factor: 'GDPR Consent Management - 2 critical violations',
+        impact: 20000000,
+        urgency: 'immediate'
+      },
+      {
+        factor: 'MiFID Suitability Assessment - 1 critical violation',
+        impact: 10000000,
+        urgency: 'high'
+      },
+      {
+        factor: 'PSD2 SCA Implementation gaps',
+        impact: 5000000,
+        urgency: 'medium'
+      }
+    ]
+  };
+}
+
+export function getViolations(): Violation[] {
+  const agentNames = ['Sarah Johnson', 'Michael Chen', 'Emily Rodriguez', 'David Kim', 'Jessica Martinez'];
+  const agentIds = ['agent_001', 'agent_002', 'agent_003', 'agent_004', 'agent_005'];
+  
+  return [
+    {
+      violationId: 'viol_001',
+      callId: 'call_1001',
+      agentId: agentIds[0],
+      agentName: agentNames[0],
+      timestamp: new Date(Date.now() - 2 * 3600000).toISOString(),
+      category: 'GDPR',
+      subCategory: 'missing_consent',
+      regulation: 'GDPR Art. 13 - Information to be provided',
+      severity: 'critical',
+      severityReason: 'Recording consent not obtained before call recording',
+      financialImpact: {
+        potentialFine: 20000000,
+        currency: 'EUR',
+        fineCalculation: '4% of annual turnover or €20M',
+        probability: 15,
+        expectedLoss: 3000000
+      },
+      evidence: {
+        transcriptExcerpt: "Agent: 'I can help with that account issue...' [No consent mentioned]",
+        timestamp: 5
+      },
+      remediation: {
+        required: true,
+        action: 'Retrain agent on GDPR consent requirements. Implement real-time consent prompts.',
+        deadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+        responsibleTeam: 'Compliance Training',
+        status: 'pending'
+      },
+      reporting: {
+        reportable: true,
+        regulator: 'ECB',
+        reportDeadline: new Date(Date.now() + 14 * 24 * 3600000).toISOString(),
+        reported: false
+      },
+      customerNotification: {
+        required: true,
+        deadline: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
+        notified: false
+      },
+      recurrence: {
+        isRecurring: true,
+        occurrenceCount: 3,
+        pattern: 'Agent consistently misses consent in first 10 seconds'
+      }
+    },
+    {
+      violationId: 'viol_002',
+      callId: 'call_1002',
+      agentId: agentIds[1],
+      agentName: agentNames[1],
+      timestamp: new Date(Date.now() - 5 * 3600000).toISOString(),
+      category: 'PSD2',
+      subCategory: 'sca_failure',
+      regulation: 'PSD2 Art. 97 - Strong customer authentication',
+      severity: 'high',
+      severityReason: 'SCA not completed for payment transaction over €30',
+      financialImpact: {
+        potentialFine: 5000000,
+        currency: 'EUR',
+        fineCalculation: '2% of annual turnover or €5M',
+        probability: 25,
+        expectedLoss: 1250000
+      },
+      evidence: {
+        transcriptExcerpt: "Agent: 'I'll process that payment now...' [No SCA verification performed]",
+        timestamp: 120
+      },
+      remediation: {
+        required: true,
+        action: 'Block payment processing until SCA completed. Agent training on PSD2 requirements.',
+        deadline: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
+        responsibleTeam: 'Payment Security',
+        status: 'pending'
+      },
+      reporting: {
+        reportable: true,
+        regulator: 'ECB',
+        reportDeadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+        reported: false
+      },
+      customerNotification: {
+        required: false,
+        deadline: '',
+        notified: false
+      },
+      recurrence: {
+        isRecurring: false,
+        occurrenceCount: 1,
+        pattern: 'Isolated incident'
+      }
+    },
+    {
+      violationId: 'viol_003',
+      callId: 'call_1003',
+      agentId: agentIds[2],
+      agentName: agentNames[2],
+      timestamp: new Date(Date.now() - 8 * 3600000).toISOString(),
+      category: 'MiFID',
+      subCategory: 'suitability_miss',
+      regulation: 'MiFID II Art. 25 - Suitability and appropriateness',
+      severity: 'critical',
+      severityReason: 'Investment product recommended without suitability assessment',
+      financialImpact: {
+        potentialFine: 10000000,
+        currency: 'EUR',
+        fineCalculation: '3% of annual turnover or €10M',
+        probability: 20,
+        expectedLoss: 2000000
+      },
+      evidence: {
+        transcriptExcerpt: "Agent: 'This investment product would be perfect for you...' [No risk profile discussed]",
+        timestamp: 180
+      },
+      remediation: {
+        required: true,
+        action: 'Immediate suspension of investment product sales. Mandatory MiFID training.',
+        deadline: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
+        responsibleTeam: 'Investment Compliance',
+        status: 'in_progress'
+      },
+      reporting: {
+        reportable: true,
+        regulator: 'ECB',
+        reportDeadline: new Date(Date.now() + 5 * 24 * 3600000).toISOString(),
+        reported: false
+      },
+      customerNotification: {
+        required: true,
+        deadline: new Date(Date.now() + 2 * 24 * 3600000).toISOString(),
+        notified: false
+      },
+      recurrence: {
+        isRecurring: false,
+        occurrenceCount: 1,
+        pattern: 'First occurrence'
+      }
+    },
+    {
+      violationId: 'viol_004',
+      callId: 'call_1004',
+      agentId: agentIds[0],
+      agentName: agentNames[0],
+      timestamp: new Date(Date.now() - 12 * 3600000).toISOString(),
+      category: 'GDPR',
+      subCategory: 'data_retention_breach',
+      regulation: 'GDPR Art. 5 - Storage limitation',
+      severity: 'high',
+      severityReason: 'Customer data retained beyond legal retention period',
+      financialImpact: {
+        potentialFine: 20000000,
+        currency: 'EUR',
+        fineCalculation: '4% of annual turnover or €20M',
+        probability: 10,
+        expectedLoss: 2000000
+      },
+      evidence: {
+        transcriptExcerpt: "System: [Data retention period exceeded by 45 days]",
+        timestamp: 0
+      },
+      remediation: {
+        required: true,
+        action: 'Immediate data deletion. Review all customer records for retention compliance.',
+        deadline: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
+        responsibleTeam: 'Data Protection',
+        status: 'in_progress'
+      },
+      reporting: {
+        reportable: true,
+        regulator: 'ECB',
+        reportDeadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+        reported: false
+      },
+      customerNotification: {
+        required: true,
+        deadline: new Date(Date.now() + 2 * 24 * 3600000).toISOString(),
+        notified: false
+      },
+      recurrence: {
+        isRecurring: true,
+        occurrenceCount: 12,
+        pattern: 'Systematic retention policy non-compliance'
+      }
+    },
+    {
+      violationId: 'viol_005',
+      callId: 'call_1005',
+      agentId: agentIds[3],
+      agentName: agentNames[3],
+      timestamp: new Date(Date.now() - 1 * 3600000).toISOString(),
+      category: 'AML',
+      subCategory: 'cdd_incomplete',
+      regulation: 'AML Directive Art. 13 - Customer due diligence',
+      severity: 'medium',
+      severityReason: 'Incomplete customer due diligence for high-value transaction',
+      financialImpact: {
+        potentialFine: 5000000,
+        currency: 'EUR',
+        fineCalculation: '2% of annual turnover or €5M',
+        probability: 15,
+        expectedLoss: 750000
+      },
+      evidence: {
+        transcriptExcerpt: "Agent: 'I can process that €50,000 transfer...' [CDD checks incomplete]",
+        timestamp: 90
+      },
+      remediation: {
+        required: true,
+        action: 'Complete CDD verification. Review transaction monitoring procedures.',
+        deadline: new Date(Date.now() + 5 * 24 * 3600000).toISOString(),
+        responsibleTeam: 'AML Compliance',
+        status: 'pending'
+      },
+      reporting: {
+        reportable: false,
+        regulator: '',
+        reportDeadline: '',
+        reported: false
+      },
+      customerNotification: {
+        required: false,
+        deadline: '',
+        notified: false
+      },
+      recurrence: {
+        isRecurring: false,
+        occurrenceCount: 1,
+        pattern: 'Isolated incident'
+      }
+    }
+  ];
+}
+
 export function getKPIData(): KPIData {
   return {
     overallTeamQAScore: {
@@ -292,6 +774,7 @@ export function getKPIData(): KPIData {
       value: 92.3,
       breakdown: { fully: 75, partial: 20, non: 5 }
     },
+    euComplianceScore: getGranularComplianceScore(),
     customerEmotionIndex: {
       value: 3.8,
       trend: [3.2, 3.4, 3.5, 3.6, 3.7, 3.8, 3.8]
@@ -580,12 +1063,124 @@ export function getCallDetail(callId: string): CallDetail {
       duration: 2 + Math.random() * 5
     })),
     complianceChecklist: [
-      { item: 'KYC Verification', passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('KYC verification')) ? false : true },
-      { item: 'Identity Confirmation', passed: true },
-      { item: 'Fraud Safety Script', passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Fraud script')) ? false : true },
-      { item: 'Privacy Disclaimer', passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Privacy disclaimer')) ? false : true },
-      { item: 'Regulatory Statement', passed: true }
+      {
+        id: 'kyc_001',
+        category: 'KYC',
+        regulation: 'KYC Directive - Identity Verification',
+        item: 'KYC Verification',
+        passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('KYC verification')) ? false : true,
+        details: {
+          timestamp: 12,
+          method: 'verbal',
+          scriptVersion: 'KYC_v2.1_EN',
+          language: 'en',
+          evidence: {
+            transcriptExcerpt: transcript.find(t => t.timestamp >= 10 && t.timestamp <= 20)?.text || "Agent: 'Can you provide your account number?'",
+            confidence: 95
+          }
+        },
+        severity: 'high',
+        financialImpact: {
+          potentialFine: 5000000,
+          currency: 'EUR',
+          fineCalculation: '2% of annual turnover or €5M'
+        },
+        remediation: {
+          required: !((matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('KYC verification')) ? false : true),
+          action: 'Agent must complete KYC verification before proceeding',
+          deadline: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+          status: 'pending' as const
+        }
+      },
+      {
+        id: 'gdpr_001',
+        category: 'GDPR',
+        regulation: 'GDPR Art. 13 - Information to be provided',
+        item: 'Recording Consent',
+        passed: false,
+        details: {
+          timestamp: 0,
+          method: 'not_obtained',
+          scriptVersion: 'GDPR_v2.1_EN',
+          language: 'en',
+          evidence: {
+            transcriptExcerpt: transcript[0]?.text || "Agent: 'Thank you for calling...'",
+            confidence: 98
+          }
+        },
+        severity: 'critical',
+        financialImpact: {
+          potentialFine: 20000000,
+          currency: 'EUR',
+          fineCalculation: '4% of annual turnover or €20M'
+        },
+        remediation: {
+          required: true,
+          action: 'Obtain explicit consent for call recording',
+          deadline: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
+          status: 'pending' as const
+        }
+      },
+      {
+        id: 'fraud_001',
+        category: 'PSD2',
+        regulation: 'PSD2 Art. 2 - Fraud prevention',
+        item: 'Fraud Safety Script',
+        passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Fraud script')) ? false : true,
+        details: {
+          timestamp: 38,
+          method: 'verbal',
+          scriptVersion: 'Fraud_v2.0_EN',
+          language: 'en',
+          evidence: {
+            transcriptExcerpt: transcript.find(t => t.timestamp >= 35 && t.timestamp <= 45)?.text || "Agent: 'I'll flag this transaction...'",
+            confidence: 90
+          }
+        },
+        severity: 'high',
+        financialImpact: {
+          potentialFine: 5000000,
+          currency: 'EUR',
+          fineCalculation: '2% of annual turnover or €5M'
+        },
+        remediation: {
+          required: !((matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Fraud script')) ? false : true),
+          action: 'Complete fraud safety protocol',
+          deadline: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
+          status: 'pending' as const
+        }
+      },
+      {
+        id: 'privacy_001',
+        category: 'GDPR',
+        regulation: 'GDPR Art. 13 - Privacy information',
+        item: 'Privacy Disclaimer',
+        passed: (matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Privacy disclaimer')) ? false : true,
+        details: {
+          timestamp: 5,
+          method: 'verbal',
+          scriptVersion: 'Privacy_v1.5_EN',
+          language: 'en',
+          evidence: {
+            transcriptExcerpt: transcript.find(t => t.timestamp >= 0 && t.timestamp <= 10)?.text || "Agent: 'Your information is confidential...'",
+            confidence: 85
+          }
+        },
+        severity: 'medium',
+        financialImpact: {
+          potentialFine: 10000000,
+          currency: 'EUR',
+          fineCalculation: '2% of annual turnover or €10M'
+        },
+        remediation: {
+          required: !((matchingCall && 'complianceMisses' in matchingCall && matchingCall.complianceMisses?.includes('Privacy disclaimer')) ? false : true),
+          action: 'Provide privacy disclaimer to customer',
+          deadline: new Date(Date.now() + 5 * 24 * 3600000).toISOString(),
+          status: 'pending' as const
+        }
+      }
     ],
+    violations: getViolations().filter(v => v.callId === callId),
     speakingRatio: { agent: 45, customer: 55 },
     transcript,
     aiSummary: (matchingCall && 'aiExplanation' in matchingCall) ? matchingCall.aiExplanation : 'Call transcript analysis complete. Review recommended for quality assurance.',
@@ -595,7 +1190,12 @@ export function getCallDetail(callId: string): CallDetail {
           : matchingCall.riskCategory === 'Angry Customer'
           ? 'Review de-escalation techniques. Consider additional training on handling frustrated customers.'
           : 'Review call for quality assurance and provide feedback to agent.')
-      : 'Review call for quality assurance and provide feedback to agent.'
+      : 'Review call for quality assurance and provide feedback to agent.',
+    financialRisk: {
+      potentialFines: getViolations().filter(v => v.callId === callId).reduce((sum, v) => sum + v.financialImpact.potentialFine, 0),
+      expectedLoss: getViolations().filter(v => v.callId === callId).reduce((sum, v) => sum + v.financialImpact.expectedLoss, 0),
+      currency: 'EUR'
+    }
   };
 }
 

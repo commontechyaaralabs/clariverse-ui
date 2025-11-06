@@ -20,12 +20,12 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
           trend: data.overallTeamQAScore.trend[6] > data.overallTeamQAScore.trend[0] ? 'up' : 'down'
         },
         {
-          label: 'Compliance Adherence',
-          description: 'Measures how well agents follow mandatory banking scripts including KYC verification, fraud guidelines, and regulatory wording. Critical for legal and regulatory compliance.',
-          value: data.complianceAdherence.value.toFixed(1),
+          label: 'EU Compliance Score',
+          description: 'Granular European compliance score across GDPR, PSD2, MiFID, and AML regulations. Shows weighted average with financial risk tracking. Lower scores indicate higher regulatory risk and potential fines.',
+          value: data.euComplianceScore.overallScore.toFixed(1),
           unit: '%',
           chart: null,
-          trend: 'up' as const
+          trend: data.euComplianceScore.byRegulation.gdpr.trend[6] > data.euComplianceScore.byRegulation.gdpr.trend[0] ? 'up' : 'down'
         },
         {
           label: 'Customer Emotion',
