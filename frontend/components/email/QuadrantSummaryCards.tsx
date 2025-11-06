@@ -33,9 +33,9 @@ const quadrantConfig = {
   },
   delegate: {
     icon: ArrowUpRight,
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/20',
+    color: 'text-[#5332ff]',
+    bgColor: 'bg-[#5332ff]/10',
+    borderColor: 'border-[#5332ff]/20',
     description: 'Urgent tasks that can be delegated to others',
   },
   delete: {

@@ -122,11 +122,11 @@ export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps
   const severityColors = {
     critical: 'text-red-400 border-red-500/30 bg-red-500/10',
     warning: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
-    info: 'text-blue-400 border-blue-500/30 bg-blue-500/10',
+    info: 'text-[#b90abd] border-[#b90abd]/30 bg-[#b90abd]/10',
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-700 overflow-hidden">
+    <Card className="overflow-hidden">
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="flex items-center gap-2 flex-shrink-0">
           <Sparkles className="h-4 w-4 text-purple-400" />

@@ -92,14 +92,14 @@ export default function Sidebar() {
             <Link href={item.href}>
               <Button
                 variant={pathname === item.href ? "default" : "ghost"}
-                className={`w-full h-9 ${
+                className={`w-full h-9 border transition-all duration-200 ${
                   isExpanded 
                     ? 'justify-start gap-2 px-2' 
                     : 'justify-center p-0'
                 } ${
                   pathname === item.href
-                    ? 'btn-gradient-primary'
-                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                    ? 'btn-gradient-primary border-white/20 hover:border-white/30'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground border-transparent hover:border-white/20'
                 }`}
                 title={!isExpanded ? item.label : undefined}
               >

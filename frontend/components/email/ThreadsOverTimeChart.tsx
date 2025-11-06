@@ -13,7 +13,7 @@ interface ThreadsOverTimeChartProps {
 }
 
 const COLORS = [
-  '#3b82f6', '#ef4444', '#10b981', '#f59e0b', 
+  '#5332ff', '#ef4444', '#10b981', '#f59e0b', 
   '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'
 ];
 
@@ -244,7 +244,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
               <div className="space-y-1 mb-4">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    <div className="w-2 h-2 rounded-full bg-[#5332ff]" />
                     <span className="text-gray-300">Open - Customer</span>
                   </div>
                   <span className="text-white font-medium">{data.openCustomer}</span>
@@ -355,7 +355,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
               <div>
                 <CardTitle className="flex items-center gap-2">
                   {selectedActionType === 'customer' ? (
-                    <Users className="h-5 w-5 text-blue-400" />
+                    <Users className="h-5 w-5 text-[#b90abd]" />
                   ) : (
                     <Building className="h-5 w-5 text-orange-400" />
                   )}
@@ -406,7 +406,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
                     <Tooltip />
                     <Bar
                       dataKey="count"
-                      fill={selectedActionType === 'customer' ? '#3b82f6' : '#f97316'}
+                      fill={selectedActionType === 'customer' ? '#5332ff' : '#f97316'}
                       fillOpacity={0.8}
                     />
                   </BarChart>
@@ -421,7 +421,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-400" />
+                <Users className="h-5 w-5 text-[#b90abd]" />
                 Customer Distribution
               </CardTitle>
               <CardDescription>
@@ -440,7 +440,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
                       {Object.entries(item.topics).map(([topic, count]) => (
                         <span
                           key={topic}
-                          className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded border border-blue-500/30"
+                          className="px-2 py-1 text-xs bg-[#b90abd]/20 text-[#b90abd] rounded border border-[#b90abd]/30"
                         >
                           {topic} ({count})
                         </span>
@@ -498,7 +498,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-blue-400" />
+          <TrendingUp className="h-5 w-5 text-[#b90abd]" />
           Threads Over Time
         </CardTitle>
         <CardDescription>
@@ -553,9 +553,9 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
               <Line
                 type="monotone"
                   dataKey="openCustomer"
-                stroke="#3b82f6"
+                stroke="#5332ff"
                 strokeWidth={2}
-                dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                dot={{ fill: '#5332ff', strokeWidth: 2, r: 4 }}
                   name="Open - Customer"
               />
               <Line

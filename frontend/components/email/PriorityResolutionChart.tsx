@@ -59,7 +59,7 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
       case 'P1': return '#ef4444'; // red
       case 'P2': return '#f97316'; // orange
       case 'P3': return '#eab308'; // yellow
-      case 'P4': return '#3b82f6'; // blue
+      case 'P4': return '#5332ff'; // purple-blue
       case 'P5': return '#6b7280'; // gray
       default: return '#6b7280';
     }
@@ -70,7 +70,7 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
       case 'P1': return <AlertTriangle className="h-4 w-4 text-red-400" />;
       case 'P2': return <AlertTriangle className="h-4 w-4 text-orange-400" />;
       case 'P3': return <Clock className="h-4 w-4 text-yellow-400" />;
-      case 'P4': return <Target className="h-4 w-4 text-blue-400" />;
+      case 'P4': return <Target className="h-4 w-4 text-[#5332ff]" />;
       case 'P5': return <Target className="h-4 w-4 text-gray-400" />;
       default: return <Target className="h-4 w-4 text-gray-400" />;
     }
@@ -142,7 +142,7 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
               <Bar
                 dataKey="openCustomer"
                 stackId="a"
-                fill="#3b82f6"
+                fill="#5332ff"
                 name="Open - Customer"
                 radius={[0, 0, 0, 0]}
               />

@@ -12,7 +12,7 @@ interface TopicDistributionChartProps {
 }
 
 const COLORS = [
-  '#3b82f6', '#ef4444', '#10b981', '#f59e0b', 
+  '#5332ff', '#ef4444', '#10b981', '#f59e0b', 
   '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'
 ];
 
@@ -84,7 +84,7 @@ export function TopicDistributionChart({ data, onTopicClick }: TopicDistribution
               onClick={() => setChartType('pie')}
               className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                 chartType === 'pie'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#b90abd] text-white'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -94,7 +94,7 @@ export function TopicDistributionChart({ data, onTopicClick }: TopicDistribution
               onClick={() => setChartType('bar')}
               className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                 chartType === 'bar'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#b90abd] text-white'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -148,7 +148,7 @@ export function TopicDistributionChart({ data, onTopicClick }: TopicDistribution
                 <Tooltip content={<CustomTooltip />} />
                 <Bar 
                   dataKey="count" 
-                  fill="#3b82f6"
+                  fill="#5332ff"
                   onClick={handleBarClick}
                   radius={[4, 4, 0, 0]}
                 />

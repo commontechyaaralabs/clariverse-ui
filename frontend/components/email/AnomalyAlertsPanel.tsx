@@ -138,7 +138,7 @@ export function AnomalyAlertsPanel({ kpiData, threads }: AnomalyAlertsPanelProps
       case 'warning':
         return 'border-yellow-500 bg-yellow-500/10';
       default:
-        return 'border-blue-500 bg-blue-500/10';
+        return 'border-[#b90abd] bg-[#b90abd]/10';
     }
   };
 
@@ -149,22 +149,22 @@ export function AnomalyAlertsPanel({ kpiData, threads }: AnomalyAlertsPanelProps
       case 'warning':
         return <TrendingUp className="h-4 w-4 text-yellow-400" />;
       default:
-        return <MessageSquare className="h-4 w-4 text-blue-400" />;
+        return <MessageSquare className="h-4 w-4 text-[#b90abd]" />;
     }
   };
 
   return (
     <>
-      <Card className="bg-gray-900 border-gray-700">
+      <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-purple-400" />
+              <Zap className="h-5 w-5 text-[#b90abd]" />
               <CardTitle className="text-white">Anomaly Alerts Panel</CardTitle>
             </div>
-            <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
+            <div className="flex items-center gap-2 px-2 py-1 bg-[#b90abd]/10 border border-[#b90abd]/30 rounded-md">
               <span className="text-sm">✨</span>
-              <span className="text-xs text-purple-300 font-medium">AI Detected</span>
+              <span className="text-xs text-[#b90abd] font-medium">AI Detected</span>
             </div>
           </div>
           <CardDescription className="text-gray-400">
@@ -232,7 +232,7 @@ export function AnomalyAlertsPanel({ kpiData, threads }: AnomalyAlertsPanelProps
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-96 bg-gray-900 border-l border-gray-700 z-50 overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 w-96 z-50 overflow-y-auto border-l border-white/10"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">

@@ -154,17 +154,17 @@ export function QueueHealthMonitor({ threads, onRebalance }: QueueHealthMonitorP
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Activity className="h-5 w-5 text-purple-400" />
+            <Activity className="h-5 w-5 text-[#b90abd]" />
             <CardTitle className="text-white">Queue Health Monitor</CardTitle>
           </div>
           <Button
             onClick={handleRebalance}
             disabled={isRebalancing}
-            className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white"
+            className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white"
             size="sm"
           >
             {isRebalancing ? (

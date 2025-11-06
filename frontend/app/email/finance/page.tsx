@@ -209,7 +209,7 @@ export default function FinanceDashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="flex items-center gap-3">
-              <RefreshCw className="h-6 w-6 animate-spin text-purple-400" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#b90abd]" />
               <span className="text-white text-lg">Loading finance dashboard...</span>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function FinanceDashboard() {
     P1: '#ef4444',
     P2: '#f97316',
     P3: '#eab308',
-    P4: '#3b82f6',
+    P4: '#5332ff',
     P5: '#6b7280',
   };
 
@@ -261,7 +261,7 @@ export default function FinanceDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   🧭 Executive Cockpit
                 </Button>
@@ -270,7 +270,7 @@ export default function FinanceDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-blue-600/10 border-blue-500/30 text-blue-300 hover:bg-blue-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   ⚙️ Manager View
                 </Button>
@@ -337,10 +337,10 @@ export default function FinanceDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/30 hover:border-blue-500/50 transition-all">
+            <Card className="bg-gradient-to-br from-[#5332ff]/10 to-[#b90abd]/10 border-[#5332ff]/30 hover:border-[#5332ff]/50 transition-all">
               <CardHeader>
                 <CardTitle className="text-white text-sm flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-blue-400" />
+                  <Clock className="h-4 w-4 text-[#5332ff]" />
                   Avg Approval Latency
                 </CardTitle>
               </CardHeader>
@@ -396,10 +396,10 @@ export default function FinanceDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.3 }}
           >
-            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/30 hover:border-purple-500/50 transition-all">
+            <Card className="bg-gradient-to-br from-[#b90abd]/10 to-[#b90abd]/10 border-[#b90abd]/30 hover:border-[#b90abd]/50 transition-all">
               <CardHeader>
                 <CardTitle className="text-white text-sm flex items-center gap-2">
-                  <FileCheck className="h-4 w-4 text-purple-400" />
+                  <FileCheck className="h-4 w-4 text-[#b90abd]" />
                   Approval Rate
                 </CardTitle>
               </CardHeader>
@@ -409,8 +409,8 @@ export default function FinanceDashboard() {
                 </div>
                 <p className="text-xs text-gray-400">{approvalAnalysis.closedCount} completed</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <Target className="h-3 w-3 text-purple-400" />
-                  <span className="text-xs text-purple-400">Processing efficiency</span>
+                  <Target className="h-3 w-3 text-[#b90abd]" />
+                  <span className="text-xs text-[#b90abd]">Processing efficiency</span>
                 </div>
               </CardContent>
             </Card>
@@ -420,7 +420,7 @@ export default function FinanceDashboard() {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Approval Funnel by Priority */}
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-green-400" />
@@ -466,10 +466,10 @@ export default function FinanceDashboard() {
           </Card>
 
           {/* Approval Trend */}
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-blue-400" />
+                <TrendingUp className="h-5 w-5 text-[#b90abd]" />
                 Approval Trend (7 Days)
               </CardTitle>
               <CardDescription className="text-gray-400">
@@ -583,7 +583,7 @@ export default function FinanceDashboard() {
 
         {/* At-Risk Approvals Table */}
         {approvalAnalysis.atRisk.length > 0 && (
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-red-400" />

@@ -27,7 +27,7 @@ export function SentimentTrendChart({ data, threadId, showArea = false }: Sentim
           </p>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs">
-              <div className="w-3 h-3 rounded-full bg-blue-500" />
+              <div className="w-3 h-3 rounded-full bg-[#5332ff]" />
               <span className="text-gray-300">Sentiment:</span>
               <span className={`font-medium ${
                 data.sentiment === 1 ? 'text-green-400' : 

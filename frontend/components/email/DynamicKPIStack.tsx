@@ -68,8 +68,8 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
       value: decisionDebtHours.toLocaleString(),
       unit: 'hrs',
       icon: Clock,
-      color: decisionDebtHours > 1000 ? 'text-red-400' : decisionDebtHours > 500 ? 'text-yellow-400' : 'text-blue-400',
-      bgColor: decisionDebtHours > 1000 ? 'bg-red-500/10' : decisionDebtHours > 500 ? 'bg-yellow-500/10' : 'bg-blue-500/10',
+      color: decisionDebtHours > 1000 ? 'text-red-400' : decisionDebtHours > 500 ? 'text-yellow-400' : 'text-[#b90abd]',
+      bgColor: decisionDebtHours > 1000 ? 'bg-red-500/10' : decisionDebtHours > 500 ? 'bg-yellow-500/10' : 'bg-[#b90abd]/10',
       delta: previousData
         ? decisionDebtHours -
           Math.round(
@@ -91,8 +91,8 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
       value: intentSpike > 0 ? `↑ ${intentSpike.toFixed(1)}` : `↓ ${Math.abs(intentSpike).toFixed(1)}`,
       unit: '%',
       icon: Activity,
-      color: intentSpike > 10 ? 'text-red-400' : intentSpike > 0 ? 'text-yellow-400' : 'text-blue-400',
-      bgColor: intentSpike > 10 ? 'bg-red-500/10' : intentSpike > 0 ? 'bg-yellow-500/10' : 'bg-blue-500/10',
+      color: intentSpike > 10 ? 'text-red-400' : intentSpike > 0 ? 'text-yellow-400' : 'text-[#b90abd]',
+      bgColor: intentSpike > 10 ? 'bg-red-500/10' : intentSpike > 0 ? 'bg-yellow-500/10' : 'bg-[#b90abd]/10',
       delta: intentSpike,
     },
   ];
@@ -121,7 +121,7 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
                     : hasDelta && isPositive
                       ? 'border-l-green-500'
                       : 'border-l-gray-600'
-                } bg-gray-900 border-gray-700 hover:border-gray-600 transition-all duration-300`}
+                } hover:border-white/20 transition-all duration-300`}
               >
                 {/* Animated background on delta change */}
                 {hasDelta && (

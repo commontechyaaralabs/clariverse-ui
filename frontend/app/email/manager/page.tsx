@@ -49,7 +49,7 @@ export default function ManagerDashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="flex items-center gap-3">
-              <RefreshCw className="h-6 w-6 animate-spin text-purple-400" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#b90abd]" />
               <span className="text-white text-lg">Loading manager dashboard...</span>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function ManagerDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   🧭 Executive Cockpit
                 </Button>
@@ -96,7 +96,7 @@ export default function ManagerDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-blue-600/10 border-blue-500/30 text-blue-300 hover:bg-blue-600/20 border-2"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20 border-2"
                 >
                   ⚙️ Manager View
                 </Button>

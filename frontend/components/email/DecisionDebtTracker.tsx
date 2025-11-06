@@ -79,7 +79,7 @@ export function DecisionDebtTracker({ kpiData }: DecisionDebtTrackerProps) {
     : 0;
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

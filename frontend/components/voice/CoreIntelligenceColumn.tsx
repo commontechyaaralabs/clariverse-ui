@@ -242,11 +242,10 @@ export function CoreIntelligenceColumn({
                   <RechartsTooltip 
                     contentStyle={{ 
                       background: 'rgba(1, 1, 1, 0.95)',
-                      backdropFilter: 'blur(20px)',
                       border: '2px solid rgba(185, 10, 189, 0.4)',
                       borderRadius: '12px',
                       color: '#ffffff',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                      boxShadow: 'none',
                       padding: '8px 12px'
                     }}
                     itemStyle={{ color: '#ffffff' }}
@@ -384,11 +383,11 @@ export function CoreIntelligenceColumn({
                       <Tooltip key={vIdx}>
                         <TooltipTrigger asChild>
                           <div
-                            className="h-10 rounded flex items-center justify-center cursor-help transition-all hover:scale-105 hover:shadow-lg border border-white/10 mx-auto w-full"
+                            className="h-10 rounded flex items-center justify-center cursor-help transition-all hover:scale-105 border border-white/10 mx-auto w-full"
                             style={{ backgroundColor: getHeatmapColor(issue.value) }}
                             title={`${item.intent} - ${issue.fullLabel}: ${issue.value.toFixed(0)} occurrences`}
                           >
-                            <span className="text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                            <span className="text-sm font-bold text-white">
                               {issue.value.toFixed(0)}
                             </span>
                           </div>

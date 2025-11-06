@@ -137,10 +137,10 @@ export function EmailFilters({
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-blue-400" />
+            <Filter className="h-5 w-5 text-[#b90abd]" />
             Filters
             {activeFiltersCount > 0 && (
-              <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+              <span className="bg-[#b90abd] text-white text-xs px-2 py-1 rounded-full">
                 {activeFiltersCount}
               </span>
             )}
@@ -166,7 +166,7 @@ export function EmailFilters({
             <Button
               size="sm"
               onClick={onApplyFilters}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-[#b90abd] hover:bg-[#a009b3] text-white"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
               Apply
@@ -231,7 +231,7 @@ export function EmailFilters({
                     onClick={() => handleStatusChange(option.value)}
                     className={
                       filters.status.includes(option.value)
-                        ? "bg-blue-600 text-white"
+                        ? "bg-[#b90abd] text-white"
                         : "border-gray-600 text-gray-300 hover:bg-gray-700"
                     }
                   >
@@ -322,12 +322,12 @@ export function EmailFilters({
               {filters.status.map((status) => (
                 <span
                   key={`status-${status}`}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full"
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-[#b90abd]/20 text-[#b90abd] text-xs rounded-full"
                 >
                   Status: {statusOptions.find(o => o.value === status)?.label}
                   <button
                     onClick={() => handleStatusChange(status)}
-                    className="ml-1 hover:text-blue-100"
+                    className="ml-1 hover:text-[#a009b3]"
                   >
                     <X className="h-3 w-3" />
                   </button>

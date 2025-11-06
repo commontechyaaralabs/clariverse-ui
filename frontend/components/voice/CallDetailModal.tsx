@@ -150,11 +150,10 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                       <Tooltip 
                         contentStyle={{ 
                           background: 'rgba(1, 1, 1, 0.95)',
-                          backdropFilter: 'blur(20px)',
                           border: '2px solid rgba(185, 10, 189, 0.4)',
                           borderRadius: '12px',
                           color: '#ffffff',
-                          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(185, 10, 189, 0.3)',
+                          boxShadow: 'none',
                           padding: '8px 12px'
                         }}
                         formatter={(value: number) => {
@@ -170,7 +169,6 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                         stroke="url(#sentimentLineGradient)" 
                         strokeWidth={3}
                         fill="url(#sentimentAreaGradient)"
-                        filter="url(#glow)"
                         dot={false}
                         activeDot={{ r: 6, fill: '#b90abd', stroke: '#fff', strokeWidth: 2 }}
                       />
@@ -238,11 +236,10 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                       <Tooltip 
                         contentStyle={{ 
                           background: 'rgba(1, 1, 1, 0.95)',
-                          backdropFilter: 'blur(20px)',
                           border: '2px solid rgba(245, 158, 11, 0.4)',
                           borderRadius: '12px',
                           color: '#ffffff',
-                          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 158, 11, 0.3)',
+                          boxShadow: 'none',
                           padding: '8px 12px'
                         }}
                         formatter={(value: number) => [`${value.toFixed(2)}s`, 'Silence Duration']}
@@ -251,7 +248,6 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                       <Bar 
                         dataKey="duration" 
                         fill="url(#silenceGradient)"
-                        filter="url(#barGlow)"
                         radius={[4, 4, 0, 0]}
                       >
                         {call.silenceTimeline.map((entry, index) => {

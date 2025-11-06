@@ -297,7 +297,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
       case 'topic':
         return '#7c3aed'; // purple
       case 'stage':
-        return '#3b82f6'; // blue
+        return '#5332ff'; // purple-blue
       case 'outcome':
         return '#10b981'; // green
       default:
@@ -310,7 +310,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
       case 'topic':
         return '#8b5cf6';
       case 'stage':
-        return '#60a5fa';
+        return '#5332ff';
       case 'outcome':
         return '#34d399';
       default:
@@ -321,7 +321,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
   const getLinkColor = (link: FlowLink, isHovered: boolean) => {
     if (isHovered) return '#a78bfa';
     if (link.source.startsWith('topic')) return '#7c3aed';
-    if (link.source.startsWith('stage')) return '#3b82f6';
+    if (link.source.startsWith('stage')) return '#5332ff';
     return '#6b7280';
   };
 
@@ -334,11 +334,11 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GitBranch className="h-5 w-5 text-purple-400" />
+            <GitBranch className="h-5 w-5 text-[#b90abd]" />
             <CardTitle className="text-white">Intent Flow Map</CardTitle>
           </div>
           <div className="flex items-center gap-2">
@@ -346,14 +346,14 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
               onClick={() => setIsZoomed(true)}
               variant="outline"
               size="sm"
-              className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+              className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
             >
               <ZoomIn className="h-4 w-4 mr-2" />
               Zoom
             </Button>
-            <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
+            <div className="flex items-center gap-2 px-2 py-1 bg-[#b90abd]/10 border border-[#b90abd]/30 rounded-md">
               <span className="text-sm">✨</span>
-              <span className="text-xs text-purple-300 font-medium">AI Flow Analysis</span>
+              <span className="text-xs text-[#b90abd] font-medium">AI Flow Analysis</span>
             </div>
           </div>
         </div>
@@ -372,8 +372,8 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
                   <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.6" />
                 </linearGradient>
                 <linearGradient id="stageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.6" />
+                  <stop offset="0%" stopColor="#5332ff" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#5332ff" stopOpacity="0.6" />
                 </linearGradient>
                 <linearGradient id="outcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
@@ -589,7 +589,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
               <span className="text-xs text-gray-400">Topics</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-blue-500"></div>
+              <div className="w-4 h-4 rounded bg-[#5332ff]"></div>
               <span className="text-xs text-gray-400">Stages</span>
             </div>
             <div className="flex items-center gap-2">
@@ -606,7 +606,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
 
       {/* Zoom Dialog */}
       <Dialog open={isZoomed} onOpenChange={setIsZoomed}>
-        <DialogContent className="max-w-[100vw] max-h-[100vh] w-screen h-screen m-0 p-0 bg-gray-900 border-gray-700 rounded-none flex flex-col">
+        <DialogContent className="max-w-[100vw] max-h-[100vh] w-screen h-screen m-0 p-0 rounded-none flex flex-col">
           <DialogTitle className="sr-only">Intent Flow Map - Full View</DialogTitle>
           <div className="relative bg-gray-950 overflow-hidden flex-1 min-h-0 w-full h-full">
             <svg width="100%" height="100%" viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid meet" className="absolute inset-0">
@@ -616,8 +616,8 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
                   <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.6" />
                 </linearGradient>
                 <linearGradient id="stageGradientFull" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.6" />
+                  <stop offset="0%" stopColor="#5332ff" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#5332ff" stopOpacity="0.6" />
                 </linearGradient>
                 <linearGradient id="outcomeGradientFull" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />

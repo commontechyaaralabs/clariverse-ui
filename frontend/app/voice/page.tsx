@@ -32,6 +32,7 @@ import {
   CallDetail
 } from '@/lib/voiceData';
 import { ViolationCenter } from '@/components/voice/ViolationCenter';
+import { AIDayGeneratorChat } from '@/components/voice/AIDayGeneratorChat';
 
 export default function VoiceTranscript() {
   const [kpiData, setKpiData] = useState<KPIData | null>(null);
@@ -48,6 +49,7 @@ export default function VoiceTranscript() {
   const [violations, setViolations] = useState<any[]>([]);
   const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     // Initialize date range for "One Month" preset
@@ -176,11 +178,8 @@ export default function VoiceTranscript() {
             {/* AI Insights Button */}
             <div className="flex justify-end">
               <Button
-                onClick={() => {
-                  // Handle AI insights generation
-                  console.log('Generate your day in 2 minutes');
-                }}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 group h-[38px] px-6"
+                onClick={() => setIsChatOpen(true)}
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 group h-[38px] px-6"
               >
                 <span className="text-lg mr-2 group-hover:rotate-180 transition-transform duration-500 inline-block">✨</span>
                 Generate your day in 2 minutes
@@ -229,7 +228,7 @@ export default function VoiceTranscript() {
               <Button
                 size="sm"
                 onClick={handleApplyFilters}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 h-[38px]"
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 h-[38px]"
               >
                 Apply
                 <RefreshCw className="h-4 w-4 ml-2" />
@@ -283,6 +282,17 @@ export default function VoiceTranscript() {
           setIsCallModalOpen(false);
           setSelectedCall(null);
         }}
+      />
+
+      {/* AI Day Generator Chat */}
+      <AIDayGeneratorChat
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        kpiData={kpiData}
+        highRiskCalls={highRiskCalls}
+        agentLeaderboard={agentLeaderboard}
+        coachingTickets={coachingTickets}
+        intentDistribution={intentDistribution}
       />
     </div>
   );

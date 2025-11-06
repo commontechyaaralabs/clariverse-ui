@@ -144,16 +144,16 @@ export function BottleneckHeatmap({ threads }: BottleneckHeatmapProps) {
   const maxAge = Math.max(...heatmapData.cells.map((c) => c.avgAge), 1);
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-purple-400" />
+            <AlertTriangle className="h-5 w-5 text-[#b90abd]" />
             <CardTitle className="text-white">Bottleneck Heatmap</CardTitle>
           </div>
-          <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
+          <div className="flex items-center gap-2 px-2 py-1 bg-[#b90abd]/10 border border-[#b90abd]/30 rounded-md">
             <span className="text-sm">✨</span>
-            <span className="text-xs text-purple-300 font-medium">AI Suggestions</span>
+            <span className="text-xs text-[#b90abd] font-medium">AI Suggestions</span>
           </div>
         </div>
         <CardDescription className="text-gray-400">
@@ -201,7 +201,7 @@ export function BottleneckHeatmap({ threads }: BottleneckHeatmapProps) {
                             cell
                               ? `${getColorForAge(cell.avgAge)} text-white`
                               : 'bg-gray-800 text-gray-600'
-                          } ${isHovered ? 'ring-2 ring-purple-400' : ''}`}
+                          } ${isHovered ? 'ring-2 ring-[#b90abd]' : ''}`}
                           onMouseEnter={() => setHoveredCell({ owner, stage })}
                           onMouseLeave={() => setHoveredCell(null)}
                         >
@@ -243,7 +243,7 @@ export function BottleneckHeatmap({ threads }: BottleneckHeatmapProps) {
                                     </div>
                                     {cell.suggestion && (
                                       <div className="pt-2 border-t border-gray-700">
-                                        <p className="text-xs text-purple-300 font-medium">
+                                        <p className="text-xs text-[#b90abd] font-medium">
                                           💡 {cell.suggestion}
                                         </p>
                                       </div>

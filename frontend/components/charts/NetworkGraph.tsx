@@ -92,7 +92,7 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
 
   const getNodeColor = (type: string) => {
     switch (type) {
-      case 'customer': return '#3B82F6'; // Blue
+      case 'customer': return '#5332ff'; // Purple-blue
       case 'agent': return '#10B981'; // Green
       case 'manager': return '#F59E0B'; // Yellow
       case 'external': return '#EF4444'; // Red
@@ -111,7 +111,7 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <CardTitle className="text-white">People & Collaboration Network</CardTitle>
         <CardDescription className="text-gray-400">
@@ -123,7 +123,7 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
           {/* Legend */}
           <div className="flex items-center gap-6 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-[#5332ff] rounded-full"></div>
               <span className="text-gray-300">Customers</span>
             </div>
             <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
               ref={svgRef}
               width="100%"
               height="400"
-              className="border border-gray-700 rounded-lg bg-gray-800"
+              className="border border-white/10 rounded-lg bg-app-black/30"
             >
               {/* Edges */}
               {data.edges.map((edge, index) => {
@@ -200,11 +200,11 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
 
             {/* Hover Tooltips */}
             {hoveredNode && (
-              <div className="absolute z-10 bg-gray-800 border border-gray-600 rounded-lg p-3 shadow-xl max-w-xs">
+              <div className="absolute z-10 bg-app-black/90 border border-white/10 rounded-lg p-3 shadow-xl max-w-xs">
                 <div className="space-y-1 text-sm">
                   <div className="text-white font-medium">{hoveredNode.label}</div>
                   <div className="text-gray-300">
-                    <div>Type: <span className="text-blue-400">{hoveredNode.type}</span></div>
+                    <div>Type: <span className="text-[#b90abd]">{hoveredNode.type}</span></div>
                     <div>Email: <span className="text-gray-400">{hoveredNode.email}</span></div>
                     <div>Threads: <span className="text-green-400">{hoveredNode.thread_count}</span></div>
                     <div>Avg Sentiment: <span className={getSentimentColor(hoveredNode.avg_sentiment)}>{hoveredNode.avg_sentiment}</span></div>
@@ -214,11 +214,11 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
             )}
 
             {hoveredEdge && (
-              <div className="absolute z-10 bg-gray-800 border border-gray-600 rounded-lg p-3 shadow-xl max-w-xs">
+              <div className="absolute z-10 bg-app-black/90 border border-white/10 rounded-lg p-3 shadow-xl max-w-xs">
                 <div className="space-y-1 text-sm">
                   <div className="text-white font-medium">Connection</div>
                   <div className="text-gray-300">
-                    <div>Weight: <span className="text-blue-400">{hoveredEdge.weight.toFixed(2)}</span></div>
+                    <div>Weight: <span className="text-[#b90abd]">{hoveredEdge.weight.toFixed(2)}</span></div>
                     <div>Thread Count: <span className="text-green-400">{hoveredEdge.thread_count}</span></div>
                   </div>
                 </div>
@@ -229,7 +229,7 @@ export function NetworkGraph({ data }: NetworkGraphProps) {
           {/* Statistics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400">
+              <div className="text-2xl font-bold text-[#5332ff]">
                 {data.nodes.filter(n => n.type === 'customer').length}
               </div>
               <div className="text-gray-400">Customers</div>

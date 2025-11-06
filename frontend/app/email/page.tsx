@@ -25,6 +25,7 @@ import {
 import { KPICards } from '@/components/email/KPICards';
 import { FilterState } from '@/components/email/EmailFilters';
 import { ThreadDetailDrawer } from '@/components/email/ThreadDetailDrawer';
+import { AIDayGeneratorChat } from '@/components/email/AIDayGeneratorChat';
 import { ThreadsOverTimeChart } from '@/components/email/ThreadsOverTimeChart';
 import { SentimentTrendChart } from '@/components/email/SentimentTrendChart';
 import { TopicDistributionChart } from '@/components/email/TopicDistributionChart';
@@ -56,6 +57,7 @@ export default function EmailDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuadrant, setSelectedQuadrant] = useState<string | null>(null);
   const [selectedPriorityForTopics, setSelectedPriorityForTopics] = useState<string | null>(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   
   // Filters state
   const [filters, setFilters] = useState<FilterState>({
@@ -369,7 +371,7 @@ export default function EmailDashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="flex items-center gap-3">
-              <RefreshCw className="h-6 w-6 animate-spin text-blue-400" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#b90abd]" />
               <span className="text-white text-lg">Loading dashboard...</span>
             </div>
           </div>
@@ -407,7 +409,7 @@ export default function EmailDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   🧭 Executive Cockpit
                 </Button>
@@ -416,7 +418,7 @@ export default function EmailDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-blue-600/10 border-blue-500/30 text-blue-300 hover:bg-blue-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   ⚙️ Manager View
                 </Button>
@@ -445,11 +447,8 @@ export default function EmailDashboard() {
             {/* AI Insights Button */}
             <div className="flex justify-end">
               <Button
-                onClick={() => {
-                  // Handle AI insights generation
-                  console.log('Generate your day in 2 minutes');
-                }}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 group h-[38px] px-6"
+                onClick={() => setIsChatOpen(true)}
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white shadow-lg hover:shadow-[#b90abd]/30 transition-all duration-200 group h-[38px] px-6"
               >
                 <span className="text-lg mr-2 group-hover:rotate-180 transition-transform duration-500 inline-block">✨</span>
                 Generate your day in 2 minutes
@@ -486,7 +485,7 @@ export default function EmailDashboard() {
                       ...filters,
                       dateRange: { ...filters.dateRange, start: e.target.value }
                     })}
-                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[38px]"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                   />
                   <label className="text-xs text-gray-400 whitespace-nowrap">End Date:</label>
                   <input
@@ -496,7 +495,7 @@ export default function EmailDashboard() {
                       ...filters,
                       dateRange: { ...filters.dateRange, end: e.target.value }
                     })}
-                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[38px]"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                   />
                 </>
               )}
@@ -504,7 +503,7 @@ export default function EmailDashboard() {
               <Button
                 size="sm"
                 onClick={handleApplyFilters}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 h-[38px]"
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white shadow-lg hover:shadow-[#b90abd]/30 transition-all duration-200 h-[38px]"
               >
                 Apply
                 <RefreshCw className="h-4 w-4 ml-2" />
@@ -525,21 +524,21 @@ export default function EmailDashboard() {
             {eisenhowerThreads.length > 0 && (
               <div className={`grid gap-6 ${selectedQuadrant ? 'grid-cols-1 xl:grid-cols-2 items-stretch' : 'grid-cols-1'}`}>
                 {/* Left Side - Eisenhower Quadrant Distribution */}
-                <Card className={`bg-gray-900 border-gray-700 ${selectedQuadrant ? 'h-full flex flex-col' : ''}`}>
+                <Card className={`${selectedQuadrant ? 'h-full flex flex-col' : ''}`}>
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
                       <CardTitle className="flex items-center gap-2 text-white">
-                        <Target className="h-5 w-5 text-purple-400" />
+                        <Target className="h-5 w-5 text-[#b90abd]" />
                         Eisenhower Quadrant Distribution
                       </CardTitle>
-                      <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
+                      <div className="flex items-center gap-2 px-2 py-1 bg-[#b90abd]/10 border border-[#b90abd]/30 rounded-md">
                         <span className="text-sm">✨</span>
-                        <span className="text-xs text-purple-300 font-medium">AI Priority Analysis</span>
+                        <span className="text-xs text-[#b90abd] font-medium">AI Priority Analysis</span>
                       </div>
                     </div>
                     <CardDescription className="text-gray-400 flex items-center gap-2">
                       <span>Focus on critical items first</span>
-                      <span className="text-purple-400">•</span>
+                      <span className="text-[#b90abd]">•</span>
                       <span>Thread distribution across priority quadrants</span>
                     </CardDescription>
                   </CardHeader>
@@ -554,7 +553,7 @@ export default function EmailDashboard() {
                         const colors = {
                           do: { bg: 'bg-red-500' },
                           schedule: { bg: 'bg-yellow-500' },
-                          delegate: { bg: 'bg-blue-500' },
+                          delegate: { bg: 'bg-[#5332ff]' },
                           delete: { bg: 'bg-gray-500' }
                         }[quadrant] || { bg: 'bg-gray-500' };
                         
@@ -583,19 +582,19 @@ export default function EmailDashboard() {
                           <div 
                             key={quadrant} 
                             className={`relative text-center cursor-pointer hover:bg-gray-800/50 p-4 transition-all duration-200 group ${
-                              isSelected ? 'bg-gray-800/70 ring-2 ring-purple-400 shadow-lg' : ''
+                              isSelected ? 'bg-gray-800/70 ring-2 ring-[#b90abd] shadow-lg' : ''
                             } ${
                               isLeftColumn ? 'border-r border-gray-600' : ''
                             } ${
                               isTopRow ? 'border-b border-gray-600' : ''
                             } ${
-                              hasHighPriority ? 'hover:ring-2 hover:ring-purple-400/50' : ''
+                              hasHighPriority ? 'hover:ring-2 hover:ring-[#b90abd]/50' : ''
                             }`}
                             onClick={() => handleQuadrantClick(quadrant)}
                           >
                             {/* Purple glow for Do quadrant when high priority */}
                             {hasHighPriority && (
-                              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg" />
+                              <div className="absolute inset-0 bg-gradient-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg" />
                             )}
                             <div className="flex items-center justify-center mb-2 relative z-10">
                               {hasHighPriority && (
@@ -620,7 +619,7 @@ export default function EmailDashboard() {
                             {quadrant === 'do' && quadrantThreads.length > 0 && (
                               <Button
                                 size="sm"
-                                className="w-full mt-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-xs border-0 shadow-lg hover:shadow-purple-500/30 transition-all duration-200"
+                                className="w-full mt-2 bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white text-xs border-0 shadow-lg hover:shadow-[#b90abd]/30 transition-all duration-200"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleQuadrantClick(quadrant);
@@ -645,7 +644,7 @@ export default function EmailDashboard() {
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <Target className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                          <Target className="h-5 w-5 text-[#b90abd] flex-shrink-0" />
                           <CardTitle className="text-lg truncate">
                             Priority vs Resolution Status - {selectedQuadrant.charAt(0).toUpperCase() + selectedQuadrant.slice(1)}
                           </CardTitle>
@@ -727,6 +726,14 @@ export default function EmailDashboard() {
           thread={selectedThread}
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
+        />
+
+        {/* AI Day Generator Chat */}
+        <AIDayGeneratorChat
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          kpiData={kpiData}
+          threads={eisenhowerThreads}
         />
       </div>
     </div>

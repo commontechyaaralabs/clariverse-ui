@@ -28,7 +28,7 @@ interface EisenhowerMatrixProps {
 const quadrantColors = {
   do: '#ef4444',      // red
   schedule: '#eab308', // yellow
-  delegate: '#3b82f6', // blue
+  delegate: '#5332ff', // purple-blue
   delete: '#6b7280',   // gray
 };
 
@@ -153,7 +153,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
 
   const getActionPendingColor = (pendingFrom: string) => {
     switch (pendingFrom) {
-      case 'customer': return 'bg-blue-500/20 text-blue-400 border-blue-500';
+      case 'customer': return 'bg-[#b90abd]/20 text-[#b90abd] border-[#b90abd]';
       case 'company': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500';
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500';
     }
@@ -172,7 +172,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
       case 'P1': return 'bg-red-500/20 text-red-400 border-red-500';
       case 'P2': return 'bg-orange-500/20 text-orange-400 border-orange-500';
       case 'P3': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500';
-      case 'P4': return 'bg-blue-500/20 text-blue-400 border-blue-500';
+      case 'P4': return 'bg-[#5332ff]/20 text-[#5332ff] border-[#5332ff]';
       case 'P5': return 'bg-gray-500/20 text-gray-400 border-gray-500';
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500';
     }
@@ -183,7 +183,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
       case 'P1': return 'bg-red-900/50 text-red-300 border-red-600 hover:bg-red-800/50';
       case 'P2': return 'bg-orange-900/50 text-orange-300 border-orange-600 hover:bg-orange-800/50';
       case 'P3': return 'bg-yellow-900/50 text-yellow-300 border-yellow-600 hover:bg-yellow-800/50';
-      case 'P4': return 'bg-blue-900/50 text-blue-300 border-blue-600 hover:bg-blue-800/50';
+      case 'P4': return 'bg-[#5332ff]/50 text-[#5332ff] border-[#5332ff] hover:bg-[#5332ff]/60';
       case 'P5': return 'bg-gray-900/50 text-gray-300 border-gray-600 hover:bg-gray-800/50';
       default: return 'bg-gray-900/50 text-gray-300 border-gray-600 hover:bg-gray-800/50';
     }
@@ -285,7 +285,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
       const value = payload[0].value;
       const name = payload[0].name;
       return (
-        <div className="bg-blue-500 text-white px-3 py-2 rounded-lg shadow-lg">
+        <div className="bg-[#b90abd] text-white px-3 py-2 rounded-lg shadow-lg">
           <div className="font-medium">{name}: {value}</div>
         </div>
       );
@@ -326,15 +326,15 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
           const colors = {
             do: { bg: 'bg-red-500/10', border: 'border-red-500', text: 'text-red-400', icon: 'bg-red-500' },
             schedule: { bg: 'bg-yellow-500/10', border: 'border-yellow-500', text: 'text-yellow-400', icon: 'bg-yellow-500' },
-            delegate: { bg: 'bg-blue-500/10', border: 'border-blue-500', text: 'text-blue-400', icon: 'bg-blue-500' },
+            delegate: { bg: 'bg-[#5332ff]/10', border: 'border-[#5332ff]', text: 'text-[#5332ff]', icon: 'bg-[#5332ff]' },
             delete: { bg: 'bg-gray-500/10', border: 'border-gray-500', text: 'text-gray-400', icon: 'bg-gray-500' }
           }[quadrant] || { bg: 'bg-gray-500/10', border: 'border-gray-500', text: 'text-gray-400', icon: 'bg-gray-500' };
           
           return (
             <Card
               key={quadrant}
-              className={`bg-gray-900 hover:scale-[1.01] transition-transform duration-200`}
-              style={{ border: `2px solid ${quadrant === 'do' ? '#ef4444' : quadrant === 'schedule' ? '#eab308' : quadrant === 'delegate' ? '#3b82f6' : '#6b7280'}` }}
+              className={`hover:scale-[1.01] transition-transform duration-200`}
+              style={{ border: `2px solid ${quadrant === 'do' ? '#ef4444' : quadrant === 'schedule' ? '#eab308' : quadrant === 'delegate' ? '#5332ff' : '#6b7280'}` }}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -419,7 +419,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
                     {sentimentThreshold !== null && (
                       <button
                         onClick={() => handleSentimentChange(quadrant, null)}
-                        className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                        className="text-xs text-[#b90abd] hover:text-[#a009b3] transition-colors"
                         title="Reset to show all sentiments"
                       >
                         Reset
@@ -458,7 +458,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
                         {/* Single Handle with Enhanced Tooltip - only show when filter is applied */}
                         {sentimentThreshold !== null && (
                           <div 
-                            className="absolute w-6 h-6 bg-white rounded-full cursor-grab active:cursor-grabbing transform -translate-y-2 -translate-x-3 shadow-lg hover:shadow-xl transition-all duration-150 border-2 border-blue-500 select-none"
+                            className="absolute w-6 h-6 bg-white rounded-full cursor-grab active:cursor-grabbing transform -translate-y-2 -translate-x-3 shadow-lg hover:shadow-xl transition-all duration-150 border-2 border-[#b90abd] select-none"
                             style={{ left: `${((sentimentThreshold - 1) / 4) * 100}%` }}
                             onMouseDown={(e) => {
                               e.preventDefault();
@@ -605,7 +605,7 @@ export function EisenhowerMatrix({ data, onThreadClick, onQuadrantClick, selecte
                             onClick={() => handlePageChange(quadrant, pageNum)}
                             className={`px-2 py-1 text-xs border rounded ${
                               currentPage === pageNum
-                                ? 'bg-blue-600 border-blue-500 text-white'
+                                ? 'bg-[#b90abd] border-[#b90abd] text-white'
                                 : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700'
                             }`}
                           >

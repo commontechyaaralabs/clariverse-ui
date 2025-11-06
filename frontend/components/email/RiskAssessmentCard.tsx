@@ -32,14 +32,14 @@ export function RiskAssessmentCard({ data }: RiskAssessmentCardProps) {
     {
       label: 'Customer Waiting',
       value: data.customerWaiting,
-      color: 'bg-blue-500',
+      color: 'bg-[#5332ff]',
       icon: Clock,
       description: 'Threads pending customer response'
     }
   ];
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
           <AlertTriangle className="h-5 w-5 text-orange-400" />

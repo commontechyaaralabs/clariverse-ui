@@ -49,7 +49,7 @@ export function NextActionsFeed({ actions, onRunAction }: NextActionsFeedProps) 
       case 'medium':
         return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
       default:
-        return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+        return 'text-[#b90abd] border-[#b90abd]/30 bg-[#b90abd]/10';
     }
   };
 
@@ -65,7 +65,7 @@ export function NextActionsFeed({ actions, onRunAction }: NextActionsFeedProps) 
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

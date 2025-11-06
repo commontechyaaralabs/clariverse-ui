@@ -27,7 +27,7 @@ interface ThreadDetailDrawerProps {
 
 const statusConfig = {
   open: { icon: Circle, color: 'text-yellow-400', bgColor: 'bg-yellow-500/10' },
-  in_progress: { icon: Clock, color: 'text-blue-400', bgColor: 'bg-blue-500/10' },
+  in_progress: { icon: Clock, color: 'text-[#b90abd]', bgColor: 'bg-[#b90abd]/10' },
   closed: { icon: CheckCircle, color: 'text-green-400', bgColor: 'bg-green-500/10' },
 };
 
@@ -134,7 +134,7 @@ export function ThreadDetailDrawer({ thread, isOpen, onClose }: ThreadDetailDraw
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors ${
                     activeTab === tab.id
-                      ? 'text-blue-400 border-b-2 border-blue-400 bg-blue-500/5'
+                      ? 'text-[#b90abd] border-b-2 border-[#b90abd] bg-[#b90abd]/5'
                       : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                   }`}
                 >
@@ -203,8 +203,8 @@ export function ThreadDetailDrawer({ thread, isOpen, onClose }: ThreadDetailDraw
                     <div className="space-y-3">
                       {thread.participants.map((participant, index) => (
                         <div key={index} className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-                          <div className="p-2 bg-blue-500/10 rounded-lg">
-                            <User className="h-4 w-4 text-blue-400" />
+                          <div className="p-2 bg-[#b90abd]/10 rounded-lg">
+                            <User className="h-4 w-4 text-[#b90abd]" />
                           </div>
                           <div className="flex-1">
                             <p className="text-white font-medium">{participant.name}</p>
@@ -304,7 +304,7 @@ export function ThreadDetailDrawer({ thread, isOpen, onClose }: ThreadDetailDraw
           {/* Footer */}
           <div className="p-6 border-t border-gray-700">
             <div className="flex gap-3">
-              <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+              <Button className="flex-1 bg-[#b90abd] hover:bg-[#a009b3] text-white">
                 Take Action
               </Button>
               <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700">

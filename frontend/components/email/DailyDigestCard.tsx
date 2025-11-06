@@ -78,7 +78,7 @@ export function DailyDigestCard({ kpiData, threads }: DailyDigestCardProps) {
   const progress = totalItems > 0 ? (completedCount / totalItems) * 100 : 0;
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -175,7 +175,7 @@ export function DailyDigestCard({ kpiData, threads }: DailyDigestCardProps) {
             {/* Delegate */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <UserPlus className="h-4 w-4 text-blue-400" />
+                <UserPlus className="h-4 w-4 text-[#b90abd]" />
                 <h3 className="text-sm font-semibold text-white">Delegate</h3>
               </div>
               <div className="space-y-2">
@@ -189,7 +189,7 @@ export function DailyDigestCard({ kpiData, threads }: DailyDigestCardProps) {
                       className={`flex items-center gap-3 p-3 rounded-lg border ${
                         isCompleted
                           ? 'bg-gray-800/50 border-gray-700'
-                          : 'bg-blue-500/10 border-blue-500/30'
+                          : 'bg-[#b90abd]/10 border-[#b90abd]/30'
                       }`}
                     >
                       <input

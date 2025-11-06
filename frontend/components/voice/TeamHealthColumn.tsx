@@ -388,11 +388,10 @@ export function TeamHealthColumn({
                   <Tooltip
                     contentStyle={{
                       background: 'rgba(1, 1, 1, 0.95)',
-                      backdropFilter: 'blur(20px)',
                       border: '2px solid rgba(185, 10, 189, 0.4)',
                       borderRadius: '12px',
                       color: '#ffffff',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                      boxShadow: 'none',
                       padding: '8px 12px'
                     }}
                     itemStyle={{ color: '#ffffff' }}

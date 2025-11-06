@@ -64,7 +64,7 @@ export default function OpsDashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="flex items-center gap-3">
-              <RefreshCw className="h-6 w-6 animate-spin text-purple-400" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#b90abd]" />
               <span className="text-white text-lg">Loading ops dashboard...</span>
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function OpsDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-purple-600/10 border-purple-500/30 text-purple-300 hover:bg-purple-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   🧭 Executive Cockpit
                 </Button>
@@ -111,7 +111,7 @@ export default function OpsDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-blue-600/10 border-blue-500/30 text-blue-300 hover:bg-blue-600/20"
+                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
                 >
                   ⚙️ Manager View
                 </Button>
@@ -148,10 +148,10 @@ export default function OpsDashboard() {
 
         {/* Friction Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white text-sm flex items-center gap-2">
-                <TrendingDown className="h-4 w-4 text-purple-400" />
+                <TrendingDown className="h-4 w-4 text-[#b90abd]" />
                 Friction Index
               </CardTitle>
             </CardHeader>
@@ -163,10 +163,10 @@ export default function OpsDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white text-sm flex items-center gap-2">
-                <Users className="h-4 w-4 text-purple-400" />
+                <Users className="h-4 w-4 text-[#b90abd]" />
                 Customer Segments
               </CardTitle>
             </CardHeader>
@@ -188,10 +188,10 @@ export default function OpsDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-700">
+          <Card>
             <CardHeader>
               <CardTitle className="text-white text-sm flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-purple-400" />
+                <MessageSquare className="h-4 w-4 text-[#b90abd]" />
                 Avg Sentiment
               </CardTitle>
             </CardHeader>

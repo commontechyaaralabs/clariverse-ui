@@ -40,7 +40,7 @@ export default function EmailPreviewCard({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'open': return 'bg-[#b90abd]/20 text-[#b90abd] border-[#b90abd]/30';
       case 'in-progress': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
       case 'resolved': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
       case 'closed': return 'bg-app-gray-500/20 text-app-gray-400 border-app-gray-500/30';

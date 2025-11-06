@@ -65,8 +65,8 @@ export function KPICards({ data }: KPICardsProps) {
       insight: isEscalationHigh ? `High escalation trend detected - ${criticalThreads} threads need immediate intervention` : 'Escalation levels manageable',
       description: 'Threads requiring escalation',
       icon: TrendingUp,
-      color: isEscalationHigh ? 'text-red-400' : 'text-blue-400',
-      bgColor: isEscalationHigh ? 'bg-red-500/10' : 'bg-blue-500/10',
+      color: isEscalationHigh ? 'text-red-400' : 'text-[#b90abd]',
+      bgColor: isEscalationHigh ? 'bg-red-500/10' : 'bg-[#b90abd]/10',
       tooltip: 'Avg sentiment of escalated threads',
       trend: escalationRate > 10 ? 'up' : 'down',
       showAI: isEscalationHigh,
@@ -120,8 +120,8 @@ export function KPICards({ data }: KPICardsProps) {
         return (
           <Card 
             key={index} 
-            className={`relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl bg-gray-900 border-gray-700 ${
-              item.showAI ? 'border-l-4 border-l-purple-500 hover:border-l-purple-400' : 'hover:border-purple-500/30'
+            className={`relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl ${
+              item.showAI ? 'border-l-4 border-l-[#b90abd] hover:border-l-[#a009b3]' : 'hover:border-[#b90abd]/30'
             } hover:scale-[1.02] hover:-translate-y-1`}
             title={item.tooltip}
           >
@@ -134,7 +134,7 @@ export function KPICards({ data }: KPICardsProps) {
             
             {/* Purple glow effect on hover */}
             <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${
-              item.showAI ? 'bg-gradient-to-br from-purple-500/10 via-purple-400/5 to-transparent' : ''
+              item.showAI ? 'bg-gradient-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent' : ''
             }`} />
             
             <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 ${item.showAI ? 'pt-8' : ''}`}>
@@ -153,7 +153,7 @@ export function KPICards({ data }: KPICardsProps) {
                 {/* AI Insight */}
                 {item.insight && (
                   <div className={`mb-3 p-2 rounded-md text-xs ${
-                    item.showAI ? 'bg-purple-500/10 border border-purple-500/20 text-purple-200' : 'bg-gray-800/50 text-gray-400'
+                    item.showAI ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
                   }`}>
                     {item.insight}
                   </div>
@@ -198,7 +198,7 @@ export function EisenhowerDistributionCard({ data }: { data: KPIData }) {
       name: 'Delegate - Team',
       value: distribution.delegate,
       percentage: Math.round((distribution.delegate / total) * 100),
-      color: 'bg-blue-500',
+      color: 'bg-[#5332ff]',
       description: 'Not Important, Urgent',
     },
     {
@@ -214,7 +214,7 @@ export function EisenhowerDistributionCard({ data }: { data: KPIData }) {
     <Card className="col-span-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Target className="h-5 w-5 text-purple-400" />
+          <Target className="h-5 w-5 text-[#b90abd]" />
           Eisenhower Quadrant Distribution
         </CardTitle>
         <CardDescription>
