@@ -41,16 +41,54 @@ export default function FinanceDashboard() {
     // Auto-refresh disabled - data only loads on mount or manual refresh
   }, []);
 
+  // Helper function to determine stage (same as IntentFlowMap and BottleneckHeatmap)
+  const getStage = useCallback((thread: EisenhowerThread): string => {
+    if (thread.resolution_status === 'closed') {
+      if (thread.action_pending_status === 'completed' && (thread.follow_up_required || thread.next_action_suggestion)) {
+        return 'Report';
+      }
+      return 'Close';
+    }
+    if (thread.resolution_status === 'escalated' || thread.escalation_count > 0) {
+      return 'Escalation';
+    }
+    if (thread.action_pending_status === 'completed') {
+      return 'Resolved';
+    }
+    if (thread.resolution_status === 'in_progress' && thread.action_pending_status === 'in_progress') {
+      return 'Resolution';
+    }
+    if (thread.resolution_status === 'in_progress' || thread.action_pending_status === 'in_progress') {
+      return 'Update';
+    }
+    if (thread.resolution_status === 'open') {
+      if (thread.action_pending_status === 'pending') {
+        if (!thread.action_pending_from || thread.action_pending_from === 'company') {
+          const hash = thread.thread_id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+          const stageIndex = hash % 3;
+          const earlyStages = ['Receive', 'Authenticate', 'Categorize'];
+          return earlyStages[stageIndex];
+        }
+        return 'Update';
+      }
+      // Handle other action_pending_status values for open threads (in_progress, overdue, completed)
+      return 'Resolution';
+    }
+    return 'Receive';
+  }, []);
+
   // Enhanced approval analysis
   const approvalAnalysis = useMemo(() => {
     // Filter threads that might need approval (based on stages, priority, or business impact)
     const approvalThreads = threads.filter((t) => {
-      const stage = t.stages || '';
+      const stage = getStage(t);
       const needsApproval = 
         stage.toLowerCase().includes('approval') ||
         stage.toLowerCase().includes('review') ||
         stage.toLowerCase().includes('finance') ||
         stage.toLowerCase().includes('budget') ||
+        stage === 'Resolution' || // Resolution stage often needs approval
+        stage === 'Escalation' || // Escalated items need approval
         (t.business_impact_score || 0) > 70 ||
         t.priority === 'P1' || t.priority === 'P2';
       
@@ -76,7 +114,7 @@ export default function FinanceDashboard() {
 
     // Group by stage
     const byStage = approvalThreads.reduce((acc, t) => {
-      const stage = t.stages || 'Unknown';
+      const stage = getStage(t);
       if (!acc[stage]) acc[stage] = [];
       acc[stage].push(t);
       return acc;
@@ -99,7 +137,7 @@ export default function FinanceDashboard() {
 
     // Calculate approval velocity (approvals per day)
     const closedApprovals = threads.filter((t) => {
-      const stage = t.stages || '';
+      const stage = getStage(t);
       const wasApproval = stage.toLowerCase().includes('approval') || stage.toLowerCase().includes('review');
       return wasApproval && t.resolution_status === 'closed';
     });
@@ -401,7 +439,10 @@ export default function FinanceDashboard() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                      label={(props: any) => {
+                        const { name, value, percent } = props;
+                        return `${name}: ${value} (${((percent || 0) * 100).toFixed(0)}%)`;
+                      }}
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
@@ -583,7 +624,7 @@ export default function FinanceDashboard() {
                               {thread.priority}
                             </span>
                           </td>
-                          <td className="p-3 text-sm text-gray-300">{thread.stages || 'Unknown'}</td>
+                          <td className="p-3 text-sm text-gray-300">{getStage(thread)}</td>
                           <td className="p-3 text-sm text-red-400 text-right font-medium">
                             {age.toFixed(1)}d
                           </td>

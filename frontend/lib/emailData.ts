@@ -1,6 +1,4 @@
 // Email data service for loading JSON data
-import emailDataJson from '../public/data/email-data.json';
-
 // Type definitions for email data
 export interface EmailData {
   _id: { $oid: string };
@@ -63,5 +61,14 @@ export interface EmailData {
   urgency: boolean;
 }
 
-// Export the email data with proper typing
-export const emailData: EmailData[] = emailDataJson as EmailData[];
+// Export the email data with proper typing - fallback to empty array if file doesn't exist
+let emailDataJson: EmailData[] = [];
+try {
+  // Try to import, but handle gracefully if file doesn't exist
+  emailDataJson = require('../public/data/email-data.json') as EmailData[];
+} catch {
+  // File doesn't exist, use empty array
+  emailDataJson = [];
+}
+
+export const emailData: EmailData[] = emailDataJson;

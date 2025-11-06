@@ -1,85 +1,159 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Mic, Clock, CheckCircle, AlertTriangle, Users, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from 'react';
+import { KPIRibbon } from '@/components/voice/KPIRibbon';
+import { TeamHealthColumn } from '@/components/voice/TeamHealthColumn';
+import { CoreIntelligenceColumn } from '@/components/voice/CoreIntelligenceColumn';
+import { ActionCoachingColumn } from '@/components/voice/ActionCoachingColumn';
+import { CallInsightsDock } from '@/components/voice/CallInsightsDock';
+import { CallDetailModal } from '@/components/voice/CallDetailModal';
+import { MicroTrendBar } from '@/components/voice/MicroTrendBar';
+import {
+  getKPIData,
+  getIntentDistribution,
+  getTeamHeatmap,
+  getAgentLeaderboard,
+  getHighRiskCalls,
+  getSkillGapData,
+  getCoachingTickets,
+  getCallList,
+  getCallDetail,
+  getTrendData,
+  getTeamHealthData,
+  KPIData,
+  IntentDistribution,
+  IssueHeatmapData,
+  AgentPerformance,
+  HighRiskCall,
+  SkillGapData,
+  CoachingTicket,
+  CallListItem,
+  CallDetail
+} from '@/lib/voiceData';
 
-export default function VoiceDashboard() {
-  const stats = [
-    { label: "Total Calls", value: "1,247", icon: Mic, color: "text-accent" },
-    { label: "Pending Actions", value: "134", icon: AlertTriangle, color: "text-red-400" },
-    { label: "Sentiment Score", value: "89.1%", icon: CheckCircle, color: "text-green-400" },
-    { label: "Avg Duration", value: "8.5m", icon: Clock, color: "text-primary" },
-  ];
+export default function VoiceTranscript() {
+  const [kpiData, setKpiData] = useState<KPIData | null>(null);
+  const [intentDistribution, setIntentDistribution] = useState<IntentDistribution[]>([]);
+  const [issueHeatmap, setIssueHeatmap] = useState<IssueHeatmapData[]>([]);
+  const [agentLeaderboard, setAgentLeaderboard] = useState<AgentPerformance[]>([]);
+  const [highRiskCalls, setHighRiskCalls] = useState<HighRiskCall[]>([]);
+  const [skillGapData, setSkillGapData] = useState<SkillGapData[]>([]);
+  const [coachingTickets, setCoachingTickets] = useState<CoachingTicket[]>([]);
+  const [callList, setCallList] = useState<CallListItem[]>([]);
+  const [selectedCall, setSelectedCall] = useState<CallDetail | null>(null);
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [trendData, setTrendData] = useState<any>(null);
+  const [teamHealthData, setTeamHealthData] = useState<any>(null);
+
+  useEffect(() => {
+    // Load all data
+    setKpiData(getKPIData());
+    setIntentDistribution(getIntentDistribution());
+    setIssueHeatmap(getTeamHeatmap());
+    setAgentLeaderboard(getAgentLeaderboard());
+    setHighRiskCalls(getHighRiskCalls());
+    setSkillGapData(getSkillGapData());
+    setCoachingTickets(getCoachingTickets());
+    setCallList(getCallList());
+    setTrendData(getTrendData());
+    setTeamHealthData(getTeamHealthData());
+  }, []);
+
+  const handleCallClick = (callId: string) => {
+    const detail = getCallDetail(callId);
+    setSelectedCall(detail);
+    setIsCallModalOpen(true);
+  };
+
+  const handleAgentClick = (agentId: string) => {
+    // Filter calls by agent
+    const agentCalls = callList.filter(call => {
+      const agent = agentLeaderboard.find(a => a.agentId === agentId);
+      return agent && call.agentName.includes(agent.agentName.split(' ')[0]);
+    });
+    if (agentCalls.length > 0) {
+      handleCallClick(agentCalls[0].callId);
+    }
+  };
+
+  const agentsNeedingAttention = agentLeaderboard.filter(a => a.severity !== 'low');
+
+  if (!kpiData || !teamHealthData || !trendData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b90abd] mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header Section */}
+    <div className="space-y-6 animate-fade-in pb-72">
+      {/* Header */}
       <div className="space-y-4 animate-slide-down">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">Voice Intelligence</h1>
-            <p className="text-muted-foreground text-lg">Advanced voice conversation analysis and insights</p>
+            <h1 className="text-4xl font-bold text-foreground mb-2">Voice QA Manager Dashboard</h1>
+            <p className="text-muted-foreground text-lg">AI-powered call center intelligence & quality assurance</p>
           </div>
         </div>
       </div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div key={index} className="card-gradient-subtle p-6 animate-fade-in hover:border-primary transition-all" style={{ animationDelay: `${index * 0.1}s` }}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <stat.icon className="w-6 h-6 text-primary" />
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-foreground">{stat.value}</div>
-                <div className="text-muted-foreground text-sm">{stat.label}</div>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* KPI Ribbon */}
+      <KPIRibbon data={kpiData} />
+
+      {/* Main Dashboard Grid */}
+      <div className="flex gap-4">
+        {/* Left Column - Team Health */}
+        <TeamHealthColumn
+          qaScore={teamHealthData.qaScore}
+          qaBreakdown={teamHealthData.qaBreakdown}
+          qaTrend={teamHealthData.qaTrend}
+          complianceData={teamHealthData.complianceData}
+          emotionData={teamHealthData.emotionData}
+          escalationData={teamHealthData.escalationData}
+        />
+
+        {/* Center Column - Core Intelligence */}
+        <CoreIntelligenceColumn
+          highRiskCalls={highRiskCalls}
+          intentDistribution={intentDistribution}
+          issueHeatmap={issueHeatmap}
+          skillGapData={skillGapData}
+          onCallClick={handleCallClick}
+        />
+
+        {/* Right Column - Action & Coaching */}
+        <ActionCoachingColumn
+          agentsNeedingAttention={agentsNeedingAttention}
+          agentLeaderboard={agentLeaderboard}
+          coachingTickets={coachingTickets}
+          onAgentClick={handleAgentClick}
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="card-gradient-primary p-6 animate-slide-up">
-          <h3 className="text-foreground text-lg font-semibold mb-4">Voice Statistics</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="text-manatee">Total Calls</span>
-              <span className="font-semibold text-white">1,247</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-manatee">Urgent Calls</span>
-              <span className="font-semibold text-red-400">134</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-manatee">Sentiment Score</span>
-              <span className="font-semibold text-green-400">89.1%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-manatee">Sub Categories</span>
-              <span className="font-semibold text-white">10</span>
-            </div>
-          </div>
-        </div>
+      {/* Micro Trend Bar */}
+      <MicroTrendBar trends={trendData} />
 
-        <div className="card-gradient-accent p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <h3 className="text-foreground text-lg font-semibold mb-4">Voice Analytics</h3>
-          <div className="h-48 flex items-center justify-center border-2 border-dashed border-iron/30 rounded-lg">
-            <p className="text-manatee">Voice transcript charts and graphs</p>
-          </div>
-        </div>
-      </div>
+      {/* Call Detail Modal */}
+      <CallDetailModal
+        call={selectedCall}
+        open={isCallModalOpen}
+        onClose={() => {
+          setIsCallModalOpen(false);
+          setSelectedCall(null);
+        }}
+      />
 
-      <div className="flex justify-center">
-        <Link href="/voice/topic-analysis">
-          <Button className="px-8 btn-gradient-primary">
-            View Voice Transcripts
-          </Button>
-        </Link>
-      </div>
+      {/* Call Insights Dock */}
+      <CallInsightsDock
+        calls={callList}
+        selectedCall={selectedCall}
+        onCallSelect={handleCallClick}
+        onClose={() => setSelectedCall(null)}
+      />
     </div>
   );
 }

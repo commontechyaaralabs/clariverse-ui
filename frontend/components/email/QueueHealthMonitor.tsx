@@ -39,10 +39,18 @@ export function QueueHealthMonitor({ threads, onRebalance }: QueueHealthMonitorP
     const ownerStatuses: OwnerStatus[] = Array.from(ownerMap.entries()).map(([owner, ownerThreads]) => {
       const openThreads = ownerThreads.filter((t) => t.resolution_status !== 'closed').length;
       
-      // Estimate throughput (simplified: assume avg resolution time)
-      const avgResolutionDays = ownerThreads.length > 0
-        ? ownerThreads.reduce((sum, t) => sum + (t.avg_resolution_time_days || 2.3), 0) / ownerThreads.length
-        : 2.3;
+      // Estimate throughput (simplified: calculate from thread ages)
+      // Calculate average age of resolved threads or use default
+      const now = new Date().getTime();
+      const resolvedThreads = ownerThreads.filter(t => t.resolution_status === 'closed');
+      const avgResolutionDays = resolvedThreads.length > 0
+        ? resolvedThreads.reduce((sum, t) => {
+            const firstMessageTime = new Date(t.first_message_at || t.last_message_at).getTime();
+            const lastMessageTime = new Date(t.last_message_at).getTime();
+            const resolutionDays = (lastMessageTime - firstMessageTime) / (1000 * 60 * 60 * 24);
+            return sum + (resolutionDays || 2.3);
+          }, 0) / resolvedThreads.length
+        : 2.3; // Default fallback
       const throughput = avgResolutionDays > 0 ? 7 / avgResolutionDays : 0; // threads per week
       
       // SLA target: assume 10 threads per day per owner

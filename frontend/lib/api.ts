@@ -429,7 +429,7 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     const business_impact_score = seededRandom(seed) * 100;
     
     // Determine priority based on which quadrant we'll assign to
-    let priority: string;
+    let priority: 'P1' | 'P2' | 'P3' | 'P4' | 'P5';
     if (i < targetCounts.do) {
       // For Do quadrant, assign mix of P1 and P2 (50% each for 12 threads = 6 P1, 6 P2)
       priority = (i % 2 === 0) ? 'P1' : 'P2';

@@ -74,7 +74,7 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
       }
       
       // Resolved stage - threads that are completed but not closed
-      if (thread.action_pending_status === 'completed' && thread.resolution_status !== 'closed') {
+      if (thread.action_pending_status === 'completed') {
         return 'Resolved';
       }
       
@@ -102,9 +102,8 @@ export function IntentFlowMap({ threads }: IntentFlowMapProps) {
           }
           return 'Update';
         }
-        if (thread.action_pending_status === 'in_progress') {
-          return 'Resolution';
-        }
+        // Handle other action_pending_status values for open threads (in_progress, overdue, completed)
+        return 'Resolution';
       }
       
       // Default fallback

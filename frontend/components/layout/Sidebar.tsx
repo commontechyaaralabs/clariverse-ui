@@ -46,13 +46,13 @@ export default function Sidebar() {
     //   href: "/social",
     //   hasSubItems: false,
     // },
-    // {
-    //   id: "voice",
-    //   label: "Voice Transcript",
-    //   icon: Mic,
-    //   href: "/voice",
-    //   hasSubItems: false,
-    // },
+    {
+      id: "voice",
+      label: "Voice Transcript",
+      icon: Mic,
+      href: "/voice",
+      hasSubItems: false,
+    },
     // {
     //   id: "topic-analysis",
     //   label: "Topic Analysis",

@@ -95,12 +95,14 @@ export function AnomalyAlertsPanel({ kpiData, threads }: AnomalyAlertsPanelProps
 
   // SLA breach risk
   if (kpiData.sla_breach_risk_percentage > 10) {
+    const atRiskCount = Math.round((kpiData.sla_breach_risk_percentage / 100) * (kpiData.total_threads || 0));
     alerts.push({
       id: 'sla-breach',
       type: 'sla_breach',
       title: 'SLA Breach Risk',
       description: `${kpiData.sla_breach_risk_percentage.toFixed(1)}% of threads at risk of SLA breach`,
       severity: kpiData.sla_breach_risk_percentage > 20 ? 'critical' : 'warning',
+      count: atRiskCount,
       value: kpiData.sla_breach_risk_percentage,
       resolveActions: [
         'Prioritize at-risk threads',
