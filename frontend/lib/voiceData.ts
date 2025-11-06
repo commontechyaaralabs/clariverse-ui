@@ -96,6 +96,192 @@ export interface CallListItem {
 
 // Mock Data Generators
 
+/**
+ * KPI CALCULATION METHODOLOGY
+ * 
+ * 1. TEAM QA SCORE (87.5%)
+ *    Calculation: Weighted average of 5 components
+ *    Formula: (Empathy × 0.20) + (Compliance × 0.25) + (Tone × 0.15) + (Resolution × 0.25) + (Listening × 0.15)
+ *    Range: 0-100%
+ * 
+ *    COMPONENT BREAKDOWN:
+ * 
+ *    A. EMPATHY SCORE (20% weight)
+ *       Purpose: Measures agent's ability to understand and respond to customer emotions
+ *       Calculation Method:
+ *       - AI analyzes transcript for empathetic language patterns
+ *       - Voice tone analysis (warmth, concern, understanding)
+ *       - Response appropriateness to customer emotional state
+ *       
+ *       Factors Measured:
+ *       1. Empathetic Phrases (30%): Use of phrases like "I understand", "I can see how frustrating", "Let me help"
+ *       2. Emotional Recognition (25%): Agent correctly identifies customer's emotional state
+ *       3. Appropriate Response (25%): Response matches customer's emotional needs
+ *       4. Tone Warmth (20%): Voice analysis shows genuine concern and warmth
+ *       
+ *       Formula: (Empathetic Phrases × 0.30) + (Emotional Recognition × 0.25) + 
+ *                (Appropriate Response × 0.25) + (Tone Warmth × 0.20)
+ *       Range: 0-100%
+ *       Example: Agent says "I completely understand your frustration" with warm tone = High empathy score
+ * 
+ *    B. COMPLIANCE SCORE (25% weight)
+ *       Purpose: Adherence to mandatory banking scripts and regulatory requirements
+ *       Calculation Method:
+ *       - Automated checklist verification against required scripts
+ *       - NLP pattern matching for mandatory phrases
+ *       - Regulatory statement detection
+ *       
+ *       Factors Measured:
+ *       1. KYC Verification (30%): Identity verification scripts completed
+ *          - "Can you provide your account number?"
+ *          - "Last four digits of your SSN?"
+ *          - "Date of birth for verification?"
+ *       2. Fraud Safety Scripts (25%): Fraud prevention protocols followed
+ *          - "I'll flag this transaction immediately"
+ *          - "Your card will be blocked for security"
+ *          - "We'll issue a new card within 7-10 days"
+ *       3. Regulatory Statements (25%): Required legal disclosures
+ *          - "This call may be recorded for quality assurance"
+ *          - "Your information is protected under banking regulations"
+ *          - "You have the right to dispute any charges"
+ *       4. Privacy Disclaimer (20%): Data protection statements
+ *          - "Your information is confidential"
+ *          - "We will never share your data with third parties"
+ *       
+ *       Formula: (KYC Verification × 0.30) + (Fraud Scripts × 0.25) + 
+ *                (Regulatory Statements × 0.25) + (Privacy Disclaimer × 0.20)
+ *       Range: 0-100%
+ *       Example: All 4 categories completed = 100% compliance score
+ * 
+ *    C. TONE QUALITY (15% weight)
+ *       Purpose: Professionalism, clarity, and consistency of communication
+ *       Calculation Method:
+ *       - Voice analysis (pitch, pace, volume consistency)
+ *       - Transcript analysis (professional language, clarity)
+ *       - Consistency throughout the call
+ *       
+ *       Factors Measured:
+ *       1. Professional Language (30%): Use of professional banking terminology
+ *          - Avoids slang, maintains formality
+ *          - Uses proper titles and respectful language
+ *       2. Clarity of Speech (25%): Clear pronunciation, appropriate pace
+ *          - Not too fast or too slow
+ *          - Enunciates clearly
+ *       3. Consistency (25%): Tone remains consistent throughout call
+ *          - Doesn't become impatient or frustrated
+ *          - Maintains professional demeanor
+ *       4. Politeness (20%): Courteous and respectful throughout
+ *          - Says "please" and "thank you"
+ *          - Apologizes when appropriate
+ *       
+ *       Formula: (Professional Language × 0.30) + (Clarity × 0.25) + 
+ *                (Consistency × 0.25) + (Politeness × 0.20)
+ *       Range: 0-100%
+ *       Example: Agent maintains professional, clear, polite tone throughout = High tone score
+ * 
+ *    D. RESOLUTION ACCURACY (25% weight)
+ *       Purpose: Correctness of information provided and problem resolution
+ *       Calculation Method:
+ *       - Fact-checking against banking knowledge base
+ *       - Verification of solutions provided
+ *       - Customer outcome tracking
+ *       
+ *       Factors Measured:
+ *       1. Information Accuracy (35%): Correct facts and data provided
+ *          - Account balances are correct
+ *          - Transaction details are accurate
+ *          - Policy information is current and correct
+ *       2. Solution Correctness (30%): Appropriate solution for the problem
+ *          - Correct process followed
+ *          - Right department/team involved
+ *          - Appropriate resolution steps taken
+ *       3. Problem Resolution (25%): Customer's issue actually resolved
+ *          - Follow-up confirms resolution
+ *          - Customer satisfaction indicates success
+ *       4. No Misinformation (10%): No incorrect information given
+ *          - Penalty for providing wrong information
+ *          - Penalty for outdated policies
+ *       
+ *       Formula: (Information Accuracy × 0.35) + (Solution Correctness × 0.30) + 
+ *                (Problem Resolution × 0.25) + (No Misinformation × 0.10)
+ *       Range: 0-100%
+ *       Example: Agent provides correct account info, follows proper process, resolves issue = High resolution score
+ * 
+ *    E. LISTENING PATTERNS (15% weight)
+ *       Purpose: Active listening indicators showing agent understands customer needs
+ *       Calculation Method:
+ *       - Analysis of response appropriateness
+ *       - Detection of interruptions
+ *       - Question relevance to customer statements
+ *       
+ *       Factors Measured:
+ *       1. Appropriate Responses (35%): Responses directly address what customer said
+ *          - Agent references customer's specific concern
+ *          - Follows up on customer's statements
+ *       2. No Interruptions (25%): Agent doesn't interrupt customer
+ *          - Lets customer finish speaking
+ *          - Waits for natural pauses
+ *       3. Relevant Questions (25%): Questions relate to customer's issue
+ *          - Asks clarifying questions about the problem
+ *          - Doesn't ask irrelevant questions
+ *       4. Acknowledgment (15%): Agent acknowledges customer's concerns
+ *          - "I understand you're concerned about..."
+ *          - "Let me make sure I have this right..."
+ *       
+ *       Formula: (Appropriate Responses × 0.35) + (No Interruptions × 0.25) + 
+ *                (Relevant Questions × 0.25) + (Acknowledgment × 0.15)
+ *       Range: 0-100%
+ *       Example: Agent listens fully, asks relevant questions, acknowledges concerns = High listening score
+ * 
+ * 2. COMPLIANCE ADHERENCE (92.3%)
+ *    Calculation: Percentage of calls that fully comply with banking regulations
+ *    - Fully Compliant (75%): All required scripts and protocols followed correctly
+ *    - Partially Compliant (20%): Most protocols followed, minor omissions
+ *    - Non-Compliant (5%): Critical protocols missed (KYC, fraud scripts, regulatory statements)
+ *    Formula: (Fully Compliant Calls / Total Calls) × 100
+ *    Breakdown: Fully (75%) + Partial (20%) + Non (5%) = 100%
+ *    Range: 0-100%
+ * 
+ * 3. CUSTOMER EMOTION INDEX (3.8/5)
+ *    Calculation: Average sentiment score across all customer interactions
+ *    - AI sentiment analysis of call transcripts (NLP + voice tone analysis)
+ *    - Scores: 1 = Very Negative, 2 = Negative, 3 = Neutral, 4 = Positive, 5 = Very Positive
+ *    - Lower values = Better satisfaction (customers are calmer, less frustrated)
+ *    Formula: Sum of all customer emotion scores / Total calls analyzed
+ *    Range: 1-5 (lower is better)
+ * 
+ * 4. HIGH-RISK CALLS COUNT (12)
+ *    Calculation: Number of calls flagged as critical requiring immediate review
+ *    Criteria for high-risk:
+ *    - Escalation likelihood > 70% (AI prediction)
+ *    - Angry/frustrated customer (emotion score < 2.0)
+ *    - Compliance violations detected
+ *    - Agent errors (incorrect information, tone issues)
+ *    - Long silence periods (> 5 seconds)
+ *    Formula: Count of calls matching any high-risk criteria
+ *    Range: 0+ (lower is better)
+ * 
+ * 5. ESCALATION RISK SCORE (23.5%)
+ *    Calculation: AI-predicted probability of calls escalating to supervisors
+ *    Factors considered:
+ *    - Customer sentiment trends (negative trajectory)
+ *    - Agent behavior patterns (defensive responses, interruptions)
+ *    - Call duration (very short or very long)
+ *    - Compliance misses
+ *    - Historical escalation patterns for similar calls
+ *    Formula: AI model prediction based on call features and patterns
+ *    Range: 0-100% (lower is better)
+ * 
+ * 6. TOTAL CALLS HANDLED (1247)
+ *    Calculation: Simple count of all calls processed in the selected timeframe
+ *    Includes:
+ *    - All call types (inquiries, fraud reports, disputes, loans, etc.)
+ *    - All call statuses (completed, transferred, abandoned)
+ *    - All agents in the team
+ *    Formula: Count of all call records in the system
+ *    Range: 0+ (tracking volume trends)
+ */
+
 export function getKPIData(): KPIData {
   return {
     overallTeamQAScore: {
@@ -211,17 +397,45 @@ export function getHighRiskCalls(): HighRiskCall[] {
     'James Wilson'
   ];
   
-  return Array.from({ length: 8 }, (_, i) => ({
-    callId: `call_${1000 + i}`,
-    intent: intents[i % intents.length],
-    riskCategory: categories[i % categories.length],
-    agentName: agentNames[i % agentNames.length],
-    riskScore: 65 + Math.random() * 35,
-    emotionTimeline: Array.from({ length: 20 }, () => Math.random() * 2 - 1),
-    complianceMisses: i % 2 === 0 ? ['KYC verification', 'Privacy disclaimer'] : ['Fraud script'],
-    aiExplanation: `Customer showed frustration during ${intents[i % intents.length].toLowerCase()} discussion. Agent missed critical compliance step.`,
-    timestamp: new Date(Date.now() - i * 3600000).toISOString()
-  })).sort((a, b) => b.riskScore - a.riskScore);
+  return Array.from({ length: 8 }, (_, i) => {
+    const category = categories[i % categories.length];
+    const baseEmotion = category === 'Angry Customer' ? 3.5 : category === 'Compliance Error' ? 2.8 : 2.2;
+    
+    // Generate meaningful emotion timeline (0-5 scale, where lower is better)
+    // For high-risk calls, show patterns that reflect the risk category
+    const emotionTimeline = Array.from({ length: 20 }, (_, j) => {
+      let emotion = baseEmotion;
+      
+      // Add variation based on risk category
+      if (category === 'Angry Customer') {
+        // Show escalating frustration with peaks
+        emotion = 3.5 + Math.sin(j / 3) * 1.2 + (j / 20) * 0.5 + (Math.random() * 0.6 - 0.3);
+      } else if (category === 'Compliance Error') {
+        // Show spikes when compliance issues occur
+        emotion = 2.5 + Math.sin(j / 4) * 0.8 + (j % 5 === 0 ? 1.2 : 0) + (Math.random() * 0.5 - 0.25);
+      } else if (category === 'Incorrect Info') {
+        // Show confusion/frustration when wrong info is given
+        emotion = 2.8 + Math.sin(j / 5) * 0.9 + (Math.random() * 0.6 - 0.3);
+      } else {
+        // General pattern with some variation
+        emotion = 2.2 + Math.sin(j / 6) * 0.7 + (Math.random() * 0.5 - 0.25);
+      }
+      
+      return Math.max(0, Math.min(5, emotion));
+    });
+    
+    return {
+      callId: `call_${1000 + i}`,
+      intent: intents[i % intents.length],
+      riskCategory: category,
+      agentName: agentNames[i % agentNames.length],
+      riskScore: 65 + Math.random() * 35,
+      emotionTimeline,
+      complianceMisses: i % 2 === 0 ? ['KYC verification', 'Privacy disclaimer'] : ['Fraud script'],
+      aiExplanation: `Customer showed frustration during ${intents[i % intents.length].toLowerCase()} discussion. Agent missed critical compliance step.`,
+      timestamp: new Date(Date.now() - i * 3600000).toISOString()
+    };
+  }).sort((a, b) => b.riskScore - a.riskScore);
 }
 
 export function getSkillGapData(): SkillGapData[] {
@@ -424,7 +638,7 @@ export function getTeamHealthData() {
     escalationData: {
       riskScore: 23.5,
       callsAtRisk: 12,
-      agentsInvolved: ['Agent B', 'Agent E', 'Agent F'],
+      agentsInvolved: ['Michael Chen', 'Jessica Martinez', 'Robert Taylor'],
       topCauses: ['Compliance miss', 'Tone issues', 'Long silence'],
       trend: [28, 26, 25, 24, 23.5, 23.5, 23.5]
     }
