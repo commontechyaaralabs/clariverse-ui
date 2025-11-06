@@ -2652,6 +2652,16 @@ export async function getUnifiedDashboard(): Promise<UnifiedDashboardData> {
   };
 }
 
+export interface TrustpilotDashboardData {
+  kpis: TrustpilotKPIs;
+  clusterVolume: TrustpilotClusterVolume[];
+  topicBubbles: TrustpilotTopicBubble[];
+  trendData: TrustpilotTrendData[];
+  aiInsights: TrustpilotAIInsight[];
+  actionFunnel: TrustpilotActionFunnel[];
+  clusters: string[];
+}
+
 // Mock API function for Trustpilot data
 export async function getTrustpilotDashboard(filters?: TrustpilotFilters): Promise<TrustpilotDashboardData> {
   // Simulate API delay
@@ -2732,5 +2742,425 @@ export async function getTrustpilotDashboard(filters?: TrustpilotFilters): Promi
       { topic: 'Pricing', urgency: 'medium', resolutionStatus: 'open', resolvedPercent: 23, count: 134 },
     ],
     clusters: ['Delivery Speed', 'Product Quality', 'Customer Service', 'Payment Issues', 'App Experience', 'Pricing'],
+  };
+}
+
+// Enhanced Trustpilot Types for Next-Gen Dashboard
+export interface TrustpilotReviewMetadata {
+  urgency: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  priority: 'REGULATORY_COMPLIANCE' | 'REVENUE_IMPACT' | 'CUSTOMER_SATISFACTION' | 'INTERNAL_PROCESS';
+  resolution_status: 'RESOLVED' | 'PENDING' | 'ESCALATED' | 'REQUIRES_INTERVENTION';
+  action_pending: boolean;
+  action_pending_from: 'SUPPORT_TEAM' | 'MANAGEMENT' | 'COMPLIANCE' | 'PRODUCT' | null;
+  follow_up_required: boolean;
+  follow_up_date?: string;
+  follow_up_reason?: string;
+  next_action_suggestion: string;
+  overall_sentiment: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE' | 'MIXED';
+  sentiment_confidence: number; // 0-100
+  authenticity_confidence: number; // 0-100
+  summary: string;
+}
+
+export interface TrustpilotReviewer {
+  name: string;
+  verified_purchase: boolean;
+  review_count: number;
+  helpful_percentage: number;
+  is_influencer: boolean;
+  influencer_reach?: number;
+}
+
+export interface TrustpilotReview {
+  review_id: string;
+  rating: number; // 1-5
+  text: string;
+  posted_date: string;
+  cluster_id?: string;
+  subcluster_id?: string;
+  reviewer: TrustpilotReviewer;
+  metadata: TrustpilotReviewMetadata;
+  helpful_votes?: number;
+  not_helpful_votes?: number;
+  review_views?: number;
+}
+
+export interface TrustpilotSubcluster {
+  subcluster_id: string;
+  name: string;
+  volume: number;
+  percentage: number;
+  urgency: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  ai_summary: string;
+  sentiment: {
+    positive: number;
+    neutral: number;
+    negative: number;
+    mixed: number;
+  };
+  reviews?: TrustpilotReview[];
+  ai_insights?: Array<{
+    type: 'EMERGING_CRISIS' | 'REGULATORY' | 'INFLUENCER' | 'OPPORTUNITY' | 'TREND';
+    message: string;
+    confidence: number;
+  }>;
+}
+
+export interface TrustpilotCluster {
+  cluster_id: string;
+  cluster_name: string;
+  volume: number;
+  percentage: number;
+  sentiment: {
+    positive: number;
+    neutral: number;
+    negative: number;
+    mixed: number;
+  };
+  urgency: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  priority: 'REGULATORY_COMPLIANCE' | 'REVENUE_IMPACT' | 'CUSTOMER_SATISFACTION' | 'INTERNAL_PROCESS';
+  trend: {
+    '7d_change': number;
+    direction: 'UP' | 'DOWN' | 'STABLE';
+  };
+  subclusters: TrustpilotSubcluster[];
+  ai_insights: Array<{
+    type: 'EMERGING_CRISIS' | 'REGULATORY' | 'INFLUENCER' | 'OPPORTUNITY' | 'TREND';
+    message: string;
+    confidence: number;
+  }>;
+  avg_resolution_time_days?: number;
+  response_rate?: number;
+  fake_review_rate?: number;
+}
+
+export interface TrustpilotEnhancedMetadata {
+  last_updated: string;
+  update_frequency_seconds: number;
+  total_reviews: number;
+  trustscore: number;
+  response_rate: number;
+  avg_response_time_hours: number;
+  reputation_risk_score?: number; // 0-5
+  clv_at_risk?: number; // in currency
+  unresolved_alerts?: number;
+  fake_reviews_flagged?: number;
+  top_complaint?: string;
+  top_complaint_percentage?: number;
+}
+
+export interface TrustpilotEnhancedDashboardData {
+  metadata: TrustpilotEnhancedMetadata;
+  clusters: TrustpilotCluster[];
+  reviews: TrustpilotReview[];
+}
+
+// Enhanced API function that generates enriched data
+export async function getTrustpilotEnhancedDashboard(filters?: TrustpilotFilters): Promise<TrustpilotEnhancedDashboardData> {
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Generate enriched cluster data with subclusters
+  const clusters: TrustpilotCluster[] = [
+    {
+      cluster_id: 'ACC_001',
+      cluster_name: 'Account Issues',
+      volume: 1465,
+      percentage: 28,
+      sentiment: { positive: 0.18, neutral: 0.22, negative: 0.50, mixed: 0.10 },
+      urgency: 'HIGH',
+      priority: 'CUSTOMER_SATISFACTION',
+      trend: { '7d_change': 0.15, direction: 'UP' },
+      avg_resolution_time_days: 2.3,
+      response_rate: 0.76,
+      fake_review_rate: 0.02,
+      subclusters: [
+        {
+          subcluster_id: 'ACC_001_A',
+          name: 'Verification Delays',
+          volume: 456,
+          percentage: 31,
+          urgency: 'CRITICAL',
+          ai_summary: 'Account verification process taking 2+ weeks, causing customer frustration',
+          sentiment: { positive: 0.05, neutral: 0.15, negative: 0.75, mixed: 0.05 },
+          ai_insights: [
+            { type: 'EMERGING_CRISIS', message: 'Volume +145% vs yesterday - potential service outage', confidence: 0.94 },
+            { type: 'REGULATORY', message: '4 mentions of PSD2 non-compliance detected - escalate to compliance', confidence: 0.87 }
+          ]
+        },
+        {
+          subcluster_id: 'ACC_001_B',
+          name: 'Account Closure Issues',
+          volume: 389,
+          percentage: 27,
+          urgency: 'HIGH',
+          ai_summary: 'Customers experiencing difficulties closing accounts',
+          sentiment: { positive: 0.10, neutral: 0.20, negative: 0.65, mixed: 0.05 },
+          ai_insights: [
+            { type: 'TREND', message: 'Steady increase over past week', confidence: 0.82 }
+          ]
+        },
+        {
+          subcluster_id: 'ACC_001_C',
+          name: 'Onboarding Problems',
+          volume: 620,
+          percentage: 42,
+          urgency: 'MEDIUM',
+          ai_summary: 'New customer onboarding process needs improvement',
+          sentiment: { positive: 0.30, neutral: 0.30, negative: 0.35, mixed: 0.05 },
+        }
+      ],
+      ai_insights: [
+        { type: 'EMERGING_CRISIS', message: 'Volume +145% vs yesterday - potential service outage', confidence: 0.94 },
+        { type: 'REGULATORY', message: '4 mentions of PSD2 non-compliance detected - escalate to compliance', confidence: 0.87 }
+      ]
+    },
+    {
+      cluster_id: 'TXN_001',
+      cluster_name: 'Transaction Problems',
+      volume: 1234,
+      percentage: 24,
+      sentiment: { positive: 0.12, neutral: 0.18, negative: 0.65, mixed: 0.05 },
+      urgency: 'CRITICAL',
+      priority: 'REVENUE_IMPACT',
+      trend: { '7d_change': 0.45, direction: 'UP' },
+      avg_resolution_time_days: 1.8,
+      response_rate: 0.82,
+      fake_review_rate: 0.01,
+      subclusters: [
+        {
+          subcluster_id: 'TXN_001_A',
+          name: 'Payment Failures',
+          volume: 567,
+          percentage: 46,
+          urgency: 'CRITICAL',
+          ai_summary: 'Payment processing errors affecting checkout experience',
+          sentiment: { positive: 0.05, neutral: 0.10, negative: 0.80, mixed: 0.05 },
+          ai_insights: [
+            { type: 'EMERGING_CRISIS', message: 'Payment gateway timeout issues - urgent investigation needed', confidence: 0.96 }
+          ]
+        },
+        {
+          subcluster_id: 'TXN_001_B',
+          name: 'Refund Delays',
+          volume: 423,
+          percentage: 34,
+          urgency: 'HIGH',
+          ai_summary: 'Delayed refund processing causing customer complaints',
+          sentiment: { positive: 0.08, neutral: 0.15, negative: 0.72, mixed: 0.05 },
+        },
+        {
+          subcluster_id: 'TXN_001_C',
+          name: 'Transaction Errors',
+          volume: 244,
+          percentage: 20,
+          urgency: 'MEDIUM',
+          ai_summary: 'Various transaction-related errors reported',
+          sentiment: { positive: 0.20, neutral: 0.25, negative: 0.50, mixed: 0.05 },
+        }
+      ],
+      ai_insights: [
+        { type: 'EMERGING_CRISIS', message: 'Payment gateway timeout issues - urgent investigation needed', confidence: 0.96 },
+        { type: 'OPPORTUNITY', message: 'Estimated €89K in failed transactions this week - revenue recovery opportunity', confidence: 0.91 }
+      ]
+    },
+    {
+      cluster_id: 'CS_001',
+      cluster_name: 'Customer Service',
+      volume: 987,
+      percentage: 19,
+      sentiment: { positive: 0.35, neutral: 0.25, negative: 0.35, mixed: 0.05 },
+      urgency: 'MEDIUM',
+      priority: 'CUSTOMER_SATISFACTION',
+      trend: { '7d_change': -0.12, direction: 'DOWN' },
+      avg_resolution_time_days: 3.1,
+      response_rate: 0.71,
+      fake_review_rate: 0.03,
+      subclusters: [
+        {
+          subcluster_id: 'CS_001_A',
+          name: 'Response Delays',
+          volume: 456,
+          percentage: 46,
+          urgency: 'HIGH',
+          ai_summary: 'Customer support response times exceeding SLA',
+          sentiment: { positive: 0.15, neutral: 0.20, negative: 0.60, mixed: 0.05 },
+        },
+        {
+          subcluster_id: 'CS_001_B',
+          name: 'Support Quality',
+          volume: 531,
+          percentage: 54,
+          urgency: 'MEDIUM',
+          ai_summary: 'Mixed feedback on support agent quality and resolution effectiveness',
+          sentiment: { positive: 0.50, neutral: 0.30, negative: 0.15, mixed: 0.05 },
+          ai_insights: [
+            { type: 'OPPORTUNITY', message: '15 reviews waiting for response - average 8h delay vs 18h avg', confidence: 0.88 }
+          ]
+        }
+      ],
+      ai_insights: [
+        { type: 'OPPORTUNITY', message: '15 reviews waiting for response - average 8h delay vs 18h avg', confidence: 0.88 }
+      ]
+    },
+    {
+      cluster_id: 'APP_001',
+      cluster_name: 'App/Technical',
+      volume: 856,
+      percentage: 16,
+      sentiment: { positive: 0.28, neutral: 0.22, negative: 0.45, mixed: 0.05 },
+      urgency: 'HIGH',
+      priority: 'CUSTOMER_SATISFACTION',
+      trend: { '7d_change': 0.23, direction: 'UP' },
+      avg_resolution_time_days: 4.2,
+      response_rate: 0.65,
+      fake_review_rate: 0.02,
+      subclusters: [
+        {
+          subcluster_id: 'APP_001_A',
+          name: 'App Crashes',
+          volume: 389,
+          percentage: 45,
+          urgency: 'HIGH',
+          ai_summary: 'Mobile app stability issues affecting user experience',
+          sentiment: { positive: 0.10, neutral: 0.15, negative: 0.70, mixed: 0.05 },
+        },
+        {
+          subcluster_id: 'APP_001_B',
+          name: 'Login Issues',
+          volume: 312,
+          percentage: 36,
+          urgency: 'MEDIUM',
+          ai_summary: 'Authentication and login problems reported',
+          sentiment: { positive: 0.20, neutral: 0.25, negative: 0.50, mixed: 0.05 },
+        },
+        {
+          subcluster_id: 'APP_001_C',
+          name: 'Feature Requests',
+          volume: 155,
+          percentage: 19,
+          urgency: 'LOW',
+          ai_summary: 'User requests for new features and improvements',
+          sentiment: { positive: 0.60, neutral: 0.30, negative: 0.05, mixed: 0.05 },
+        }
+      ],
+      ai_insights: [
+        { type: 'TREND', message: 'App stability issues increasing - consider prioritizing bug fixes', confidence: 0.85 }
+      ],
+    },
+    {
+      cluster_id: 'FEE_001',
+      cluster_name: 'Fees',
+      volume: 432,
+      percentage: 8,
+      sentiment: { positive: 0.15, neutral: 0.20, negative: 0.60, mixed: 0.05 },
+      urgency: 'MEDIUM',
+      priority: 'REVENUE_IMPACT',
+      trend: { '7d_change': 0.08, direction: 'UP' },
+      avg_resolution_time_days: 2.5,
+      response_rate: 0.58,
+      fake_review_rate: 0.04,
+      subclusters: [
+        {
+          subcluster_id: 'FEE_001_A',
+          name: 'Hidden Fees',
+          volume: 267,
+          percentage: 62,
+          urgency: 'HIGH',
+          ai_summary: 'Customers complaining about unexpected or hidden fees',
+          sentiment: { positive: 0.05, neutral: 0.10, negative: 0.80, mixed: 0.05 },
+        },
+        {
+          subcluster_id: 'FEE_001_B',
+          name: 'Fee Structure',
+          volume: 165,
+          percentage: 38,
+          urgency: 'MEDIUM',
+          ai_summary: 'General feedback on fee pricing and structure',
+          sentiment: { positive: 0.25, neutral: 0.30, negative: 0.40, mixed: 0.05 },
+        }
+      ],
+      ai_insights: [
+        { type: 'OPPORTUNITY', message: 'Fee transparency concerns may impact customer retention - improve disclosure', confidence: 0.82 }
+      ],
+    },
+    {
+      cluster_id: 'OTH_001',
+      cluster_name: 'Other',
+      volume: 260,
+      percentage: 5,
+      sentiment: { positive: 0.40, neutral: 0.30, negative: 0.25, mixed: 0.05 },
+      urgency: 'LOW',
+      priority: 'INTERNAL_PROCESS',
+      trend: { '7d_change': -0.05, direction: 'DOWN' },
+      avg_resolution_time_days: 1.5,
+      response_rate: 0.85,
+      fake_review_rate: 0.01,
+      subclusters: [],
+      ai_insights: [],
+    }
+  ];
+
+  // Generate sample reviews
+  const reviews: TrustpilotReview[] = [];
+  clusters.forEach(cluster => {
+    cluster.subclusters.forEach(subcluster => {
+      const reviewCount = Math.min(subcluster.volume, 10); // Limit reviews per subcluster for demo
+      for (let i = 0; i < reviewCount; i++) {
+        const isNegative = subcluster.sentiment.negative > 0.5;
+        reviews.push({
+          review_id: `REV_${cluster.cluster_id}_${subcluster.subcluster_id}_${i}`,
+          rating: isNegative ? (Math.random() > 0.5 ? 1 : 2) : (Math.random() > 0.3 ? 4 : 5),
+          text: `${subcluster.ai_summary} Review ${i + 1}: ${isNegative ? 'Very disappointed with the service. ' : 'Great experience! '}${subcluster.name} issue needs attention.`,
+          posted_date: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+          cluster_id: cluster.cluster_id,
+          subcluster_id: subcluster.subcluster_id,
+          reviewer: {
+            name: `User${Math.floor(Math.random() * 1000)}`,
+            verified_purchase: Math.random() > 0.3,
+            review_count: Math.floor(Math.random() * 50) + 1,
+            helpful_percentage: Math.floor(Math.random() * 40) + 60,
+            is_influencer: Math.random() > 0.9,
+            influencer_reach: Math.random() > 0.9 ? Math.floor(Math.random() * 50000) + 10000 : undefined
+          },
+          metadata: {
+            urgency: subcluster.urgency,
+            priority: cluster.priority,
+            resolution_status: Math.random() > 0.6 ? 'PENDING' : Math.random() > 0.5 ? 'RESOLVED' : 'REQUIRES_INTERVENTION',
+            action_pending: Math.random() > 0.4,
+            action_pending_from: Math.random() > 0.5 ? 'SUPPORT_TEAM' : 'MANAGEMENT',
+            follow_up_required: Math.random() > 0.6,
+            follow_up_date: Math.random() > 0.6 ? new Date(Date.now() + Math.random() * 48 * 60 * 60 * 1000).toISOString() : undefined,
+            follow_up_reason: Math.random() > 0.6 ? 'Initial response pending - SLA breach in 4h' : undefined,
+            next_action_suggestion: `Respond with escalation to ${subcluster.name.toLowerCase()} team`,
+            overall_sentiment: isNegative ? 'NEGATIVE' : Math.random() > 0.5 ? 'POSITIVE' : 'NEUTRAL',
+            sentiment_confidence: Math.floor(Math.random() * 20) + 80,
+            authenticity_confidence: Math.floor(Math.random() * 10) + 90,
+            summary: subcluster.ai_summary
+          },
+          helpful_votes: Math.floor(Math.random() * 50) + 5,
+          not_helpful_votes: Math.floor(Math.random() * 10),
+          review_views: Math.floor(Math.random() * 500) + 100
+        });
+      }
+    });
+  });
+
+  return {
+    metadata: {
+      last_updated: new Date().toISOString(),
+      update_frequency_seconds: 60,
+      total_reviews: 5234,
+      trustscore: 4.2,
+      response_rate: 0.87,
+      avg_response_time_hours: 18,
+      reputation_risk_score: 4.2,
+      clv_at_risk: 2300000,
+      unresolved_alerts: 12,
+      fake_reviews_flagged: 3,
+      top_complaint: 'Account Issues',
+      top_complaint_percentage: 28
+    },
+    clusters,
+    reviews
   };
 }
