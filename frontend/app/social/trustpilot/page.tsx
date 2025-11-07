@@ -78,10 +78,10 @@ export default function TrustpilotDashboard({
   if (!trustpilotEnhancedData && !trustpilotData) {
     return (
       <div className="space-y-6">
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardContent className="py-12 text-center">
-            <RefreshCw className="h-12 w-12 text-gray-500 mx-auto mb-4 animate-spin" />
-            <p className="text-gray-400">Loading Trustpilot Intelligence Dashboard...</p>
+            <RefreshCw className="h-12 w-12 text-muted-foreground mx-auto mb-4 animate-spin" />
+            <p className="text-muted-foreground">Loading Trustpilot Intelligence Dashboard...</p>
           </CardContent>
         </Card>
       </div>
@@ -98,8 +98,8 @@ export default function TrustpilotDashboard({
       case 'CRITICAL': return 'text-red-400 bg-red-500/20 border-red-500/50';
       case 'HIGH': return 'text-orange-400 bg-orange-500/20 border-orange-500/50';
       case 'MEDIUM': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/50';
-      case 'LOW': return 'text-gray-400 bg-gray-500/20 border-gray-500/50';
-      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/50';
+      case 'LOW': return 'text-muted-foreground bg-white/10 border-white/10';
+      default: return 'text-muted-foreground bg-white/10 border-white/10';
     }
   };
 
@@ -108,8 +108,8 @@ export default function TrustpilotDashboard({
       case 'REGULATORY_COMPLIANCE': return 'text-purple-400 bg-purple-500/20';
       case 'REVENUE_IMPACT': return 'text-red-400 bg-red-500/20';
       case 'CUSTOMER_SATISFACTION': return 'text-blue-400 bg-blue-500/20';
-      case 'INTERNAL_PROCESS': return 'text-gray-400 bg-gray-500/20';
-      default: return 'text-gray-400 bg-gray-500/20';
+      case 'INTERNAL_PROCESS': return 'text-muted-foreground bg-white/10';
+      default: return 'text-muted-foreground bg-white/10';
     }
   };
 
@@ -117,9 +117,9 @@ export default function TrustpilotDashboard({
     switch (sentiment) {
       case 'POSITIVE': return 'text-green-400';
       case 'NEGATIVE': return 'text-red-400';
-      case 'NEUTRAL': return 'text-gray-400';
+      case 'NEUTRAL': return 'text-muted-foreground';
       case 'MIXED': return 'text-yellow-400';
-      default: return 'text-gray-400';
+      default: return 'text-muted-foreground';
     }
   };
 
@@ -129,7 +129,7 @@ export default function TrustpilotDashboard({
       case 'PENDING': return 'text-yellow-400 bg-yellow-500/20';
       case 'ESCALATED': return 'text-orange-400 bg-orange-500/20';
       case 'REQUIRES_INTERVENTION': return 'text-red-400 bg-red-500/20';
-      default: return 'text-gray-400 bg-gray-500/20';
+      default: return 'text-muted-foreground bg-white/10';
     }
   };
 
@@ -217,10 +217,10 @@ export default function TrustpilotDashboard({
   if (!metadata) {
     return (
       <div className="space-y-6">
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardContent className="py-12 text-center">
-            <RefreshCw className="h-12 w-12 text-gray-500 mx-auto mb-4 animate-spin" />
-            <p className="text-gray-400">Loading Trustpilot Intelligence Dashboard...</p>
+            <RefreshCw className="h-12 w-12 text-muted-foreground mx-auto mb-4 animate-spin" />
+            <p className="text-muted-foreground">Loading Trustpilot Intelligence Dashboard...</p>
           </CardContent>
         </Card>
       </div>
@@ -507,7 +507,7 @@ export default function TrustpilotDashboard({
           <div className="flex items-center gap-2 text-blue-400 text-sm">
             <Sparkles className="h-4 w-4" />
             <span>Enhanced Trustpilot Intelligence Dashboard Active</span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted-foreground">
               ({enhancedData.clusters.length} clusters, {enhancedData.reviews.length} reviews)
             </span>
           </div>
@@ -533,7 +533,7 @@ export default function TrustpilotDashboard({
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Average Rating */}
-            <Card className="bg-gray-900 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
+            <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -542,7 +542,7 @@ export default function TrustpilotDashboard({
                       Average Rating
                     </CardTitle>
                   </div>
-                  <div className="w-8 h-8 rounded bg-gray-800 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                   </div>
                 </div>
@@ -550,7 +550,7 @@ export default function TrustpilotDashboard({
               <CardContent className="space-y-2">
                 <div>
                   <div className="text-3xl font-bold text-white">{avgRating.toFixed(1)}</div>
-                  <div className="text-xs text-gray-400 mt-1">out of 5.0 stars</div>
+                  <div className="text-xs text-muted-foreground mt-1">out of 5.0 stars</div>
                 </div>
                 <div className="pt-2">
                   <div className="bg-purple-900/30 rounded-md px-3 py-2">
@@ -563,7 +563,7 @@ export default function TrustpilotDashboard({
             </Card>
 
             {/* Replied vs Not Replied */}
-            <Card className="bg-gray-900 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
+            <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -572,7 +572,7 @@ export default function TrustpilotDashboard({
                       Replied vs Not Replied
                     </CardTitle>
                   </div>
-                  <div className="w-8 h-8 rounded bg-gray-800 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
                     <MessageSquare className="h-4 w-4 text-green-400" />
                   </div>
                 </div>
@@ -580,7 +580,7 @@ export default function TrustpilotDashboard({
               <CardContent className="space-y-2">
                 <div>
                   <div className="text-3xl font-bold text-white">{repliedPercent}%</div>
-                  <div className="text-xs text-gray-400 mt-1">vs {notRepliedPercent}% Not Replied</div>
+                  <div className="text-xs text-muted-foreground mt-1">vs {notRepliedPercent}% Not Replied</div>
                 </div>
                 <div className="pt-2">
                   <div className="bg-purple-900/30 rounded-md px-3 py-2">
@@ -593,7 +593,7 @@ export default function TrustpilotDashboard({
             </Card>
 
             {/* Avg Response Time */}
-            <Card className="bg-gray-900 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
+            <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -602,7 +602,7 @@ export default function TrustpilotDashboard({
                       Avg Response Time
                     </CardTitle>
                   </div>
-                  <div className="w-8 h-8 rounded bg-gray-800 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
                     <Clock className="h-4 w-4 text-blue-400" />
                   </div>
                 </div>
@@ -610,7 +610,7 @@ export default function TrustpilotDashboard({
               <CardContent className="space-y-2">
                 <div>
                   <div className="text-3xl font-bold text-white">{avgResponseTimeHours.toFixed(1)}h</div>
-                  <div className="text-xs text-gray-400 mt-1">Average response time</div>
+                  <div className="text-xs text-muted-foreground mt-1">Average response time</div>
                 </div>
                 <div className="pt-2">
                   <div className="bg-purple-900/30 rounded-md px-3 py-2">
@@ -623,7 +623,7 @@ export default function TrustpilotDashboard({
             </Card>
 
             {/* Positive vs Negative Review */}
-            <Card className="bg-gray-900 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
+            <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -632,7 +632,7 @@ export default function TrustpilotDashboard({
                       Positive vs Negative
                     </CardTitle>
                   </div>
-                  <div className="w-8 h-8 rounded bg-gray-800 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
                     {positiveReviewsPercent >= 70 ? (
                       <TrendingUp className="h-4 w-4 text-green-400" />
                     ) : (
@@ -644,7 +644,7 @@ export default function TrustpilotDashboard({
               <CardContent className="space-y-2">
                 <div>
                   <div className="text-3xl font-bold text-white">{positiveReviewsPercent.toFixed(1)}%</div>
-                  <div className="text-xs text-gray-400 mt-1">vs {negativeReviewsPercent.toFixed(1)}% Negative</div>
+                  <div className="text-xs text-muted-foreground mt-1">vs {negativeReviewsPercent.toFixed(1)}% Negative</div>
                 </div>
                 <div className="pt-2">
                   <div className="bg-purple-900/30 rounded-md px-3 py-2">
@@ -662,13 +662,13 @@ export default function TrustpilotDashboard({
       {/* Top 10 Dominant Topics by Virality - Sentiment Distribution with Viral Negative Posts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Chart Section */}
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Grid3x3 className="h-5 w-5 text-purple-400" />
               Top 10 Dominant Topics by Virality
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               Sentiment distribution (5 levels) for most viral topics
             </CardDescription>
           </CardHeader>
@@ -830,13 +830,13 @@ export default function TrustpilotDashboard({
         </Card>
 
         {/* Trustpilot Viral Negative Post Summaries Column */}
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <AlertTriangle className="h-5 w-5 text-red-400" />
               Trustpilot Viral Negative Post Summaries
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               Hover over posts to view Trustpilot review details and action suggestions
             </CardDescription>
           </CardHeader>
@@ -846,7 +846,7 @@ export default function TrustpilotDashboard({
                 {viralNegativePosts.map((post) => (
                   <UITooltip key={post.id}>
                     <TooltipTrigger asChild>
-                      <div className="p-4 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-red-500/50 transition-all cursor-pointer">
+                      <div className="p-4 rounded-lg border border-white/10 bg-app-black/60/50 hover:bg-app-black/60 hover:border-red-500/50 transition-all cursor-pointer">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
@@ -863,17 +863,17 @@ export default function TrustpilotDashboard({
                                     className={`h-3 w-3 ${
                                       i < post.starRating
                                         ? 'fill-yellow-400 text-yellow-400'
-                                        : 'text-gray-600'
+                                        : 'text-muted-foreground'
                                     }`}
                                   />
                                 ))}
                               </div>
                             </div>
                             <h4 className="text-sm font-semibold text-white mb-1">{post.topic}</h4>
-                            <p className="text-xs text-gray-300 line-clamp-2">{post.summary}</p>
+                            <p className="text-xs text-foreground line-clamp-2">{post.summary}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <ThumbsUp className="h-3 w-3" />
                             {post.helpfulVotes} helpful
@@ -884,7 +884,7 @@ export default function TrustpilotDashboard({
                     <TooltipContent 
                       side="left" 
                       align="start"
-                      className="max-w-md p-4 bg-gray-800 border-gray-700 shadow-xl z-50"
+                      className="max-w-md p-4 bg-app-black/60 border-white/10 shadow-xl z-50"
                       sideOffset={10}
                     >
                       <div className="space-y-3">
@@ -896,9 +896,9 @@ export default function TrustpilotDashboard({
                             </span>
                           </div>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs text-gray-400">By {post.author}</span>
-                            <span className="text-xs text-gray-500">•</span>
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-muted-foreground">By {post.author}</span>
+                            <span className="text-xs text-muted-foreground">•</span>
+                            <span className="text-xs text-muted-foreground">
                               {new Date(post.timestamp).toLocaleString()}
                             </span>
                           </div>
@@ -909,62 +909,62 @@ export default function TrustpilotDashboard({
                                 className={`h-4 w-4 ${
                                   i < post.starRating
                                     ? 'fill-yellow-400 text-yellow-400'
-                                    : 'text-gray-600'
+                                    : 'text-muted-foreground'
                                 }`}
                               />
                             ))}
-                            <span className="text-xs text-gray-400 ml-2">{post.starRating} stars</span>
+                            <span className="text-xs text-muted-foreground ml-2">{post.starRating} stars</span>
                           </div>
                         </div>
                         
-                        <div className="border-t border-gray-700 pt-2">
-                          <h4 className="text-xs font-semibold text-gray-300 mb-1">Review Content:</h4>
-                          <p className="text-xs text-gray-400 mb-3">{post.postContent}</p>
+                        <div className="border-t border-white/10 pt-2">
+                          <h4 className="text-xs font-semibold text-foreground mb-1">Review Content:</h4>
+                          <p className="text-xs text-muted-foreground mb-3">{post.postContent}</p>
                         </div>
 
-                        <div className="border-t border-gray-700 pt-2">
-                          <h4 className="text-xs font-semibold text-gray-300 mb-2">Trustpilot Metrics:</h4>
+                        <div className="border-t border-white/10 pt-2">
+                          <h4 className="text-xs font-semibold text-foreground mb-2">Trustpilot Metrics:</h4>
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div>
-                              <span className="text-gray-400">Helpful Votes:</span>
+                              <span className="text-muted-foreground">Helpful Votes:</span>
                               <span className="text-white ml-2 font-semibold">{post.helpfulVotes.toLocaleString()}</span>
                             </div>
                             <div>
-                              <span className="text-gray-400">Star Rating:</span>
+                              <span className="text-muted-foreground">Star Rating:</span>
                               <span className="text-yellow-400 ml-2 font-semibold">{post.starRating}/5</span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="border-t border-gray-700 pt-2">
-                          <h4 className="text-xs font-semibold text-gray-300 mb-2">Sentiment & Analysis:</h4>
+                        <div className="border-t border-white/10 pt-2">
+                          <h4 className="text-xs font-semibold text-foreground mb-2">Sentiment & Analysis:</h4>
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div>
-                              <span className="text-gray-400">Sentiment:</span>
+                              <span className="text-muted-foreground">Sentiment:</span>
                               <span className={`ml-2 font-semibold ${
                                 post.sentimentLevel >= 4 ? 'text-red-400' : 
-                                post.sentimentLevel === 3 ? 'text-yellow-400' : 'text-gray-400'
+                                post.sentimentLevel === 3 ? 'text-yellow-400' : 'text-muted-foreground'
                               }`}>
                                 Level {post.sentimentLevel}
                               </span>
                             </div>
                             <div>
-                              <span className="text-gray-400">Urgency:</span>
+                              <span className="text-muted-foreground">Urgency:</span>
                               <span className={`ml-2 font-semibold ${
                                 post.urgency === 'High' ? 'text-red-400' : 
-                                post.urgency === 'Medium' ? 'text-yellow-400' : 'text-gray-400'
+                                post.urgency === 'Medium' ? 'text-yellow-400' : 'text-muted-foreground'
                               }`}>
                                 {post.urgency}
                               </span>
                             </div>
                             <div>
-                              <span className="text-gray-400">Virality Score:</span>
+                              <span className="text-muted-foreground">Virality Score:</span>
                               <span className="text-orange-400 ml-2 font-semibold">{post.viralityScore}</span>
                             </div>
                             <div>
-                              <span className="text-gray-400">Trending:</span>
+                              <span className="text-muted-foreground">Trending:</span>
                               <span className={`ml-2 font-semibold ${
-                                post.trending === 'Yes' ? 'text-orange-400' : 'text-gray-400'
+                                post.trending === 'Yes' ? 'text-orange-400' : 'text-muted-foreground'
                               }`}>
                                 {post.trending}
                               </span>
@@ -972,9 +972,9 @@ export default function TrustpilotDashboard({
                           </div>
                         </div>
 
-                        <div className="border-t border-gray-700 pt-2">
+                        <div className="border-t border-white/10 pt-2">
                           <h4 className="text-xs font-semibold text-yellow-400 mb-1">Next Action Suggestion:</h4>
-                          <p className="text-xs text-gray-300">{post.nextAction}</p>
+                          <p className="text-xs text-foreground">{post.nextAction}</p>
                         </div>
                       </div>
                     </TooltipContent>
@@ -996,13 +996,13 @@ export default function TrustpilotDashboard({
       {enhancedData && (
         <>
           {/* Section 1: Executive Summary Strip */}
-          <Card className="bg-gray-900 border-gray-700">
+          <Card className="bg-app-black/60 border border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Activity className="h-5 w-5 text-purple-400" />
                 Executive Summary
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-muted-foreground">
                 Real-time reputation intelligence with AI confidence scores
               </CardDescription>
             </CardHeader>
@@ -1010,112 +1010,112 @@ export default function TrustpilotDashboard({
               <div className="flex flex-wrap gap-4 overflow-x-auto pb-2">
                 {/* Reputation Risk Score */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                   onClick={() => setReviewFilters({...reviewFilters, urgency: ['CRITICAL', 'HIGH']})}
                 >
                   <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
                     <AlertTriangle className="h-5 w-5 text-red-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Reputation Risk</div>
+                    <div className="text-xs text-muted-foreground">Reputation Risk</div>
                     <div className="text-lg font-bold text-white">
                       {metadata?.reputation_risk_score?.toFixed(1) || '4.2'}/5
                     </div>
-                    <div className="text-xs text-gray-500">98% confidence</div>
+                    <div className="text-xs text-muted-foreground">98% confidence</div>
                   </div>
                   <TrendingUp className="h-4 w-4 text-orange-400" />
                 </div>
 
                 {/* CLV at Risk */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                   onClick={() => setReviewFilters({...reviewFilters, priority: ['REVENUE_IMPACT']})}
                 >
                   <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
                     <DollarSign className="h-5 w-5 text-orange-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">CLV at Risk</div>
+                    <div className="text-xs text-muted-foreground">CLV at Risk</div>
                     <div className="text-lg font-bold text-white">
                       €{(metadata?.clv_at_risk || 2300000) / 1000000}M
                     </div>
-                    <div className="text-xs text-gray-500">94% confidence</div>
+                    <div className="text-xs text-muted-foreground">94% confidence</div>
                   </div>
                   <TrendingUp className="h-4 w-4 text-red-400" />
                 </div>
 
                 {/* Unresolved Alerts */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                   onClick={() => setReviewFilters({...reviewFilters, resolution_status: ['PENDING', 'REQUIRES_INTERVENTION']})}
                 >
                   <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                     <AlertCircle className="h-5 w-5 text-yellow-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Unresolved Alerts</div>
+                    <div className="text-xs text-muted-foreground">Unresolved Alerts</div>
                     <div className="text-lg font-bold text-white">
                       {metadata?.unresolved_alerts || 12}
                     </div>
-                    <div className="text-xs text-gray-500">96% confidence</div>
+                    <div className="text-xs text-muted-foreground">96% confidence</div>
                   </div>
                   <ArrowRight className="h-4 w-4 text-yellow-400" />
                 </div>
 
                 {/* Fake Reviews Flagged */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                 >
                   <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <Shield className="h-5 w-5 text-purple-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Fake Reviews</div>
+                    <div className="text-xs text-muted-foreground">Fake Reviews</div>
                     <div className="text-lg font-bold text-white">
                       {metadata?.fake_reviews_flagged || 3}
                     </div>
-                    <div className="text-xs text-gray-500">87% confidence</div>
+                    <div className="text-xs text-muted-foreground">87% confidence</div>
                   </div>
                   <CheckCircle className="h-4 w-4 text-green-400" />
                 </div>
 
                 {/* Response Rate */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                 >
                   <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                     <MessageSquare className="h-5 w-5 text-green-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Response Rate</div>
+                    <div className="text-xs text-muted-foreground">Response Rate</div>
                     <div className="text-lg font-bold text-white">
                       {metadata?.response_rate ? Math.round(metadata.response_rate * 100) : 87}%
                     </div>
-                    <div className="text-xs text-gray-500">99% confidence</div>
+                    <div className="text-xs text-muted-foreground">99% confidence</div>
                   </div>
                   <TrendingUp className="h-4 w-4 text-green-400" />
                 </div>
 
                 {/* Avg Response Time */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                 >
                   <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
                     <Clock className="h-5 w-5 text-blue-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Avg Response</div>
+                    <div className="text-xs text-muted-foreground">Avg Response</div>
                     <div className="text-lg font-bold text-white">
                       {metadata?.avg_response_time_hours?.toFixed(1) || '18.0'}h
                     </div>
-                    <div className="text-xs text-gray-500">97% confidence</div>
+                    <div className="text-xs text-muted-foreground">97% confidence</div>
                   </div>
                   <TrendingDown className="h-4 w-4 text-orange-400" />
                 </div>
 
                 {/* Top Complaint */}
                 <div 
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
+                  className="flex items-center gap-3 px-4 py-3 bg-app-black/60/50 rounded-lg border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer min-w-[200px]"
                   onClick={() => {
                     const topCluster = enhancedData.clusters.find(c => c.cluster_name === metadata?.top_complaint);
                     if (topCluster) setSelectedCluster(topCluster);
@@ -1125,15 +1125,15 @@ export default function TrustpilotDashboard({
                     <Flag className="h-5 w-5 text-red-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-gray-400">Top Complaint</div>
+                    <div className="text-xs text-muted-foreground">Top Complaint</div>
                     <div className="text-sm font-bold text-white truncate">
                       {metadata?.top_complaint || 'N/A'}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       {metadata?.top_complaint_percentage || 28}% • 92% confidence
                     </div>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-400" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
             </CardContent>

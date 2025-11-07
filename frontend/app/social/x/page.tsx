@@ -158,21 +158,21 @@ export default function XDashboard({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Activity className="h-5 w-5 text-sky-400" />
             X Channel Signal Summary
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Real-time performance and sentiment signals from the X (Twitter) channel
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpis.map((item) => (
-              <div key={item.label} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <div className="text-xs uppercase tracking-wide text-gray-400">{item.label}</div>
+              <div key={item.label} className="bg-app-black/60 border border-white/10 rounded-lg p-4 space-y-3">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.label}</div>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-white">{item.value}</span>
                   <span
@@ -183,40 +183,40 @@ export default function XDashboard({
                     {item.delta}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500">{item.description}</div>
+                <div className="text-xs text-muted-foreground">{item.description}</div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Sparkles className="h-5 w-5 text-sky-400" />
             Sentiment & Volume Trend (30 days)
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Daily post volume with sentiment overlay and anomaly detection highlights
           </CardDescription>
         </CardHeader>
         <CardContent>{renderSentimentChart(sentimentTrendData, 'x')}</CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Hash className="h-5 w-5 text-sky-400" />
             Emerging Conversations
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Live hashtags and narratives driving the conversation in the last 6 hours
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {conversationThemes.map((theme) => (
-              <div key={theme.tag} className="p-4 rounded-lg bg-gray-800 border border-gray-700 space-y-2">
+              <div key={theme.tag} className="p-4 rounded-lg bg-app-black/60 border border-white/10 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-white">{theme.tag}</span>
                   <span
@@ -227,8 +227,8 @@ export default function XDashboard({
                     {theme.change}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 leading-relaxed">{theme.description}</p>
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground leading-relaxed">{theme.description}</p>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     Last 6h
@@ -244,13 +244,13 @@ export default function XDashboard({
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <MessageCircle className="h-5 w-5 text-sky-400" />
             Top Live Posts
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             High-visibility posts requiring review, response, or amplification
           </CardDescription>
         </CardHeader>
@@ -259,15 +259,15 @@ export default function XDashboard({
             {topPosts.map((post) => (
               <div
                 key={post.author}
-                className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-gray-800 border border-gray-700 rounded-lg"
+                className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-app-black/60 border border-white/10 rounded-lg"
               >
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-white">{post.author}</span>
-                    <span className="text-xs text-gray-500">· {post.followers} followers</span>
+                    <span className="text-xs text-muted-foreground">· {post.followers} followers</span>
                   </div>
-                  <p className="text-sm text-gray-200 leading-relaxed">{post.summary}</p>
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400">
+                  <p className="text-sm text-foreground/80 leading-relaxed">{post.summary}</p>
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Users className="h-3 w-3" />
                       {post.impressions} impressions
@@ -293,7 +293,7 @@ export default function XDashboard({
                     <MessageCircle className="h-3 w-3 mr-1" />
                     Respond
                   </Button>
-                  <Button variant="outline" className="border-gray-600 text-gray-200 hover:text-white text-xs">
+                  <Button variant="outline" className="border-white/10 text-foreground/80 hover:text-white text-xs">
                     <ArrowUpRight className="h-3 w-3 mr-1" />
                     View Thread
                   </Button>
@@ -304,27 +304,27 @@ export default function XDashboard({
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <TrendingDown className="h-5 w-5 text-amber-400" />
             Risk Monitor
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Potential risk indicators detected by anomaly models and manual triage
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {sentimentMix.map((item) => (
-              <div key={item.label} className="p-4 bg-gray-800 border border-gray-700 rounded-lg space-y-2">
+              <div key={item.label} className="p-4 bg-app-black/60 border border-white/10 rounded-lg space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-white">{item.label}</span>
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${item.color}`}>
                     {item.value}%
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {item.label === 'Negative'
                     ? 'Escalate posts mentioning payment failures or outage reports.'
                     : item.label === 'Positive'

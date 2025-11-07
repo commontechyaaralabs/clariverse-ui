@@ -154,21 +154,21 @@ export default function PlayStoreDashboard({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Smartphone className="h-5 w-5 text-green-400" />
             Play Store Health Overview
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Ratings, stability, and listing performance indicators from Google Play
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpis.map((item) => (
-              <div key={item.label} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <div className="text-xs uppercase tracking-wide text-gray-400">{item.label}</div>
+              <div key={item.label} className="bg-app-black/60 border border-white/10 rounded-lg p-4 space-y-3">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.label}</div>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-white">{item.value}</span>
                   <span
@@ -179,20 +179,20 @@ export default function PlayStoreDashboard({
                     {item.delta}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500">{item.description}</div>
+                <div className="text-xs text-muted-foreground">{item.description}</div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Sparkles className="h-5 w-5 text-green-400" />
             Sentiment & Review Trend (30 days)
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Review cadence with sentiment overlay and outage anomaly detection
           </CardDescription>
         </CardHeader>
@@ -200,42 +200,42 @@ export default function PlayStoreDashboard({
       </Card>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <BadgePercent className="h-5 w-5 text-green-400" />
               Version Adoption Insights
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               Distribution of installs across production and beta tracks
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {versionInsights.map((version) => (
-              <div key={version.version} className="p-4 bg-gray-800 border border-gray-700 rounded-lg space-y-2">
-                <div className="flex items-center justify-between text-sm text-gray-200">
+              <div key={version.version} className="p-4 bg-app-black/60 border border-white/10 rounded-lg space-y-2">
+                <div className="flex items-center justify-between text-sm text-foreground/80">
                   <span>{version.version}</span>
                   <span>{version.installs}</span>
                 </div>
-                <div className="text-xs text-gray-400 leading-relaxed">{version.highlight}</div>
+                <div className="text-xs text-muted-foreground leading-relaxed">{version.highlight}</div>
               </div>
             ))}
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <MessageSquare className="h-5 w-5 text-green-400" />
               Priority Reviews Queue
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               Reviews triaged by automation for immediate follow-up or amplification
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {reviewQueue.map((item) => (
-              <div key={item.id} className="p-4 bg-gray-800 border border-gray-700 rounded-lg">
+              <div key={item.id} className="p-4 bg-app-black/60 border border-white/10 rounded-lg">
                 <div className="flex items-center justify-between text-sm font-semibold text-white">
                   <span>{item.summary}</span>
                   <span
@@ -248,13 +248,13 @@ export default function PlayStoreDashboard({
                     {item.sentiment}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                   <span>ID: {item.id}</span>
                   <span>Status: {item.status}</span>
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="border-gray-600 text-gray-200 hover:text-white text-xs">
+            <Button variant="outline" className="border-white/10 text-foreground/80 hover:text-white text-xs">
               <ArrowUpRight className="h-3 w-3 mr-1" />
               Open review response console
             </Button>
@@ -262,22 +262,22 @@ export default function PlayStoreDashboard({
         </Card>
       </div>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <AlertTriangle className="h-5 w-5 text-green-400" />
             Next Actions & Ownership
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Mitigation and growth initiatives tracked against Play Store metrics
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {upcomingActions.map((action) => (
-            <div key={action.title} className="p-4 bg-gray-800 border border-gray-700 rounded-lg space-y-2">
+            <div key={action.title} className="p-4 bg-app-black/60 border border-white/10 rounded-lg space-y-2">
               <div className="text-sm font-semibold text-white">{action.title}</div>
-              <div className="text-xs text-gray-400">Owner: {action.owner}</div>
-              <div className="text-xs text-gray-500">Status: {action.due}</div>
+              <div className="text-xs text-muted-foreground">Owner: {action.owner}</div>
+              <div className="text-xs text-muted-foreground">Status: {action.due}</div>
             </div>
           ))}
         </CardContent>

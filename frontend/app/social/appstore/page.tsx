@@ -148,21 +148,21 @@ export default function AppStoreDashboard({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <AppWindow className="h-5 w-5 text-blue-400" />
             App Store Performance Snapshot
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Ratings, stability, and adoption signals from the Apple App Store
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpis.map((item) => (
-              <div key={item.label} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between text-xs uppercase tracking-wide text-gray-400">
+              <div key={item.label} className="bg-app-black/60 border border-white/10 rounded-lg p-4 space-y-3">
+                <div className="flex items-center justify-between text-xs uppercase tracking-wide text-muted-foreground">
                   <span>{item.label}</span>
                   {item.icon}
                 </div>
@@ -176,20 +176,20 @@ export default function AppStoreDashboard({
                     {item.delta}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500">{item.description}</div>
+                <div className="text-xs text-muted-foreground">{item.description}</div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Sparkles className="h-5 w-5 text-blue-400" />
             Sentiment & Rating Volume (30 days)
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Review velocity paired with sentiment trajectory for the latest iOS builds
           </CardDescription>
         </CardHeader>
@@ -197,24 +197,24 @@ export default function AppStoreDashboard({
       </Card>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Star className="h-5 w-5 text-yellow-400" />
               Rating Distribution
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               Share of reviews by star rating for the current major release
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {ratingDistribution.map((bucket) => (
               <div key={bucket.stars} className="space-y-1">
-                <div className="flex items-center justify-between text-sm text-gray-300">
+                <div className="flex items-center justify-between text-sm text-foreground">
                   <span>{bucket.stars} Star{bucket.stars === 1 ? '' : 's'}</span>
                   <span>{bucket.percent}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-gray-800">
+                <div className="h-2 rounded-full bg-app-black/60">
                   <div
                     className="h-2 rounded-full bg-yellow-400"
                     style={{ width: `${bucket.percent}%` }}
@@ -225,25 +225,25 @@ export default function AppStoreDashboard({
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-700">
+        <Card className="bg-app-black/60 border border-white/10 shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <MessageSquare className="h-5 w-5 text-blue-400" />
               Featured Reviews
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-muted-foreground">
               High-signal reviews to amplify, respond, or funnel into product feedback
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {featuredReviews.map((review) => (
-              <div key={review.title} className="p-4 bg-gray-800 border border-gray-700 rounded-lg space-y-2">
+              <div key={review.title} className="p-4 bg-app-black/60 border border-white/10 rounded-lg space-y-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
                   <span>{review.title}</span>
-                  <span className="text-xs text-gray-500">· {review.rating}★</span>
+                  <span className="text-xs text-muted-foreground">· {review.rating}★</span>
                 </div>
-                <div className="text-xs text-gray-400 leading-relaxed">{review.body}</div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground leading-relaxed">{review.body}</div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Clock className="h-3 w-3" />
                   {review.age} · {review.author}
                 </div>
@@ -253,26 +253,26 @@ export default function AppStoreDashboard({
         </Card>
       </div>
 
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <ShieldCheck className="h-5 w-5 text-blue-400" />
             Release Quality Checklist
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Launch-readiness items for the current release cadence
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {releaseChecklist.map((item) => (
-              <div key={item.task} className="p-4 bg-gray-800 border border-gray-700 rounded-lg space-y-2">
+              <div key={item.task} className="p-4 bg-app-black/60 border border-white/10 rounded-lg space-y-2">
                 <div className="text-sm font-semibold text-white">{item.task}</div>
-                <div className="text-xs text-gray-400">Status: {item.status}</div>
+                <div className="text-xs text-muted-foreground">Status: {item.status}</div>
               </div>
             ))}
           </div>
-          <Button variant="outline" className="mt-4 border-gray-600 text-gray-200 hover:text-white text-xs">
+          <Button variant="outline" className="mt-4 border-white/10 text-foreground/80 hover:text-white text-xs">
             <ArrowUpRight className="h-3 w-3 mr-1" />
             View detailed rollout plan
           </Button>
