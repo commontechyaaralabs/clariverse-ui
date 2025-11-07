@@ -6,6 +6,7 @@ import {
   TrustpilotEnhancedDashboardData,
   TrustpilotCluster,
   TrustpilotReview,
+  BANK_SOCIAL_TOPICS,
 } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -29,8 +30,8 @@ import {
   CheckCircle,
   Flag,
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { renderDefaultSentimentChart } from '../components/defaultSentimentChart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList } from 'recharts';
+import { renderDefaultSentimentChart } from '../../../components/social/defaultSentimentChart';
 
 type Channel = 'all' | 'trustpilot' | 'x' | 'reddit' | 'appstore' | 'playstore';
 
@@ -132,6 +133,54 @@ export default function TrustpilotDashboard({
     }
   };
 
+  const renderViralityLabel = (props: any) => {
+    const { x, y, width, height, value } = props;
+    if (!value || typeof value !== 'string') {
+      return null;
+    }
+
+    const labelX = (x ?? 0) + (width ?? 0) + 12;
+    const labelY = (y ?? 0) + (height ?? 0) / 2;
+    const boxWidth = 140;
+    const boxHeight = 24;
+    const iconOffsetX = 10;
+    const textOffsetX = 28;
+
+    return (
+      <g transform={`translate(${labelX}, ${labelY})`}>
+        <rect
+          x={0}
+          y={-boxHeight / 2}
+          width={boxWidth}
+          height={boxHeight}
+          rx={boxHeight / 2}
+          fill="rgba(55, 65, 81, 0.6)"
+          stroke="rgba(107, 114, 128, 0.6)"
+        />
+        <text
+          x={iconOffsetX}
+          y={2}
+          fill="#FBBF24"
+          fontSize={12}
+          textAnchor="start"
+          dominantBaseline="middle"
+        >
+          {'👍'}
+        </text>
+        <text
+          x={textOffsetX}
+          y={2}
+          fill="#F3F4F6"
+          fontSize={12}
+          textAnchor="start"
+          dominantBaseline="middle"
+        >
+          {value}
+        </text>
+      </g>
+    );
+  };
+
   // Use the filtered and sorted reviews from top-level hooks
   const displayReviews = selectedCluster || selectedSubcluster ? getReviewsForSelection() : filteredAndSortedReviews;
 
@@ -185,17 +234,7 @@ export default function TrustpilotDashboard({
   const legacyActionFunnel = legacyData?.actionFunnel || [];
 
   // Bank-related topics
-  const bankTopics = [
-    'Excellent Call Support',
-    'Payment Processing Failure',
-    'Mobile App Crashes',
-    'Service Information Request',
-    'Digital Innovation Appreciation',
-    'System Outage Frustration',
-    'Trade Finance Satisfaction',
-    'Account Access Problems',
-    'Fee Structure Criticism',
-  ];
+  const bankTopics = BANK_SOCIAL_TOPICS;
 
   // Calculate virality and get top 10 negative topics
   const calculateTop10NegativeTopics = () => {
@@ -635,7 +674,8 @@ export default function TrustpilotDashboard({
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={500}>
-              <BarChart data={(() => {
+              <BarChart
+                data={(() => {
                 // Map sentiment (-1 to 1) to sentiment level (1-5)
                 const mapSentimentToLevel = (sentiment: number): number => {
                   if (sentiment <= -0.6) return 5; // Very frustrated
@@ -647,6 +687,10 @@ export default function TrustpilotDashboard({
 
                 // Ensure we have at least 10 topics by combining topicBubbles with bankTopics
                 const allTopics = [...legacyTopicBubbles];
+                const helpfulVotesByTopic = viralNegativePosts.reduce((map, post) => {
+                  map.set(post.topic, (map.get(post.topic) || 0) + (post.helpfulVotes || 0));
+                  return map;
+                }, new Map<string, number>());
                 
                 // If we don't have enough topics, add from bankTopics with mock data
                 if (allTopics.length < 10) {
@@ -683,7 +727,7 @@ export default function TrustpilotDashboard({
                   .slice(0, 10);
 
                 // For each topic, calculate sentiment distribution across 5 levels
-                return top10Topics.map(topic => {
+                  return top10Topics.map(topic => {
                   const sentimentLevel = mapSentimentToLevel(topic.sentiment);
                   
                   // Distribute volume across sentiment levels based on topic's sentiment
@@ -719,20 +763,37 @@ export default function TrustpilotDashboard({
 
                   const total = distribution[1] + distribution[2] + distribution[3] + distribution[4] + distribution[5];
                   
-                  return {
-                    name: topic.topic,
-                    'Level 1': total > 0 ? (distribution[1] / total) * 100 : 0,
-                    'Level 2': total > 0 ? (distribution[2] / total) * 100 : 0,
-                    'Level 3': total > 0 ? (distribution[3] / total) * 100 : 0,
-                    'Level 4': total > 0 ? (distribution[4] / total) * 100 : 0,
-                    'Level 5': total > 0 ? (distribution[5] / total) * 100 : 0,
+                    const toPercent = (value: number) => Number(((value / total) * 100).toFixed(1));
+
+                    const helpfulVotes = helpfulVotesByTopic.get(topic.topic) ?? Math.max(Math.round(topic.viralityScore / 20), 0);
+                    const viralityLabel = helpfulVotes > 0 ? `${helpfulVotes.toLocaleString()} helpful` : '';
+
+                    return {
+                      name: topic.topic,
+                      'Level 1': total > 0 ? toPercent(distribution[1]) : 0,
+                      'Level 2': total > 0 ? toPercent(distribution[2]) : 0,
+                      'Level 3': total > 0 ? toPercent(distribution[3]) : 0,
+                      'Level 4': total > 0 ? toPercent(distribution[4]) : 0,
+                      'Level 5': total > 0 ? toPercent(distribution[5]) : 0,
                     viralityScore: Math.round(topic.viralityScore),
                     totalPosts: topic.volume,
+                      helpfulVotes,
+                      viralityLabel,
                   };
                 });
-              })()} layout="vertical" barCategoryGap="20%">
+                })()}
+                layout="vertical"
+                barCategoryGap="20%"
+                margin={{ top: 16, right: 180, bottom: 16, left: 56 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis type="number" domain={[0, 100]} stroke="#9CA3AF" label={{ value: 'Percentage (%)', position: 'insideBottom', offset: -5 }} />
+                <XAxis
+                  type="number"
+                  domain={[0, 100]}
+                  stroke="#9CA3AF"
+                  tickFormatter={(value: number) => `${value}%`}
+                  label={{ value: 'Percentage (%)', position: 'insideBottom', offset: -5 }}
+                />
                 <YAxis dataKey="name" type="category" stroke="#9CA3AF" width={180} fontSize={14} />
                 <Tooltip
                   contentStyle={{
@@ -747,7 +808,9 @@ export default function TrustpilotDashboard({
                 <Bar dataKey="Level 2" stackId="a" fill="#3b82f6" name="Level 2: Satisfied" radius={[0, 0, 0, 0]} />
                 <Bar dataKey="Level 3" stackId="a" fill="#9CA3AF" name="Level 3: Neutral" radius={[0, 0, 0, 0]} />
                 <Bar dataKey="Level 4" stackId="a" fill="#f59e0b" name="Level 4: Frustrated" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="Level 5" stackId="a" fill="#ef4444" name="Level 5: Very Frustrated" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Level 5" stackId="a" fill="#ef4444" name="Level 5: Very Frustrated" radius={[0, 4, 4, 0]}>
+                  <LabelList dataKey="viralityLabel" position="right" content={renderViralityLabel} />
+                </Bar>
                 <Legend 
                   wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
                   content={({ payload }) => (

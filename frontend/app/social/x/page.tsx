@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Users,
 } from 'lucide-react';
-import { renderDefaultSentimentChart } from '../components/defaultSentimentChart';
+import { renderDefaultSentimentChart } from '../../../components/social/defaultSentimentChart';
 
 type Channel = 'all' | 'trustpilot' | 'x' | 'reddit' | 'appstore' | 'playstore';
 
