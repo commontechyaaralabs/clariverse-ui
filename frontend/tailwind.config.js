@@ -65,6 +65,7 @@ module.exports = {
                'brand-white': '#ffffff', /* white - text/button color */
                'brand-blue': '#5332ff', /* blue - text boxes */
                'brand-manatee': '#939394', /* manatee - text boxes */
+               'app-black': '#0a0a0a', /* deep black for cards */
             },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],

@@ -2,14 +2,11 @@
 
 import { useState, useEffect, useCallback, useMemo, Fragment } from 'react';
 import {
-  getExecutiveAlerts,
   getTrustpilotDashboard,
   getTrustpilotEnhancedDashboard,
-  ExecutiveAlert,
   TrustpilotDashboardData,
   TrustpilotEnhancedDashboardData,
   TrustpilotFilters,
-  TrustpilotActionFunnel,
   TrustpilotCluster,
   TrustpilotReview,
 } from '@/lib/api';
@@ -23,16 +20,11 @@ import {
   AlertTriangle,
   TrendingDown,
   TrendingUp,
-  DollarSign,
   Users,
   Zap,
   X,
-  ExternalLink,
   Play,
-  Clock,
-  AlertCircle,
   MessageSquare,
-  Star,
   ThumbsUp,
   ShoppingBag,
   Smartphone,
@@ -55,6 +47,7 @@ import {
   User,
   Flag,
   Info,
+  Heart,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ScatterChart, Scatter, Cell, PieChart, Pie, AreaChart, Area, ComposedChart } from 'recharts';
 import TrustpilotDashboard from './trustpilot/page';
@@ -67,7 +60,6 @@ type Channel = 'all' | 'trustpilot' | 'x' | 'reddit' | 'appstore' | 'playstore';
 
 export default function SocialMediaDashboard() {
   // Data states
-  const [alerts, setAlerts] = useState<ExecutiveAlert[]>([]);
   const [trustpilotData, setTrustpilotData] = useState<TrustpilotDashboardData | null>(null);
   const [trustpilotEnhancedData, setTrustpilotEnhancedData] = useState<TrustpilotEnhancedDashboardData | null>(null);
   const [channelData, setChannelData] = useState<Record<Channel, any>>({
@@ -172,7 +164,6 @@ export default function SocialMediaDashboard() {
 
   // UI states
   const [isLoading, setIsLoading] = useState(true);
-  const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<Channel>('all');
   const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
@@ -253,9 +244,6 @@ export default function SocialMediaDashboard() {
   const loadDashboardData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const alertsData = await getExecutiveAlerts();
-      setAlerts(alertsData);
-      
       // Load Trustpilot data if that tab is active
       if (activeTab === 'trustpilot') {
         const tpData = await getTrustpilotDashboard(trustpilotFilters);
@@ -267,7 +255,7 @@ export default function SocialMediaDashboard() {
       
       // Load channel-specific data (placeholder for now)
       setChannelData({
-        all: alertsData,
+        all: null,
         trustpilot: { message: 'Trustpilot data loading...' },
         x: { message: 'X (Twitter) data loading...' },
         reddit: { message: 'Reddit data loading...' },
@@ -287,42 +275,6 @@ export default function SocialMediaDashboard() {
       loadDashboardData();
     }
   }, [activeTab, loadDashboardData]);
-
-  const handleDismissAlert = useCallback((alertId: string) => {
-    setDismissedAlerts(prev => new Set(prev).add(alertId));
-  }, []);
-
-  const handleAlertAction = useCallback((alert: ExecutiveAlert, action: string) => {
-    console.log('Alert action:', action, alert.id);
-    // Handle different actions: assign, escalate, view, etc.
-  }, []);
-
-  const visibleAlerts = useMemo(
-    () => alerts.filter(alert => !dismissedAlerts.has(alert.id)),
-    [alerts, dismissedAlerts]
-  );
-
-  const getAlertColor = (type: string) => {
-    switch (type) {
-      case 'critical':
-        return 'bg-red-500/10 border-red-500/50';
-      case 'urgent':
-        return 'bg-orange-500/10 border-orange-500/50';
-      default:
-        return 'bg-yellow-500/10 border-yellow-500/50';
-    }
-  };
-
-  const getAlertIcon = (type: string) => {
-    switch (type) {
-      case 'critical':
-        return <AlertTriangle className="h-5 w-5 text-red-400" />;
-      case 'urgent':
-        return <Clock className="h-5 w-5 text-orange-400" />;
-      default:
-        return <AlertCircle className="h-5 w-5 text-yellow-400" />;
-    }
-  };
 
   const getChannelIcon = (channel: Channel) => {
     switch (channel) {
@@ -725,7 +677,7 @@ export default function SocialMediaDashboard() {
     const yAxisDomain: [number, number] = [0, Math.ceil(yAxisMax / 10) * 10];
 
     return (
-      <Card className="bg-gray-900 border-gray-700">
+      <Card className="bg-app-black/60 border border-white/10 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <BarChart3 className="h-5 w-5 text-purple-400" />
@@ -885,13 +837,13 @@ export default function SocialMediaDashboard() {
               
               return (
                 <div className="w-1/3 transition-all duration-300">
-                  <Card className="bg-gray-900 border-gray-700 h-full">
+                  <Card className="bg-app-black/60 border border-white/10 shadow-xl h-full">
                     <CardHeader className="relative">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setClickedPoint(null)}
-                        className="absolute top-2 right-2 h-8 w-8 p-0 text-gray-400 hover:text-white"
+                        className="absolute top-2 right-2 h-8 w-8 p-0 text-muted-foreground hover:text-white"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -905,14 +857,14 @@ export default function SocialMediaDashboard() {
                         />
                         {clickedPoint.date}
                       </CardTitle>
-                      <CardDescription className="text-gray-400">
+                      <CardDescription className="text-muted-foreground">
                         Sentiment Level {sentimentLevel}: {sentimentLevelLabels[sentimentLevel - 1]}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <div className="p-4 bg-gray-800 rounded-lg border" style={{ borderColor: `${sentimentColor}30` }}>
+                      <div className="p-4 rounded-lg border border-white/10 bg-app-black/60" style={{ borderColor: `${sentimentColor}30` }}>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-400">Total Posts:</span>
+                          <span className="text-sm text-muted-foreground">Total Posts:</span>
                           <span className="text-lg font-bold" style={{ color: sentimentColor }}>
                             {totalPosts} posts
                           </span>
@@ -921,12 +873,12 @@ export default function SocialMediaDashboard() {
                       
                       {sortedTopics.length > 0 ? (
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wide">
+                          <h4 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">
                             Topics for {sentimentLevelLabels[sentimentLevel - 1]} ({sortedTopics.length})
                           </h4>
                           <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                             {sortedTopics.map((topic, idx) => (
-                              <div key={idx} className="p-3 bg-gray-800 rounded-lg border border-gray-700">
+                              <div key={idx} className="p-3 rounded-lg border border-white/10 bg-app-black/60">
                                 <div className="flex justify-between items-start gap-3">
                                   <span className="text-sm font-medium text-white flex-1">
                                     {topic.topic}
@@ -944,7 +896,7 @@ export default function SocialMediaDashboard() {
                           </div>
                         </div>
                       ) : (
-                        <div className="text-center py-8 text-gray-400">
+                        <div className="text-center py-8 text-muted-foreground">
                           No topics available for this sentiment level
                         </div>
                       )}
@@ -1047,310 +999,160 @@ export default function SocialMediaDashboard() {
         playstore: { sentiment: 58, negativePercent: 42, rating: 3.4, engagement: 'High', volume: 'High', virality: 3 },
       },
     };
-  }, [trustpilotData, alerts]);
+  }, [trustpilotData]);
+
+  const socialKPIItems = useMemo(() => {
+    const sentimentScore = Math.round(calculateBrandHealthKPIs.avgSentimentScore || 0);
+    const sentimentBand = sentimentScore >= 70 ? 'Positive' : sentimentScore >= 50 ? 'Neutral' : 'Negative';
+    const negativitySpike = calculateBrandHealthKPIs.negativitySpikePercent || 0;
+    const emotionMix = calculateBrandHealthKPIs.emotionMix || { calm: 0, frustrated: 0, delighted: 0 };
+
+    return [
+      {
+        title: 'Total Mentions (7d)',
+        value: calculateBrandHealthKPIs.totalMentions7d.toLocaleString(),
+        subtext: `${calculateBrandHealthKPIs.totalMentions30d.toLocaleString()} in 30d`,
+        icon: MessageSquare,
+        color: 'text-purple-400',
+        bgColor: 'bg-purple-500/10',
+      },
+      {
+        title: 'Avg Sentiment',
+        value: `${sentimentScore}%`,
+        subtext: sentimentBand,
+        icon: Heart,
+        color: sentimentScore >= 70 ? 'text-green-400' : sentimentScore >= 50 ? 'text-yellow-400' : 'text-red-400',
+        bgColor: sentimentScore >= 70 ? 'bg-green-500/10' : sentimentScore >= 50 ? 'bg-yellow-500/10' : 'bg-red-500/10',
+      },
+      {
+        title: 'Negativity Spike',
+        value: `${Math.abs(negativitySpike).toFixed(1)}%`,
+        subtext: negativitySpike > 0 ? 'Week-over-week increase' : 'Week-over-week relief',
+        icon: AlertTriangle,
+        color: negativitySpike > 0 ? 'text-red-400' : 'text-green-400',
+        bgColor: negativitySpike > 0 ? 'bg-red-500/10' : 'bg-green-500/10',
+      },
+      {
+        title: 'Highest Negativity Platform',
+        value: calculateBrandHealthKPIs.platformWithHighestNegativity,
+        subtext: 'Requires priority response',
+        icon: Flag,
+        color: 'text-orange-400',
+        bgColor: 'bg-orange-500/10',
+      },
+      {
+        title: 'Virality Index',
+        value: `${calculateBrandHealthKPIs.viralityIndex}/10`,
+        subtext: 'Amplification potential',
+        icon: Activity,
+        color: calculateBrandHealthKPIs.viralityIndex >= 6 ? 'text-orange-400' : 'text-blue-400',
+        bgColor: calculateBrandHealthKPIs.viralityIndex >= 6 ? 'bg-orange-500/10' : 'bg-blue-500/10',
+      },
+      {
+        title: 'Emotion Mix',
+        value: `${emotionMix.calm}% Calm`,
+        subtext: `${emotionMix.frustrated}% Frustrated • ${emotionMix.delighted}% Delighted`,
+        icon: Users,
+        color: 'text-purple-300',
+        bgColor: 'bg-purple-500/10',
+        customContent: (
+          <div className="mt-2 space-y-2">
+            {[
+              { label: 'Calm', value: emotionMix.calm, bar: 'bg-green-500' },
+              { label: 'Frustrated', value: emotionMix.frustrated, bar: 'bg-red-500' },
+              { label: 'Delighted', value: emotionMix.delighted, bar: 'bg-blue-500' },
+            ].map(({ label, value, bar }) => (
+              <div key={label} className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="w-20">{label}</span>
+                <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-app-black/60">
+                  <div className={`h-full ${bar}`} style={{ width: `${Math.min(100, Math.max(0, value))}%` }}></div>
+                </div>
+                <span className="w-10 text-right">{Math.round(value)}%</span>
+              </div>
+            ))}
+          </div>
+        ),
+      },
+    ];
+  }, [calculateBrandHealthKPIs]);
 
   const renderChannelContent = (channel: Channel) => {
     if (channel === 'all') {
-  return (
-            <div className="space-y-6">
-          {/* Brand Health KPI Zone - Phase 1 Spec */}
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <BarChart3 className="h-5 w-5 text-purple-400" />
-                Brand Health KPI Zone
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Overall brand health at a glance
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                {/* Total Mentions */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-1">Total Mentions</div>
-                  <div className="text-2xl font-bold text-white mb-1">{calculateBrandHealthKPIs.totalMentions7d.toLocaleString()}</div>
-                  <div className="text-xs text-gray-500">7d / {calculateBrandHealthKPIs.totalMentions30d.toLocaleString()} 30d</div>
-                  <div className="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '70%' }}></div>
-                  </div>
-                </div>
-
-                {/* Average Sentiment Score */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-1">Avg Sentiment</div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="text-2xl font-bold text-white">{calculateBrandHealthKPIs.avgSentimentScore}%</div>
-                    <div className={`text-xs px-2 py-0.5 rounded ${
-                      calculateBrandHealthKPIs.avgSentimentScore >= 70 ? 'bg-green-500/20 text-green-400' :
-                      calculateBrandHealthKPIs.avgSentimentScore >= 50 ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>
-                      {calculateBrandHealthKPIs.avgSentimentScore >= 70 ? 'Good' : calculateBrandHealthKPIs.avgSentimentScore >= 50 ? 'Fair' : 'Poor'}
+      return (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-4">
+            {socialKPIItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <Card
+                  key={index}
+                  className="relative flex h-full flex-col overflow-hidden border border-white/10 bg-app-black/60 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl"
+                >
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-purple-500/5 via-purple-500/0 to-transparent" />
+                  <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2 relative z-10 min-h-[72px]">
+                    <div>
+                      <CardTitle className="text-sm font-medium text-foreground">
+                        {item.title}
+                      </CardTitle>
+                      <CardDescription className="text-xs text-muted-foreground">
+                        {item.subtext}
+                      </CardDescription>
                     </div>
-                  </div>
-                  <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${
-                        calculateBrandHealthKPIs.avgSentimentScore >= 70 ? 'bg-green-500' :
-                        calculateBrandHealthKPIs.avgSentimentScore >= 50 ? 'bg-yellow-500' :
-                        'bg-red-500'
-                      }`}
-                      style={{ width: `${calculateBrandHealthKPIs.avgSentimentScore}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Negativity Spike */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-1">Negativity Spike</div>
-                  <div className={`text-2xl font-bold flex items-center gap-1 ${
-                    calculateBrandHealthKPIs.negativitySpikePercent > 0 ? 'text-red-400' : 'text-green-400'
-                  }`}>
-                    {calculateBrandHealthKPIs.negativitySpikePercent > 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
-                    {Math.abs(calculateBrandHealthKPIs.negativitySpikePercent).toFixed(1)}%
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Early warning indicator</div>
-                </div>
-
-                {/* Platform with Highest Negativity */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-red-500/50">
-                  <div className="text-xs text-gray-400 mb-1">Highest Negativity</div>
-                  <div className="text-xl font-bold text-red-400">{calculateBrandHealthKPIs.platformWithHighestNegativity}</div>
-                  <div className="text-xs text-gray-500 mt-1">Priority platform</div>
-                </div>
-
-                {/* Top 3 Trending Topics */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-2">Top 3 Trending</div>
-                  <div className="space-y-1">
-                    {calculateBrandHealthKPIs.top3TrendingTopics.map((topic, idx) => (
-                      <div key={idx} className="text-xs text-white truncate" title={topic}>
-                        {idx + 1}. {topic}
+                    <div className={`p-2 rounded-lg ${item.bgColor} group-hover:scale-110 transition-transform duration-200`}>
+                      <Icon className={`h-4 w-4 ${item.color}`} />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="relative z-10 flex-1 flex flex-col gap-3 pt-0">
+                    <div className="text-2xl font-bold text-white">{item.value}</div>
+                    {item.customContent && (
+                      <div className="mt-auto">
+                        {item.customContent}
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Virality Index */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-1">Virality Index</div>
-                  <div className="text-2xl font-bold text-orange-400">{calculateBrandHealthKPIs.viralityIndex}/10</div>
-                  <div className="flex gap-1 mt-2">
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-1 flex-1 rounded ${
-                          i < calculateBrandHealthKPIs.viralityIndex ? 'bg-orange-500' : 'bg-gray-700'
-                        }`}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Customer Emotion Mix - Donut Chart */}
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-2">Emotion Mix</div>
-                  <ResponsiveContainer width="100%" height={80}>
-                    <PieChart>
-                      <Pie
-                        data={[
-                          { name: 'Calm', value: calculateBrandHealthKPIs.emotionMix.calm, fill: '#10b981' },
-                          { name: 'Frustrated', value: calculateBrandHealthKPIs.emotionMix.frustrated, fill: '#ef4444' },
-                          { name: 'Delighted', value: calculateBrandHealthKPIs.emotionMix.delighted, fill: '#3b82f6' },
-                        ]}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={20}
-                        outerRadius={35}
-                        dataKey="value"
-                      >
-                        {[
-                          { name: 'Calm', value: calculateBrandHealthKPIs.emotionMix.calm, fill: '#10b981' },
-                          { name: 'Frustrated', value: calculateBrandHealthKPIs.emotionMix.frustrated, fill: '#ef4444' },
-                          { name: 'Delighted', value: calculateBrandHealthKPIs.emotionMix.delighted, fill: '#3b82f6' },
-                        ].map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="flex gap-2 mt-2 text-[10px] justify-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <span className="text-gray-400">{calculateBrandHealthKPIs.emotionMix.calm}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                      <span className="text-gray-400">{calculateBrandHealthKPIs.emotionMix.frustrated}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                      <span className="text-gray-400">{calculateBrandHealthKPIs.emotionMix.delighted}%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {visibleAlerts.length > 0 ? (
-                    <Card className="bg-gray-900 border-gray-700">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <CardTitle className="flex items-center gap-2 text-white">
-                            <AlertTriangle className="h-5 w-5 text-red-400" />
-                            Executive Alerts
-                          </CardTitle>
-                          <div className="flex items-center gap-1">
-                            <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 text-xs font-medium">
-                              {visibleAlerts.filter(a => a.type === 'critical').length}
-                            </span>
-                            <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 text-xs font-medium">
-                              {visibleAlerts.filter(a => a.type === 'urgent').length}
-                            </span>
-                          </div>
-                        </div>
-                        <CardDescription className="text-gray-400 text-xs">
-                          {visibleAlerts.length} critical issues requiring immediate attention
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                <div className="max-h-[calc(100vh-350px)] overflow-y-auto space-y-3 pr-2">
-                          {visibleAlerts.map((alert) => (
-                            <div
-                              key={alert.id}
-                              className={`p-4 rounded-lg border ${getAlertColor(alert.type)} transition-all`}
-                            >
-                              <div className="space-y-3">
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex items-start gap-2 flex-1">
-                                    <div className="p-1.5 rounded bg-black/30 mt-0.5">
-                                      {getAlertIcon(alert.type)}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-2 flex-wrap mb-1">
-                                        <h4 className="text-sm font-bold text-white leading-tight">{alert.title}</h4>
-                                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${
-                                          alert.type === 'critical' ? 'bg-red-500/30 text-red-300' :
-                                          alert.type === 'urgent' ? 'bg-orange-500/30 text-orange-300' :
-                                          'bg-yellow-500/30 text-yellow-300'
-                                        }`}>
-                                          {alert.urgency}
-                                        </span>
-                                      </div>
-                                      <p className="text-xs text-gray-300 leading-relaxed mb-2">{alert.description}</p>
-                                      <div className="space-y-1 mb-2">
-                                        <div className="flex items-center gap-1.5">
-                                          <DollarSign className="h-3 w-3 text-yellow-400 flex-shrink-0" />
-                                          <span className="font-bold text-yellow-400 text-xs">{alert.impact}</span>
-                                        </div>
-                                        {alert.affectedUsers && (
-                                          <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                                            <Users className="h-3 w-3 flex-shrink-0" />
-                                            <span>{alert.affectedUsers.toLocaleString()} users</span>
-                                          </div>
-                                        )}
-                                        {alert.revenueImpact && (
-                                          <div className="flex items-center gap-1.5 text-xs text-red-400">
-                                            <TrendingDown className="h-3 w-3 flex-shrink-0" />
-                                            <span>${(alert.revenueImpact / 1000).toFixed(0)}K at risk</span>
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="p-2 rounded bg-blue-500/10 border border-blue-500/30 mb-2">
-                                        <div className="flex items-start gap-1.5">
-                                          <Zap className="h-3 w-3 text-blue-400 mt-0.5 flex-shrink-0" />
-                                          <div>
-                                            <p className="text-xs font-semibold text-blue-300 mb-0.5">Action:</p>
-                                            <p className="text-xs text-blue-200 leading-relaxed">{alert.recommendedAction}</p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex gap-2">
-                                  <Button
-                                    size="sm"
-                                    onClick={() => handleAlertAction(alert, 'view')}
-                                    className="bg-purple-600 hover:bg-purple-500 text-white text-xs flex-1"
-                                  >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
-                                    View
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => handleAlertAction(alert, 'assign')}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white text-xs flex-1"
-                                  >
-                                    <Play className="h-3 w-3 mr-1" />
-                                    Act
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => handleDismissAlert(alert.id)}
-                                    className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800 px-2"
-                                  >
-                                    <X className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-          ) : (
-            <Card className="bg-gray-900 border-gray-700">
-              <CardContent className="py-12 text-center">
-                <AlertCircle className="h-12 w-12 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-400">No alerts at this time</p>
-                        </CardContent>
-                      </Card>
-          )}
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
 
           {/* Cross-Platform Comparative Health - Phase 1 Spec */}
-            <Card className="bg-gray-900 border-gray-700">
+            <Card className="bg-app-black/60 border border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <BarChart3 className="h-5 w-5 text-purple-400" />
                 Cross-Platform Comparative Health
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-muted-foreground">
                 Side-by-side comparison to identify healthiest or most problematic platforms
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto text-foreground">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 px-4 text-gray-400 font-semibold">Platform</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Sentiment Score</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Negative %</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Avg Rating</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Engagement Level</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Volume</th>
-                      <th className="text-center py-3 px-4 text-gray-400 font-semibold">Virality Score</th>
+                      <th className="text-left py-3 px-4 text-muted-foreground font-semibold">Platform</th>
+                      <th className="text-center py-3 px-4 text-muted-foreground font-semibold">Positive %</th>
+                      <th className="text-center py-3 px-4 text-muted-foreground font-semibold">Negative %</th>
+                      <th className="text-center py-3 px-4 text-muted-foreground font-semibold">Engagement Level</th>
+                      <th className="text-center py-3 px-4 text-muted-foreground font-semibold">Volume</th>
+                      <th className="text-center py-3 px-4 text-muted-foreground font-semibold">Virality Score</th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.entries(calculateBrandHealthKPIs.platformHealth).map(([platform, health]: [string, any]) => {
                       // Calculate heatmap color based on overall health
-                      const getHealthColor = () => {
+                      const getHealthClasses = () => {
                         const sentimentScore = health.sentiment || 50;
                         const negativePercent = health.negativePercent || 50;
                         const avgScore = (sentimentScore + (100 - negativePercent)) / 2;
-                        if (avgScore >= 70) return 'bg-green-500/30 border-green-500/50';
-                        if (avgScore >= 50) return 'bg-yellow-500/30 border-yellow-500/50';
-                        return 'bg-red-500/30 border-red-500/50';
+                        if (avgScore >= 70) return 'border-green-500/30';
+                        if (avgScore >= 50) return 'border-yellow-500/30';
+                        return 'border-red-500/30';
       };
 
       return (
-                        <tr key={platform} className={`border-b border-gray-800 hover:bg-gray-800/50 transition-colors ${getHealthColor()}`}>
+                        <tr key={platform} className={`border-b border-white/10 hover:bg-app-black/60 transition-colors bg-app-black/40 border-l-4 ${getHealthClasses()}`}>
                           <td className="py-3 px-4 text-white font-medium capitalize">{platform === 'x' ? 'X (Twitter)' : platform === 'appstore' ? 'App Store' : platform === 'playstore' ? 'Play Store' : platform}</td>
                           <td className="py-3 px-4 text-center">
                             {health.sentiment !== undefined ? (
@@ -1362,7 +1164,7 @@ export default function SocialMediaDashboard() {
                                 {health.sentiment}%
                               </span>
                             ) : (
-                              <span className="text-gray-500">-</span>
+                              <span className="text-muted-foreground">-</span>
                             )}
                           </td>
                           <td className="py-3 px-4 text-center">
@@ -1375,20 +1177,10 @@ export default function SocialMediaDashboard() {
                             </span>
                           </td>
                           <td className="py-3 px-4 text-center">
-                            {health.rating ? (
-                              <div className="flex items-center justify-center gap-1">
-                                <span className="text-white font-semibold">{health.rating}</span>
-                                <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                              </div>
-                            ) : (
-                              <span className="text-gray-500">-</span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 text-center">
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${
                               health.engagement === 'High' ? 'bg-purple-500/20 text-purple-400' :
                               health.engagement === 'Medium' ? 'bg-blue-500/20 text-blue-400' :
-                              'bg-gray-500/20 text-gray-400'
+                              'bg-white/10 text-muted-foreground'
                             }`}>
                               {health.engagement}
                             </span>
@@ -1397,21 +1189,23 @@ export default function SocialMediaDashboard() {
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${
                               health.volume === 'High' ? 'bg-purple-500/20 text-purple-400' :
                               health.volume === 'Medium' ? 'bg-blue-500/20 text-blue-400' :
-                              'bg-gray-500/20 text-gray-400'
+                              'bg-white/10 text-muted-foreground'
                             }`}>
                               {health.volume}
                             </span>
                           </td>
                           <td className="py-3 px-4 text-center">
-                            <div className="flex items-center justify-center gap-1">
-                              {health.virality > 0 ? (
-                                Array.from({ length: health.virality }).map((_, i) => (
-                                  <span key={i} className="text-orange-400 text-lg">🔥</span>
-                                ))
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
-                            </div>
+                            {typeof health.virality === 'number' ? (
+                              <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                                health.virality >= 3 ? 'bg-orange-500/20 text-orange-400' :
+                                health.virality >= 1 ? 'bg-yellow-500/20 text-yellow-400' :
+                                'bg-white/10 text-muted-foreground'
+                              }`}>
+                                {health.virality}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
                           </td>
                         </tr>
                       );
@@ -1426,13 +1220,13 @@ export default function SocialMediaDashboard() {
           {trustpilotData && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Topic Trend Map */}
-            <Card className="bg-gray-900 border-gray-700">
+            <Card className="bg-app-black/60 border border-white/10 shadow-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
                     <TrendingUp className="h-5 w-5 text-purple-400" />
                     Topic Trend Map (Top 12 Topics)
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted-foreground">
                     Track which themes are rising or falling
                   </CardDescription>
                 </CardHeader>
@@ -1494,13 +1288,13 @@ export default function SocialMediaDashboard() {
             </Card>
 
               {/* Topic Sentiment Matrix */}
-            <Card className="bg-gray-900 border-gray-700">
+            <Card className="bg-app-black/60 border border-white/10 shadow-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
                     <Grid3x3 className="h-5 w-5 text-purple-400" />
                     Topic Sentiment Matrix
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted-foreground">
                     Identify negative-heavy themes vs positive-high praise topics
                   </CardDescription>
                 </CardHeader>
@@ -1512,17 +1306,17 @@ export default function SocialMediaDashboard() {
                       .map((topic) => {
                         const sentimentLevel = topic.sentiment > 0.3 ? 'positive' : topic.sentiment < -0.3 ? 'negative' : 'neutral';
                         return (
-                          <div key={topic.topic} className="flex items-center justify-between p-2 bg-gray-800 rounded border border-gray-700">
+                          <div key={topic.topic} className="flex items-center justify-between rounded border border-white/10 bg-app-black/60 p-2">
                             <span className="text-sm text-white flex-1 truncate">{topic.topic}</span>
                             <div className="flex items-center gap-3">
                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
                                 sentimentLevel === 'positive' ? 'bg-green-500/20 text-green-400' :
                                 sentimentLevel === 'negative' ? 'bg-red-500/20 text-red-400' :
-                                'bg-gray-500/20 text-gray-400'
+                                'bg-white/10 text-muted-foreground'
                               }`}>
                                 {sentimentLevel}
                               </span>
-                              <span className="text-xs text-gray-400 w-16 text-right">{topic.volume} posts</span>
+                              <span className="text-xs text-muted-foreground w-16 text-right">{topic.volume} posts</span>
                             </div>
                           </div>
                         );
@@ -1533,84 +1327,17 @@ export default function SocialMediaDashboard() {
           </div>
           )}
 
-          {/* AI-Generated Narratives for Emerging Topics */}
-          {trustpilotData && (
-            <Card className="bg-gray-900 border-gray-700">
-                <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Sparkles className="h-5 w-5 text-purple-400" />
-                  AI-Generated Topic Narratives
-                  </CardTitle>
-                <CardDescription className="text-gray-400">
-                  What's happening, why it's happening, and what to do about it
-                </CardDescription>
-                </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {trustpilotData.topicBubbles
-                    .sort((a, b) => b.volume - a.volume)
-                    .slice(0, 5)
-                    .map((topic, idx) => {
-                      // Generate AI narrative based on topic data
-                      const isNegative = topic.sentiment < -0.3;
-                      const isPositive = topic.sentiment > 0.3;
-                      const narrative = isNegative
-                        ? `Complaints around ${topic.topic.toLowerCase()} have ${topic.volume > 100 ? 'doubled' : 'increased'} this week, driven mainly by ${calculateBrandHealthKPIs.platformWithHighestNegativity} discussions.`
-                        : isPositive
-                        ? `${topic.topic} is receiving positive feedback, with ${topic.volume} mentions showing appreciation for this aspect.`
-                        : `${topic.topic} shows neutral sentiment with ${topic.volume} mentions, indicating stable discussion levels.`;
-                      
-                      const action = isNegative
-                        ? `Escalate to product team, investigate root cause, prepare response strategy for ${calculateBrandHealthKPIs.platformWithHighestNegativity}.`
-                        : isPositive
-                        ? `Amplify positive feedback, consider featuring in marketing campaigns, share success story internally.`
-                        : `Monitor trend, gather more data to understand user sentiment shifts.`;
-
-                      return (
-                        <div key={idx} className={`p-4 rounded-lg border ${
-                          isNegative ? 'bg-red-500/10 border-red-500/30' :
-                          isPositive ? 'bg-green-500/10 border-green-500/30' :
-                          'bg-gray-800 border-gray-700'
-                        }`}>
-                          <div className="flex items-start justify-between gap-3 mb-2">
-                            <h4 className="text-sm font-bold text-white">{topic.topic}</h4>
-                            <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                              isNegative ? 'bg-red-500/20 text-red-400' :
-                              isPositive ? 'bg-green-500/20 text-green-400' :
-                              'bg-gray-500/20 text-gray-400'
-                            }`}>
-                              {topic.volume} mentions
-                            </span>
-                          </div>
-                    <div className="space-y-2">
-                            <div>
-                              <p className="text-xs font-semibold text-blue-300 mb-1">What happened?</p>
-                              <p className="text-xs text-gray-300">{narrative}</p>
-                          </div>
-                            <div>
-                              <p className="text-xs font-semibold text-purple-300 mb-1">What to do next?</p>
-                              <p className="text-xs text-gray-300">{action}</p>
-                    </div>
-                  </div>
-                    </div>
-                      );
-                    })}
-                  </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Negative Complaint Anatomy & Positive Champions */}
           {trustpilotData && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Negative Complaint Anatomy */}
-              <Card className="bg-gray-900 border-gray-700">
+              <Card className="bg-app-black/60 border border-white/10 shadow-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
                     <AlertTriangle className="h-5 w-5 text-red-400" />
                     Negative Complaint Anatomy
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted-foreground">
                     Root-cause analysis of what drives negativity
                   </CardDescription>
                 </CardHeader>
@@ -1677,13 +1404,13 @@ export default function SocialMediaDashboard() {
               </Card>
 
               {/* Positive Champion Drivers */}
-              <Card className="bg-gray-900 border-gray-700">
+              <Card className="bg-app-black/60 border border-white/10 shadow-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
                     <ThumbsUp className="h-5 w-5 text-green-400" />
                     Positive Champion Drivers
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted-foreground">
                     What people love about your brand
                   </CardDescription>
                 </CardHeader>
@@ -1694,7 +1421,7 @@ export default function SocialMediaDashboard() {
                       .sort((a, b) => b.volume - a.volume)
                       .slice(0, 8)
                       .map((topic) => (
-                        <div key={topic.topic} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-green-500/30">
+                        <div key={topic.topic} className="flex items-center justify-between rounded-lg border border-green-500/30 bg-app-black/60 p-3">
                           <div className="flex items-center gap-3 flex-1">
                             <div className="w-2 h-2 rounded-full bg-green-400"></div>
                             <span className="text-sm text-white font-medium">{topic.topic}</span>
@@ -1703,12 +1430,12 @@ export default function SocialMediaDashboard() {
                             <span className="text-xs text-green-400 font-semibold">
                               {Math.round((topic.sentiment + 1) * 50)}% positive
                             </span>
-                            <span className="text-xs text-gray-400 w-16 text-right">{topic.volume} posts</span>
+                            <span className="text-xs text-muted-foreground w-16 text-right">{topic.volume} posts</span>
                   </div>
                         </div>
                       ))}
                     {trustpilotData.topicBubbles.filter(t => t.sentiment > 0.3).length === 0 && (
-                      <div className="text-center py-8 text-gray-400">
+                      <div className="text-center py-8 text-muted-foreground">
                         No positive topics found
                     </div>
                     )}
@@ -1718,194 +1445,14 @@ export default function SocialMediaDashboard() {
             </div>
           )}
 
-          {/* Feature Request Analysis */}
-          {trustpilotData && (
-              <Card className="bg-gray-900 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                  <MessageSquare className="h-5 w-5 text-purple-400" />
-                  Feature Request Analysis
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                  Top feature requests sorted by volume
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={(() => {
-                      const featureRequests = [
-                        { name: 'Dark Mode', volume: 234 },
-                        { name: 'Faster Checkout', volume: 189 },
-                        { name: 'Cancel Order', volume: 156 },
-                        { name: 'Cashback Program', volume: 142 },
-                        { name: 'Better Notifications', volume: 128 },
-                        { name: 'Multi-language', volume: 98 },
-                        { name: 'Biometric Login', volume: 87 },
-                        { name: 'Export Transactions', volume: 76 },
-                      ];
-                      return featureRequests.sort((a, b) => b.volume - a.volume);
-                    })()}
-                  >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="name" stroke="#9CA3AF" fontSize={10} angle={-45} textAnchor="end" height={80} />
-                    <YAxis stroke="#9CA3AF" fontSize={10} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#1F2937',
-                          border: '1px solid #374151',
-                          borderRadius: '8px',
-                        }}
-                      />
-                    <Bar dataKey="volume" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-          )}
-
-          {/* Action Center */}
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Zap className="h-5 w-5 text-yellow-400" />
-                Action Center
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Immediate next steps requiring attention
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { action: 'Respond to viral Reddit complaint about payment failures', priority: 'High', platform: 'Reddit' },
-                  { action: 'Fix login crash on Play Store build (rating dropped to 3.4)', priority: 'Critical', platform: 'Play Store' },
-                  { action: 'Investigate payment gateway downtime reports', priority: 'High', platform: 'X' },
-                  { action: 'Push campaign around "easy onboarding" feature', priority: 'Medium', platform: 'All' },
-                  { action: 'Assign Trustpilot negative reviews to support team', priority: 'Medium', platform: 'Trustpilot' },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start justify-between p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                          item.priority === 'Critical' ? 'bg-red-500/20 text-red-400' :
-                          item.priority === 'High' ? 'bg-orange-500/20 text-orange-400' :
-                          'bg-yellow-500/20 text-yellow-400'
-                        }`}>
-                          {item.priority}
-                        </span>
-                        <span className="text-xs text-gray-400">{item.platform}</span>
-                      </div>
-                      <p className="text-sm text-white">{item.action}</p>
-                    </div>
-                    <Button size="sm" className="bg-purple-600 hover:bg-purple-500 text-white ml-4">
-                      <Play className="h-3 w-3 mr-1" />
-                      Act
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Enhanced Topic Bubble Map */}
-          {trustpilotData && (
-              <Card className="bg-gray-900 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                    <Sparkles className="h-5 w-5 text-purple-400" />
-                  Enhanced Topic Bubble Map
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                  Size = volume, Color = sentiment, Trend arrows show rising/falling topics
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                <div className="h-80 flex items-center justify-center">
-                  <div className="flex flex-wrap gap-6 justify-center items-center">
-                    {trustpilotData.topicBubbles
-                      .sort((a, b) => b.volume - a.volume)
-                      .slice(0, 15)
-                      .map((bubble, idx) => {
-                        const size = Math.max(70, Math.min(180, (bubble.volume / 5)));
-                        const getSentimentColor = (sentiment: number) => {
-                          if (sentiment > 0.5) return '#10b981'; // green
-                          if (sentiment > 0) return '#3b82f6'; // blue
-                          if (sentiment > -0.5) return '#f59e0b'; // orange
-                          return '#ef4444'; // red
-                        };
-                        const color = getSentimentColor(bubble.sentiment);
-                        const isTrending = idx < 3; // Top 3 are trending
-                        const isFalling = idx > 10; // Bottom ones are falling
-                        
-                        return (
-                          <div
-                            key={idx}
-                            className="relative group cursor-pointer"
-                            style={{
-                              width: `${size}px`,
-                              height: `${size}px`,
-                            }}
-                            title={bubble.aiSummary || bubble.topic}
-                          >
-                            <div
-                              className="rounded-full flex flex-col items-center justify-center text-white font-semibold text-xs transition-all hover:scale-110 relative"
-                              style={{
-                                backgroundColor: color,
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.85,
-                                boxShadow: `0 0 20px ${color}40`,
-                              }}
-                            >
-                              {/* Trend Arrow */}
-                              {isTrending && (
-                                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-green-400 text-lg">
-                                  ↑
-                            </div>
-                              )}
-                              {isFalling && (
-                                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-red-400 text-lg">
-                                  ↓
-                                </div>
-                              )}
-                              
-                              <div className="text-center px-2">
-                                <div className="font-bold text-[10px] leading-tight mb-1">
-                                  {bubble.topic.length > 15 ? bubble.topic.substring(0, 15) + '...' : bubble.topic}
-                                </div>
-                                <div className="text-[9px] opacity-90">{bubble.volume} posts</div>
-                              </div>
-                            </div>
-                            
-                            {/* AI Summary Tooltip */}
-                            {bubble.aiSummary && (
-                              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs p-2 rounded shadow-lg z-10 whitespace-nowrap max-w-xs">
-                              {bubble.aiSummary}
-                              </div>
-                            )}
-                            
-                            {/* Platform Leader Badge */}
-                            <div className="absolute -bottom-2 right-0 bg-purple-600 text-white text-[8px] px-1.5 py-0.5 rounded">
-                              {idx < 5 ? 'Top' : 'Trending'}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-          )}
-
           {/* Early Warning System */}
-          <Card className="bg-gray-900 border-2 border-orange-500/50">
+          <Card className="border-2 border-orange-500/50 bg-app-black/60">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <AlertTriangle className="h-5 w-5 text-orange-400" />
                 Early Warning System (AI Forecasting)
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-muted-foreground">
                 AI-powered predictions for emerging issues and potential crises
               </CardDescription>
             </CardHeader>
@@ -1965,8 +1512,8 @@ export default function SocialMediaDashboard() {
                             {alert.impact} Impact
                           </span>
                         </div>
-                        <p className="text-xs text-gray-300 mb-2">{alert.description}</p>
-                        <div className="flex items-center gap-4 text-xs text-gray-400">
+                        <p className="text-xs text-white/80 mb-2">{alert.description}</p>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>⏱ {alert.timeframe}</span>
                           <span>📊 {alert.confidence}% confidence</span>
                         </div>
@@ -1981,227 +1528,6 @@ export default function SocialMediaDashboard() {
             </CardContent>
           </Card>
 
-          {/* Audience Emotion Intelligence */}
-          {trustpilotData && (
-              <Card className="bg-gray-900 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                  <Users className="h-5 w-5 text-purple-400" />
-                  Audience Emotion Intelligence
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                  Emotional shifts across platforms and topics
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Emotion Timeline */}
-                  <div>
-                    <h4 className="text-sm font-semibold text-white mb-3">Emotion Timeline</h4>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <LineChart data={(() => {
-                        const emotions = ['Anger', 'Frustration', 'Joy', 'Confusion', 'Satisfaction'];
-                        return trustpilotData.trendData.slice(-14).map((d, idx) => {
-                          const dataPoint: any = { date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) };
-                          emotions.forEach((emotion, eIdx) => {
-                            // Simulate emotion distribution based on sentiment
-                            const baseValue = d.sentiment < -0.3 ? (emotion === 'Anger' ? 40 : emotion === 'Frustration' ? 35 : 10) :
-                                            d.sentiment > 0.3 ? (emotion === 'Joy' ? 45 : emotion === 'Satisfaction' ? 40 : 10) :
-                                            (emotion === 'Confusion' ? 30 : 15);
-                            dataPoint[emotion] = Math.round(baseValue + Math.sin(idx * 0.5 + eIdx) * 10);
-                          });
-                          return dataPoint;
-                        });
-                      })()}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                        <XAxis dataKey="date" stroke="#9CA3AF" fontSize={9} angle={-45} textAnchor="end" height={50} />
-                        <YAxis stroke="#9CA3AF" fontSize={9} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#1F2937',
-                          border: '1px solid #374151',
-                          borderRadius: '8px',
-                        }}
-                      />
-                        <Legend wrapperStyle={{ fontSize: '9px' }} />
-                        <Line type="monotone" dataKey="Anger" stroke="#ef4444" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="Frustration" stroke="#f59e0b" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="Joy" stroke="#10b981" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="Confusion" stroke="#9CA3AF" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="Satisfaction" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                  </div>
-
-                  {/* Emotion by Platform */}
-                  <div>
-                    <h4 className="text-sm font-semibold text-white mb-3">Emotion by Platform</h4>
-                    <div className="space-y-2">
-                      {[
-                        { platform: 'X (Twitter)', anger: 15, frustration: 20, joy: 35, confusion: 10, satisfaction: 20 },
-                        { platform: 'Reddit', anger: 30, frustration: 35, joy: 15, confusion: 10, satisfaction: 10 },
-                        { platform: 'Trustpilot', anger: 10, frustration: 15, joy: 40, confusion: 5, satisfaction: 30 },
-                        { platform: 'App Store', anger: 20, frustration: 25, joy: 25, confusion: 15, satisfaction: 15 },
-                        { platform: 'Play Store', anger: 35, frustration: 30, joy: 10, confusion: 15, satisfaction: 10 },
-                      ].map((platform) => (
-                        <div key={platform.platform} className="p-2 bg-gray-800 rounded border border-gray-700">
-                          <div className="text-xs font-semibold text-white mb-2">{platform.platform}</div>
-                          <div className="flex gap-1">
-                            <div className="flex-1 h-2 bg-red-500/30 rounded" style={{ width: `${platform.anger}%` }} title={`Anger: ${platform.anger}%`}></div>
-                            <div className="flex-1 h-2 bg-orange-500/30 rounded" style={{ width: `${platform.frustration}%` }} title={`Frustration: ${platform.frustration}%`}></div>
-                            <div className="flex-1 h-2 bg-green-500/30 rounded" style={{ width: `${platform.joy}%` }} title={`Joy: ${platform.joy}%`}></div>
-                            <div className="flex-1 h-2 bg-gray-500/30 rounded" style={{ width: `${platform.confusion}%` }} title={`Confusion: ${platform.confusion}%`}></div>
-                            <div className="flex-1 h-2 bg-blue-500/30 rounded" style={{ width: `${platform.satisfaction}%` }} title={`Satisfaction: ${platform.satisfaction}%`}></div>
-                        </div>
-                        </div>
-                  ))}
-                </div>
-              </div>
-                </div>
-                </CardContent>
-              </Card>
-          )}
-
-          {/* Viral Content Intelligence */}
-              <Card className="bg-gray-900 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                <TrendingUp className="h-5 w-5 text-orange-400" />
-                Viral Content Intelligence
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                Posts gaining traction and influencer impact
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Top Viral Posts */}
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-3">Top Viral Posts</h4>
-                  <div className="space-y-3 max-h-[300px] overflow-y-auto">
-                    {[
-                      { platform: 'Reddit', content: 'Payment failures are getting worse...', impressions: 2100000, retweets: 0, comments: 1240, sentiment: 'negative' },
-                      { platform: 'X', content: 'Just tried the new onboarding feature - amazing!', impressions: 1560000, retweets: 234, comments: 89, sentiment: 'positive' },
-                      { platform: 'X', content: 'Why is the app crashing on login?', impressions: 980000, retweets: 156, comments: 234, sentiment: 'negative' },
-                      { platform: 'Reddit', content: 'Customer support actually helped me today', impressions: 670000, retweets: 0, comments: 456, sentiment: 'positive' },
-                    ].map((post, idx) => (
-                      <div key={idx} className="p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-purple-500/50 transition-colors">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                            post.platform === 'X' ? 'bg-blue-500/20 text-blue-400' :
-                            post.platform === 'Reddit' ? 'bg-orange-500/20 text-orange-400' :
-                            'bg-gray-500/20 text-gray-400'
-                            }`}>
-                            {post.platform}
-                            </span>
-                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                            post.sentiment === 'positive' ? 'bg-green-500/20 text-green-400' :
-                              'bg-red-500/20 text-red-400'
-                            }`}>
-                            {post.sentiment}
-                          </span>
-                        </div>
-                        <p className="text-sm text-white mb-2">{post.content}</p>
-                        <div className="flex items-center gap-4 text-xs text-gray-400">
-                          <span>👁 {(post.impressions / 1000).toFixed(0)}K</span>
-                          {post.retweets > 0 && <span>🔄 {post.retweets}</span>}
-                          <span>💬 {post.comments}</span>
-                          </div>
-                        </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Viral Hours Heatmap */}
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-3">Viral Activity Heatmap</h4>
-                  <div className="grid grid-cols-7 gap-1">
-                    {Array.from({ length: 24 }).map((_, hour) => {
-                      const intensity = Math.floor(Math.random() * 5) + 1; // 1-5 intensity
-                      return (
-                        <div key={hour} className="text-center">
-                          <div
-                            className={`h-8 rounded mb-1 ${
-                              intensity >= 4 ? 'bg-orange-500' :
-                              intensity >= 3 ? 'bg-orange-400' :
-                              intensity >= 2 ? 'bg-orange-300' :
-                              'bg-gray-700'
-                            }`}
-                            title={`${hour}:00 - ${intensity}/5 intensity`}
-                          ></div>
-                          <div className="text-[8px] text-gray-400">{hour}</div>
-                        </div>
-                      );
-                    })}
-                      </div>
-                  <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
-                    <span>Low</span>
-                    <div className="flex gap-1">
-                      <div className="w-3 h-3 bg-gray-700 rounded"></div>
-                      <div className="w-3 h-3 bg-orange-300 rounded"></div>
-                      <div className="w-3 h-3 bg-orange-400 rounded"></div>
-                      <div className="w-3 h-3 bg-orange-500 rounded"></div>
-                    </div>
-                    <span>High</span>
-                  </div>
-                </div>
-                  </div>
-                      </CardContent>
-                    </Card>
-
-          {/* Cross-Platform Storytelling Layer */}
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <MessageSquare className="h-5 w-5 text-purple-400" />
-                Cross-Platform Storytelling
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Unified narrative across all platforms
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-gray-800 rounded-lg border-l-4 border-red-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs font-semibold">Reddit</span>
-                    <span className="text-xs text-gray-400">Negative</span>
-                </div>
-                  <p className="text-sm text-white">
-                    Users on Reddit complain about payment failures, with 234 posts in the last 24 hours discussing transaction issues.
-                  </p>
-              </div>
-                <div className="p-4 bg-gray-800 rounded-lg border-l-4 border-green-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-semibold">X (Twitter)</span>
-                    <span className="text-xs text-gray-400">Positive</span>
-                  </div>
-                  <p className="text-sm text-white">
-                    Twitter users are discussing your brand positively due to the new "easy onboarding" feature, generating 156 positive mentions.
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-800 rounded-lg border-l-4 border-orange-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs font-semibold">App Store</span>
-                    <span className="text-xs text-gray-400">Warning</span>
-                  </div>
-                  <p className="text-sm text-white">
-                    App Store users reporting crashes after the latest release, with rating concerns mentioned in 89 reviews.
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-800 rounded-lg border-l-4 border-blue-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">Trustpilot</span>
-                    <span className="text-xs text-gray-400">Mixed</span>
-                  </div>
-                  <p className="text-sm text-white">
-                    Trustpilot praises support quality (4.5 rating) but criticizes refund delays, with 67% positive sentiment overall.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
           {/* Sentiment Chart for All Channels */}
           {trustpilotData ? (
             (() => {
@@ -2383,38 +1709,45 @@ export default function SocialMediaDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 p-6 flex items-center justify-center">
+      <div className="flex h-screen items-center justify-center">
         <div className="flex items-center gap-3">
           <RefreshCw className="h-6 w-6 animate-spin text-purple-400" />
-          <span className="text-white text-lg">Loading dashboard...</span>
-                          </div>
-                        </div>
+          <span className="text-lg text-muted-foreground">Loading dashboard...</span>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--sidebar)' }}>
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
+    <div className="space-y-6 animate-fade-in pb-6">
+      {/* Header */}
+      <div className="space-y-4 animate-slide-down">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Social Media Dashboard
-            </h1>
-            <p className="text-gray-400">
-              Multi-channel insights and executive alerts
+            <h1 className="mb-2 text-4xl font-bold text-foreground">Social Media Dashboard</h1>
+            <p className="flex items-center gap-2 text-lg text-muted-foreground">
+              <span className="text-xl">✨</span>
+              Multi-channel insights and trends across key channels
             </p>
-                                    </div>
+          </div>
           <div className="flex flex-col gap-3">
-            {/* Date Filters */}
+            <div className="flex justify-end">
+              <Button
+                onClick={() => console.log('Social AI assistant coming soon')}
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 group h-[38px] px-6"
+              >
+                <span className="text-lg mr-2 group-hover:rotate-180 transition-transform duration-500 inline-block">✨</span>
+                Generate your day in 2 minutes
+              </Button>
+            </div>
             <div className="flex items-center gap-2 justify-end">
-              <label className="text-xs text-gray-400 whitespace-nowrap">Filters:</label>
+              <label className="text-xs text-muted-foreground whitespace-nowrap">Filters:</label>
               <div className="relative z-50">
                 <Select value={dateFilterPreset} onValueChange={handlePresetChange}>
-                  <SelectTrigger className="w-[180px] bg-gray-800 border-gray-600 text-white text-sm h-[38px]">
+                  <SelectTrigger className="h-[38px] w-[180px] border border-white/10 bg-app-black/60 text-sm text-foreground">
                     <SelectValue placeholder="Select period" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600 text-white z-[9999]">
+                  <SelectContent className="z-[9999] border border-white/10 bg-app-black/80 text-foreground">
                     <SelectItem value="All">All</SelectItem>
                     <SelectItem value="Current day">Current day</SelectItem>
                     <SelectItem value="One Week">One Week</SelectItem>
@@ -2423,81 +1756,81 @@ export default function SocialMediaDashboard() {
                     <SelectItem value="Custom">Custom</SelectItem>
                   </SelectContent>
                 </Select>
-                                      </div>
-              
-              {/* Custom Date Pickers - Only show when Custom is selected */}
+              </div>
+
               {dateFilterPreset === 'Custom' && (
                 <>
-                  <label className="text-xs text-gray-400 whitespace-nowrap">Start Date:</label>
+                  <label className="text-xs text-muted-foreground whitespace-nowrap">Start Date:</label>
                   <input
                     type="date"
                     value={dateRange.start}
                     onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 h-[38px]"
+                    className="h-[38px] rounded-md border border-white/10 bg-app-black/60 px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
-                  <label className="text-xs text-gray-400 whitespace-nowrap">End Date:</label>
+                  <label className="text-xs text-muted-foreground whitespace-nowrap">End Date:</label>
                   <input
                     type="date"
                     value={dateRange.end}
                     onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                    className="bg-gray-800 border border-gray-600 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 h-[38px]"
+                    className="h-[38px] rounded-md border border-white/10 bg-app-black/60 px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </>
               )}
-              
-                                  <Button
-                                    size="sm"
+
+              <Button
+                size="sm"
                 onClick={loadDashboardData}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all duration-200 h-[38px]"
+                className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white shadow-lg hover:shadow-[#b90abd]/30 transition-all duration-200 h-[38px]"
               >
                 Apply
                 <RefreshCw className="h-4 w-4 ml-2" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as Channel)} className="w-full">
-          <TabsList className="bg-gray-900 border border-gray-700 p-1 h-auto">
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as Channel)} className="w-full">
+          <TabsList className="h-auto border border-white/10 bg-app-black/60 p-1 shadow-lg">
             <TabsTrigger 
               value="all" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('all')}
               <span className="ml-2">All</span>
             </TabsTrigger>
             <TabsTrigger 
               value="trustpilot" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('trustpilot')}
               <span className="ml-2">Trustpilot</span>
             </TabsTrigger>
             <TabsTrigger 
               value="x" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('x')}
               <span className="ml-2">X</span>
             </TabsTrigger>
             <TabsTrigger 
               value="reddit" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('reddit')}
               <span className="ml-2">Reddit</span>
             </TabsTrigger>
             <TabsTrigger 
               value="appstore" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('appstore')}
               <span className="ml-2">App Store</span>
             </TabsTrigger>
             <TabsTrigger 
               value="playstore" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white text-gray-400"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#b90abd] data-[state=active]:to-[#5332ff] data-[state=active]:text-white text-muted-foreground hover:text-white"
             >
               {getChannelIcon('playstore')}
               <span className="ml-2">Play Store</span>
@@ -2520,11 +1853,10 @@ export default function SocialMediaDashboard() {
           <TabsContent value="appstore" className="mt-6">
             {renderChannelContent('appstore')}
           </TabsContent>
-          <TabsContent value="playstore" className="mt-6">
-            {renderChannelContent('playstore')}
-            </TabsContent>
-        </Tabs>
-      </div>
+        <TabsContent value="playstore" className="mt-6">
+          {renderChannelContent('playstore')}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
