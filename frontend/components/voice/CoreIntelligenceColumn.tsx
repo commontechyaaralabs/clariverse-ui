@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, AreaChart, Area } from 'recharts';
-import { HighRiskCall, IntentDistribution, IssueHeatmapData, Violation } from '@/lib/voiceData';
-import { AlertTriangle, ExternalLink } from 'lucide-react';
+import { HighRiskCall, IntentDistribution, IssueHeatmapData, Violation, CoachingTicket } from '@/lib/voiceData';
+import { AlertTriangle, ExternalLink, BookOpen } from 'lucide-react';
 import { ViolationCenter } from './ViolationCenter';
 
 interface CoreIntelligenceColumnProps {
@@ -13,7 +13,9 @@ interface CoreIntelligenceColumnProps {
   intentDistribution: IntentDistribution[];
   issueHeatmap: IssueHeatmapData[];
   violations: Violation[];
+  coachingTickets: CoachingTicket[];
   onCallClick: (callId: string) => void;
+  onAgentClick: (agentId: string) => void;
 }
 
 const COLORS = ['#b90abd', '#5332ff', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#f97316'];
@@ -23,7 +25,9 @@ export function CoreIntelligenceColumn({
   intentDistribution,
   issueHeatmap,
   violations,
-  onCallClick
+  coachingTickets,
+  onCallClick,
+  onAgentClick
 }: CoreIntelligenceColumnProps) {
   const getRiskColor = (score: number) => {
     if (score >= 80) return 'text-red-500';
@@ -38,8 +42,64 @@ export function CoreIntelligenceColumn({
     return '#10b981';
   };
 
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'text-red-500 bg-red-500/20 border-red-500/30';
+      case 'high': return 'text-orange-500 bg-orange-500/20 border-orange-500/30';
+      case 'medium': return 'text-yellow-500 bg-yellow-500/20 border-yellow-500/30';
+      default: return 'text-blue-500 bg-blue-500/20 border-blue-500/30';
+    }
+  };
+
   return (
     <div className="space-y-4 w-[50%] flex-shrink-0">
+      {/* Coaching Recommendations */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-blue-500" />
+            Coaching Recommendations
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
+          {coachingTickets.map((ticket) => (
+            <Card key={ticket.agentId} className="p-3 border-blue-500/30">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-white">{ticket.agentName}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded ${getSeverityColor(ticket.severity)}`}>
+                    {ticket.severity.toUpperCase()}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">{ticket.problemSummary}</p>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Issues:</p>
+                  <ul className="space-y-0.5">
+                    {ticket.lastIssues.map((issue, idx) => (
+                      <li key={idx} className="text-xs text-white flex items-center gap-1">
+                        <span className="w-1 h-1 bg-blue-500 rounded-full" />
+                        {issue}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="pt-2 border-t border-white/10">
+                  <p className="text-xs text-blue-400 mb-1">Recommended Training:</p>
+                  <p className="text-xs text-white">{ticket.recommendedTraining}</p>
+                </div>
+                <Button
+                  size="sm"
+                  className="w-full text-xs mt-2"
+                  onClick={() => onAgentClick(ticket.agentId)}
+                >
+                  Schedule Coaching
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </CardContent>
+      </Card>
+
       {/* Violation Center */}
       <ViolationCenter violations={violations} />
 

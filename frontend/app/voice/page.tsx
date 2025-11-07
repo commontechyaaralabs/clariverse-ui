@@ -250,7 +250,6 @@ export default function VoiceTranscript() {
           qaTrend={teamHealthData.qaTrend}
           complianceData={teamHealthData.complianceData}
           granularCompliance={kpiData?.euComplianceScore}
-          emotionData={teamHealthData.emotionData}
           escalationData={teamHealthData.escalationData}
           dateRange={dateRange}
         />
@@ -261,15 +260,18 @@ export default function VoiceTranscript() {
           intentDistribution={intentDistribution}
           issueHeatmap={issueHeatmap}
           violations={violations}
+          coachingTickets={coachingTickets}
           onCallClick={handleCallClick}
+          onAgentClick={handleAgentClick}
         />
 
         {/* Right Column - Action & Coaching */}
         <ActionCoachingColumn
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}
-          coachingTickets={coachingTickets}
           skillGapData={skillGapData}
+          emotionData={teamHealthData.emotionData}
+          dateRange={dateRange}
           onAgentClick={handleAgentClick}
         />
       </div>

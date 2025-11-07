@@ -535,16 +535,11 @@ export default function TrustpilotDashboard({
             {/* Average Rating */}
             <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-400" />
-                    <CardTitle className="text-sm font-semibold text-white">
-                      Average Rating
-                    </CardTitle>
-                  </div>
-                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  <CardTitle className="text-sm font-semibold text-white">
+                    Average Rating
+                  </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -565,16 +560,11 @@ export default function TrustpilotDashboard({
             {/* Replied vs Not Replied */}
             <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-400" />
-                    <CardTitle className="text-sm font-semibold text-white">
-                      Replied vs Not Replied
-                    </CardTitle>
-                  </div>
-                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
-                    <MessageSquare className="h-4 w-4 text-green-400" />
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  <CardTitle className="text-sm font-semibold text-white">
+                    Replied vs Not Replied
+                  </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -595,16 +585,11 @@ export default function TrustpilotDashboard({
             {/* Avg Response Time */}
             <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-400" />
-                    <CardTitle className="text-sm font-semibold text-white">
-                      Avg Response Time
-                    </CardTitle>
-                  </div>
-                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
-                    <Clock className="h-4 w-4 text-blue-400" />
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  <CardTitle className="text-sm font-semibold text-white">
+                    Avg Response Time
+                  </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -625,20 +610,11 @@ export default function TrustpilotDashboard({
             {/* Positive vs Negative Review */}
             <Card className="bg-app-black/60 border-l-4 border-purple-500 border-t-0 border-r-0 border-b-0">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-400" />
-                    <CardTitle className="text-sm font-semibold text-white">
-                      Positive vs Negative
-                    </CardTitle>
-                  </div>
-                  <div className="w-8 h-8 rounded bg-app-black/60 flex items-center justify-center">
-                    {positiveReviewsPercent >= 70 ? (
-                      <TrendingUp className="h-4 w-4 text-green-400" />
-                    ) : (
-                      <TrendingDown className="h-4 w-4 text-red-400" />
-                    )}
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  <CardTitle className="text-sm font-semibold text-white">
+                    Positive vs Negative
+                  </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">

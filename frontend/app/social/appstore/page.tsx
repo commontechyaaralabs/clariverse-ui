@@ -57,7 +57,7 @@ export default function AppStoreDashboard({
       {
         label: 'Average Rating',
         value: '4.6',
-        icon: <Star className="h-4 w-4 text-yellow-400" />,
+        icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
         delta: '+0.2',
         positive: true,
         description: 'Rolling 30-day average rating',
@@ -65,7 +65,7 @@ export default function AppStoreDashboard({
       {
         label: 'Review Velocity',
         value: '186/day',
-        icon: <Sparkles className="h-4 w-4 text-blue-400" />,
+        icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
         delta: '+14%',
         positive: true,
         description: 'vs previous 30-day window',
@@ -73,7 +73,7 @@ export default function AppStoreDashboard({
       {
         label: 'Crash Reports',
         value: '0.18%',
-        icon: <TrendingDown className="h-4 w-4 text-rose-400" />,
+        icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
         delta: '-0.04%',
         positive: true,
         description: 'App Store Connect stability signal',
@@ -81,7 +81,7 @@ export default function AppStoreDashboard({
       {
         label: 'Update Adoption',
         value: '72%',
-        icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+        icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
         delta: '+9%',
         positive: true,
         description: 'Users on latest iOS build',

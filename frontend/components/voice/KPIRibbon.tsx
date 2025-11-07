@@ -2,7 +2,6 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { KPIData } from '@/lib/voiceData';
 
 interface KPIRibbonProps {
@@ -78,9 +77,6 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
             <TooltipTrigger asChild>
               <Card className="p-3 cursor-help relative">
                 <div className="absolute top-2 left-2 text-lg">✨</div>
-                {kpi.trend === 'up' && <TrendingUp className="absolute top-2 right-2 w-4 h-4 text-green-500" />}
-                {kpi.trend === 'down' && <TrendingDown className="absolute top-2 right-2 w-4 h-4 text-red-500" />}
-                {kpi.trend === 'stable' && <Minus className="absolute top-2 right-2 w-4 h-4 text-gray-500" />}
                 <CardContent className="p-0 space-y-2">
                   <div className="flex flex-col items-center justify-center text-center">
                     <p className="text-2xl font-bold text-white">{kpi.value}{kpi.unit}</p>
