@@ -561,7 +561,7 @@ export default function EmailDashboard() {
                           do: 'Do - Now',
                           schedule: 'Schedule - Later',
                           delegate: 'Delegate - Team',
-                          delete: 'Postponed'
+                          delete: 'Postpone'
                         };
                         
                         const descriptions = {
