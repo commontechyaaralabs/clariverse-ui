@@ -128,6 +128,7 @@ export interface PriorityResolutionData {
 export interface EisenhowerThread {
   thread_id: string;
   subject_norm: string;
+  channel: 'email' | 'chat' | 'ticket' | 'social' | 'voice';
   participants: Array<{
     type: 'customer' | 'external';
     name: string;
@@ -426,6 +427,14 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
   // Use fixed seed for consistent data
   const baseSeed = 12345;
 
+  const supportChannels: Array<'email' | 'chat' | 'ticket' | 'social' | 'voice'> = [
+    'email',
+    'chat',
+    'ticket',
+    'social',
+    'voice',
+  ];
+
   for (let i = 0; i < 2004; i++) {
     const seed = baseSeed + i;
     const business_impact_score = seededRandom(seed) * 100;
@@ -453,6 +462,7 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     const topic = topics[Math.floor(seededRandom(seed + 7) * topics.length)];
     const dominantCluster = dominantClusters[Math.floor(seededRandom(seed + 7.5) * dominantClusters.length)];
     const actionPending = actionPendingFrom[Math.floor(seededRandom(seed + 8) * actionPendingFrom.length)];
+    const channel = supportChannels[Math.floor(seededRandom(seed + 8.5) * supportChannels.length)];
     
     const assigned = assignedTo[Math.floor(seededRandom(seed + 9) * assignedTo.length)];
     const nextAction = nextActions[Math.floor(seededRandom(seed + 10) * nextActions.length)];
@@ -505,6 +515,7 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     threads.push({
       thread_id: `thread_${i + 1}`,
       subject_norm: subjects[i % subjects.length],
+      channel,
       participants: [
         {
           type: 'customer',
@@ -1671,6 +1682,7 @@ function generateSocialMediaEisenhowerThreads(): EisenhowerThread[] {
     threads.push({
       thread_id: threadId,
       subject_norm: `${socialMediaSubjects[i % socialMediaSubjects.length]} - ${platform}`,
+      channel: 'social',
       participants: [
         {
           type: 'external',

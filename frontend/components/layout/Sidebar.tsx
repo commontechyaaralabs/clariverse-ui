@@ -11,18 +11,32 @@ export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigationItems = [
-    // {
-    //   id: "dashboard",
-    //   label: "Dashboard",
-    //   icon: BarChart3,
-    //   href: "/",
-    //   hasSubItems: false,
-    // },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: BarChart3,
+      href: "/",
+      hasSubItems: false,
+    },
     {
       id: "email",
       label: "Email",
       icon: Mail,
       href: "/email",
+      hasSubItems: false,
+    },
+    {
+      id: "chat",
+      label: "Chat",
+      icon: MessageCircle,
+      href: "/chat",
+      hasSubItems: false,
+    },
+    {
+      id: "ticket",
+      label: "Ticket",
+      icon: Ticket,
+      href: "/ticket",
       hasSubItems: false,
     },
     {
@@ -32,20 +46,6 @@ export default function Sidebar() {
       href: "/social",
       hasSubItems: false,
     },
-    // {
-    //   id: "chat",
-    //   label: "Chat",
-    //   icon: MessageCircle,
-    //   href: "/chat",
-    //   hasSubItems: false,
-    // },
-    // {
-    //   id: "ticket",
-    //   label: "Ticket",
-    //   icon: Ticket,
-    //   href: "/ticket",
-    //   hasSubItems: false,
-    // },
     {
       id: "voice",
       label: "Voice Transcript",
