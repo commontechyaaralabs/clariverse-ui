@@ -113,7 +113,9 @@ export function TopicDistributionChart({ data, onTopicClick }: TopicDistribution
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ topic, percentage }) => `${topic} (${percentage}%)`}
+                  label={({ payload }) =>
+                    payload ? `${payload.topic ?? ""} (${payload.percentage ?? 0}%)` : ""
+                  }
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="count"

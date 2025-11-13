@@ -552,7 +552,7 @@ export default function HomePage() {
       {eisenhowerThreads.length > 0 && (
         <Tabs
           value={activeEisenhowerChannel}
-          onValueChange={(value) => setActiveEisenhowerChannel(value as ChannelKey)}
+          onValueChange={(value: string) => setActiveEisenhowerChannel(value as ChannelKey)}
           className="space-y-6"
         >
           <TabsList className="flex flex-wrap gap-2 bg-transparent">
