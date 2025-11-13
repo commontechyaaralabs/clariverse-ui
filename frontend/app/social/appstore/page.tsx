@@ -19,16 +19,11 @@ import { renderDefaultSentimentChart } from '../../../components/social/defaultS
 
 type Channel = 'all' | 'trustpilot' | 'x' | 'reddit' | 'appstore' | 'playstore';
 
-interface AppStoreDashboardProps {
-  renderSentimentChart?: (
+export default function AppStoreDashboard() {
+  const renderSentimentChart = (
     trendData: Array<{ date: string; sentiment: number; reviewVolume: number }>,
     channel: Channel
-  ) => React.ReactElement;
-}
-
-export default function AppStoreDashboard({
-  renderSentimentChart = renderDefaultSentimentChart,
-}: AppStoreDashboardProps) {
+  ) => renderDefaultSentimentChart(trendData, channel);
   const sentimentTrendData = useMemo(() => {
     const today = new Date();
     const results: Array<{ date: string; sentiment: number; reviewVolume: number }> = [];
