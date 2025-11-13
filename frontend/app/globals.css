@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-  :root {
+/* your variables */
+:root {
     /* Brand Color Palette - Professional Dark Theme */
     --background: #141414; /* dark grey - background */
     --foreground: #ffffff; /* white - text/button color */
