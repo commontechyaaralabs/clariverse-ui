@@ -50,7 +50,7 @@ function sentimentLabel(value: number) {
 
 export function CrossChannelTrendChart({ data }: CrossChannelTrendChartProps) {
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] px-6.5 py-6.5 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-[var(--border)] bg-[var(--card)] px-6.5 py-6.5 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
       <div className="space-y-2 mb-6">
         <h2 className="text-xl font-semibold text-white">Cross-Channel Volume & Sentiment Trend</h2>
         <p className="text-sm text-muted-foreground">

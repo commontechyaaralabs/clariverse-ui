@@ -26,7 +26,7 @@ export function FollowUpCalendar({ followUps, onSelect }: FollowUpCalendarProps)
   });
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
       <h3 className="text-lg font-semibold text-white">Follow-Up Calendar</h3>
       <div className="grid grid-cols-7 gap-2 text-center text-xs text-gray-300">
         {days.map((day) => {
@@ -39,7 +39,7 @@ export function FollowUpCalendar({ followUps, onSelect }: FollowUpCalendarProps)
               key={key}
               type="button"
               onClick={() => items[0] && onSelect(items[0].id)}
-              className={`rounded-lg border border-[color:var(--border)] bg-[rgba(26,26,26,0.65)] px-2 py-3 space-y-2 transition-all hover:border-[#b90abd]/40 hover:bg-[color:var(--background)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd] ${
+              className={`rounded-lg border border-[var(--border)] bg-[rgba(26,26,26,0.65)] px-2 py-3 space-y-2 transition-all hover:border-[#b90abd]/40 hover:bg-[var(--background)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd] ${
                 items.length > 0 ? "shadow-lg shadow-purple-500/10" : ""
               }`}
             >

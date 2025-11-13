@@ -68,7 +68,7 @@ export function ActionabilitySection({
       <h2 className="text-2xl font-semibold text-white">Actionability & Workflow</h2>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+        <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-white">Next-Best-Action Queue</h3>
@@ -84,7 +84,7 @@ export function ActionabilitySection({
             {actions.map((action) => (
               <div
                 key={action.id}
-                className="rounded-lg border border-[color:var(--border)] bg-[rgba(26,26,26,0.65)] p-4 transition-all hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]"
+                className="rounded-lg border border-[var(--border)] bg-[rgba(26,26,26,0.65)] p-4 transition-all hover:border-[#b90abd]/40 hover:bg-[var(--background)]"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -133,7 +133,7 @@ export function ActionabilitySection({
           </div>
         </Card>
 
-        <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+        <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
           <div>
             <h3 className="text-lg font-semibold text-white">Root Cause Insights</h3>
             <p className="text-sm text-muted-foreground">
@@ -142,7 +142,7 @@ export function ActionabilitySection({
           </div>
           <div className="space-y-3">
             {rootCauses.map((insight) => (
-              <div key={insight.id} className="rounded-lg border border-[color:var(--border)] bg-[rgba(26,26,26,0.65)] p-4 space-y-2">
+              <div key={insight.id} className="rounded-lg border border-[var(--border)] bg-[rgba(26,26,26,0.65)] p-4 space-y-2">
                 <p className="text-sm font-semibold text-gray-100">{insight.summary}</p>
                 <p className="text-xs text-gray-400">Evidence: {insight.evidence}</p>
                 <p className="text-xs italic text-purple-200/90">
@@ -160,7 +160,7 @@ export function ActionabilitySection({
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <FollowUpCalendar followUps={followUps} onSelect={onSelectFollowUp} />
 
-        <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+        <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
           <h3 className="text-lg font-semibold text-white">Urgency vs Sentiment Heat Grid</h3>
           <p className="text-sm text-muted-foreground">
             Click tiles to drill into the cluster list filtered by urgency and sentiment band.
@@ -210,7 +210,7 @@ function HeatCell({ label, value, onClick }: HeatCellProps) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-md border border-[color:var(--border)] bg-[rgba(26,26,26,0.65)] px-3 py-4 flex flex-col items-center justify-center gap-1 transition-all hover:border-[#b90abd]/40 hover:bg-[color:var(--background)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd]"
+      className="rounded-md border border-[var(--border)] bg-[rgba(26,26,26,0.65)] px-3 py-4 flex flex-col items-center justify-center gap-1 transition-all hover:border-[#b90abd]/40 hover:bg-[var(--background)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd]"
       style={{ background }}
     >
       <span className="text-gray-500 text-[10px] uppercase">{label}</span>

@@ -9,7 +9,7 @@ interface ChannelDistributionTreemapProps {
 
 export function ChannelDistributionTreemap({ data }: ChannelDistributionTreemapProps) {
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-3 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-3 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
       <h3 className="text-lg font-semibold text-white">Channel Distribution Treemap</h3>
       <p className="text-sm text-muted-foreground">
         Visualizes how the selected intent manifests across channels. Size denotes volume share.

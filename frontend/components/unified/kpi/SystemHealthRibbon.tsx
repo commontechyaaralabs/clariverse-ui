@@ -68,7 +68,7 @@ export function SystemHealthRibbon({ data, explanations = {}, onChannelSelect }:
                 <Card
                   role="button"
                   onClick={() => onChannelSelect?.(metric.channel)}
-                  className="border-[color:var(--border)] bg-[color:var(--card)] p-6 transition-all duration-200 hover:bg-[color:var(--background)] hover:border-[#b90abd]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd]"
+                  className="border-[var(--border)] bg-[var(--card)] p-6 transition-all duration-200 hover:bg-[var(--background)] hover:border-[#b90abd]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b90abd]"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className={`p-2 rounded-lg ${metric.color}`}>
@@ -156,7 +156,7 @@ export function SystemHealthRibbon({ data, explanations = {}, onChannelSelect }:
                   </div>
                 </Card>
               </TooltipTrigger>
-              <TooltipContent className="max-w-xs bg-[color:var(--background)] text-sm text-gray-100">
+              <TooltipContent className="max-w-xs bg-[var(--background)] text-sm text-gray-100">
                 <div className="space-y-1">
                   <p className="font-medium text-white">Why this matters</p>
                   <p className="text-gray-300 text-xs">
