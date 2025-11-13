@@ -22,7 +22,7 @@ export function TrendExplorerChart({ series }: TrendExplorerChartProps) {
   });
 
   return (
-    <Card className="border border-[var(--border)] bg-[var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-white">Trend Explorer</h3>
         <div className="flex flex-wrap gap-2">

@@ -60,7 +60,7 @@ function EmotionShockboard({ bars, events }: { bars: ShockBar[]; events: ShockEv
   );
 
   return (
-    <Card className="border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">⚡ Cross-Channel Emotion Shockboard</h2>
@@ -128,13 +128,13 @@ function EmotionShockboard({ bars, events }: { bars: ShockBar[]; events: ShockEv
           {events.map((event, index) => (
             <div
               key={event.id}
-              className="rounded-2xl border border-white/10 bg-[rgba(26,26,26,0.55)] px-4 py-4 text-sm text-gray-200 shadow-inner transition hover:border-[#b90abd]/40 hover:bg-[var(--background)]"
+              className="rounded-2xl border border-white/10 bg-[rgba(26,26,26,0.55)] px-4 py-4 text-sm text-gray-200 shadow-inner transition hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]"
             >
               <div className="flex items-center justify-between text-xs uppercase tracking-wide">
                 <span className="font-semibold text-gray-300">
                   {event.tone === "critical" ? "🔴 Shock" : event.tone === "warning" ? "🟠 Surge" : "🟢 Cooling"}
                 </span>
-                <span className="rounded-full border border-[var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-0.5 text-[10px] text-gray-300">
+                <span className="rounded-full border border-[color:var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-0.5 text-[10px] text-gray-300">
                   #{index + 1}
                 </span>
               </div>
@@ -176,7 +176,7 @@ function ResolutionIntegrityMonitor({
   };
 
   return (
-    <Card className="border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg shadow-emerald-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg shadow-emerald-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">🛡️ Cross-Channel Resolution Integrity Monitor</h2>

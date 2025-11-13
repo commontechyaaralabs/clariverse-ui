@@ -21,7 +21,7 @@ export function IntentMetadataCards({
 }: IntentMetadataCardsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-      <Card className="border border-[var(--border)] bg-[var(--card)] p-4 space-y-2 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-4 space-y-2 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
         <MetadataHeader title="Urgency Profile" subtitle="Distribution across response windows" />
         <div className="space-y-2 text-xs text-gray-300">
           {urgencyProfile.map((item) => (
@@ -35,7 +35,7 @@ export function IntentMetadataCards({
         </div>
       </Card>
 
-      <Card className="border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
         <MetadataHeader title="Priority Mix" subtitle="Current workload composition" />
         <div className="h-28">
           <ResponsiveContainer width="100%" height="100%">
@@ -50,7 +50,7 @@ export function IntentMetadataCards({
         </div>
       </Card>
 
-      <Card className="border border-[var(--border)] bg-[var(--card)] p-4 space-y-3 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-4 space-y-3 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
         <MetadataHeader title="Action Pending" subtitle="Ownership split" />
         <div className="space-y-2 text-sm text-gray-200">
           {actionPendingSplit.map((item) => (
@@ -62,7 +62,7 @@ export function IntentMetadataCards({
         </div>
       </Card>
 
-      <Card className="border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
         <MetadataHeader title="Sentiment Trajectory" subtitle="Past 7 days" />
         <div className="h-28">
           <ResponsiveContainer width="100%" height="100%">
@@ -84,7 +84,7 @@ export function IntentMetadataCards({
         </div>
       </Card>
 
-      <Card className="border border-[var(--border)] bg-[var(--card)] p-4 space-y-2 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-4 space-y-2 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
         <MetadataHeader title="Follow-up Risk" subtitle="AI predicted escalation types" />
         <div className="space-y-2 text-xs text-gray-300">
           {followUpRisk.map((item) => (
@@ -116,7 +116,7 @@ function MetadataHeader({ title, subtitle }: { title: string; subtitle: string }
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-purple-400/40 bg-[var(--background)] px-3 py-2 text-xs text-gray-200">
+    <div className="rounded-lg border border-purple-400/40 bg-[color:var(--background)] px-3 py-2 text-xs text-gray-200">
       <p className="font-semibold">{label}</p>
       {payload.map((entry: any) => (
         <p key={entry.name} className="capitalize">

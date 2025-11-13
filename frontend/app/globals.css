@@ -1,6 +1,5 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import "tailwindcss";
+
   :root {
     /* Brand Color Palette - Professional Dark Theme */
     --background: #141414; /* dark grey - background */

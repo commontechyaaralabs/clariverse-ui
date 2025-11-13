@@ -210,7 +210,7 @@ function EisenhowerSummaryCard({
   const activeQuadrant = selectedQuadrant;
 
   return (
-    <Card className="border border-[var(--border)] bg-[var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <CardHeader>
         <div className="flex items-center justify-between mb-2">
           <CardTitle className="flex items-center gap-2 text-white">
@@ -241,11 +241,11 @@ function EisenhowerSummaryCard({
                 key={`${channel}-${quadrant}`}
                 className={`relative rounded-lg p-5 cursor-pointer transition-all duration-200 text-center ${
                   isSelected
-                    ? "bg-[var(--background)] ring-2 ring-[#b90abd] shadow-lg"
-                    : "bg-[var(--card)] hover:bg-[var(--background)]"
+                    ? "bg-[color:var(--background)] ring-2 ring-[#b90abd] shadow-lg"
+                    : "bg-[color:var(--card)] hover:bg-[color:var(--background)]"
                 } ${
-                  isLeftColumn ? "lg:border-r lg:border-[var(--border)]" : ""
-                } ${isTopRow ? "border-b border-[var(--border)]" : ""}`}
+                  isLeftColumn ? "lg:border-r lg:border-[color:var(--border)]" : ""
+                } ${isTopRow ? "border-b border-[color:var(--border)]" : ""}`}
                 onClick={() => onQuadrantSelect(quadrant)}
               >
                 {hasHighPriorityGlow && (
@@ -590,7 +590,7 @@ export default function HomePage() {
                         onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
                       />
 
-                      <Card className="border border-[var(--border)] bg-[var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[var(--background)]">
+                      <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
                         <CardHeader>
                           <div className="flex items-center justify-between">
                             <CardTitle className="flex items-center gap-2 text-white">
