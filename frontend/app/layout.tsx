@@ -20,9 +20,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.className} bg-background text-foreground`}>
         <ConsoleFilter />
-        <div className="min-h-screen flex">
+        <div className="flex h-screen overflow-hidden">
           <Sidebar />
-          <main className="flex-1 p-6">
+          <main className="flex-1 overflow-y-auto p-6">
             {children}
           </main>
         </div>

@@ -64,9 +64,9 @@ export default function Sidebar() {
 
   return (
     <div 
-      className={`min-h-screen border-r border-border transition-all duration-300 ease-in-out ${
+      className={`h-screen sticky top-0 border-r border-border transition-all duration-300 ease-in-out ${
         isExpanded ? 'w-72' : 'w-16'
-      }`}
+      } flex flex-col overflow-y-auto`}
       style={{ backgroundColor: 'var(--sidebar)' }}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
