@@ -59,7 +59,7 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+      <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Cross-Channel Action Grid</CardTitle>
@@ -151,96 +151,23 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
             )}
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader className="flex items-start justify-between">
-            <div>
-              <CardTitle>Intent Overlap ✨</CardTitle>
-              <CardDescription>Clusters appearing across multiple channels.</CardDescription>
-            </div>
-            <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
-              Emerging Overlap
-            </span>
-          </CardHeader>
-          <CardContent className="space-y-4 px-6 pb-6">
-            <ScrollArea className="h-[320px] rounded-xl border border-white/10 bg-black/30 p-4">
-              <div className="grid gap-3">
-                {intentOverlapMock.map((overlap) => (
-                  <div
-                    key={overlap.cluster}
-                    className="rounded-lg border border-white/10 bg-black/40 p-4 shadow-inner transition hover:border-amber-400/40 hover:bg-amber-500/5"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-semibold text-white">{overlap.cluster}</h4>
-                      <span className="text-[10px] uppercase tracking-wide text-gray-400">Sent {overlap.avgSentiment.toFixed(1)}</span>
-                    </div>
-                    <p className="mt-1 text-xs text-gray-400">{overlap.summary}</p>
-                    <div className="mt-3 flex items-center gap-2">
-                      {CHANNEL_ORDER.map((channel) => (
-                        <span
-                          key={`${overlap.cluster}-${channel}`}
-                          className={`h-2.5 w-2.5 rounded-full transition ${
-                            overlap.channels.includes(channel)
-                              ? channelDotClass[channel]
-                              : "bg-white/10"
-                          }`}
-                          title={CHANNEL_LABELS[channel]}
-                        />
-                      ))}
-                    </div>
-                    <div className="mt-3 grid gap-1 text-[11px] text-gray-300">
-                      <span>
-                        <strong className="text-gray-100">Active Channels:</strong> {overlap.channels.map((c) => CHANNEL_LABELS[c]).join(" • ")}
-                      </span>
-                      <span>
-                        <strong className="text-gray-100">Average Sentiment:</strong> {overlap.avgSentiment.toFixed(1)}
-                      </span>
-                      <span>
-                        <strong className="text-gray-100">Unresolved:</strong> {overlap.unresolvedPct}% • <strong>Volume:</strong> {overlap.volume}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-
-            <div className="rounded-lg border border-indigo-400/30 bg-indigo-500/10 p-4 text-sm text-indigo-100">
-              💬 Mortgage Rate Lock surfaced across Email, Chat, and Voice. Average sentiment 3.1, 41% awaiting underwriting review. Chat conversations resolve fastest (avg 2.8 h).
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="space-y-6">
-        <SectionTitle
-          title="Cross-Channel Correlation Wall"
-          subtitle="Narrative insights tracing how tone and emotion evolve across customer journeys."
-        />
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ToneDriftWall toneDrift={toneDriftData} />
-          <PrematureClosureAuditWall audits={prematureClosureAuditData} />
-        </div>
-        <PressureConstellationWall
-          nodes={pressureConstellationNodes}
-          clusters={pressureConstellationClusters}
-          insights={pressureConstellationInsights}
-        />
       </div>
     </div>
   );
 }
 
-type ToneDriftCorrelationLevel =
+export type ToneDriftCorrelationLevel =
   | "Intra-channel drift"
   | "Inter-channel drift (same intent)"
   | "Cross-channel sequence drift";
 
-type ToneDriftSequencePoint = {
+export type ToneDriftSequencePoint = {
   channel: ChannelKey;
   sentiment: number;
   stage?: string;
 };
 
-type ToneDriftEntry = {
+export type ToneDriftEntry = {
   intent: string;
   sequence: ToneDriftSequencePoint[];
   aiObservation: string;
@@ -250,7 +177,7 @@ type ToneDriftEntry = {
 
 type ClosureStatus = "closed" | "open" | "in_progress";
 
-type PrematureClosureAuditEntry = {
+export type PrematureClosureAuditEntry = {
   intent: string;
   customerId: string;
   closedChannel: {
@@ -306,7 +233,7 @@ type PressureInsight = {
   icon: string;
 };
 
-function ToneDriftWall({ toneDrift }: { toneDrift: ToneDriftEntry[] }) {
+export function ToneDriftWall({ toneDrift = toneDriftData }: { toneDrift?: ToneDriftEntry[] } = {}) {
   return (
     <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -420,7 +347,7 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
   );
 }
 
-function PrematureClosureAuditWall({ audits }: { audits: PrematureClosureAuditEntry[] }) {
+export function PrematureClosureAuditWall({ audits = prematureClosureAuditData }: { audits?: PrematureClosureAuditEntry[] } = {}) {
   const highRisk = audits.filter((audit) => audit.riskLevel === "high").length;
   const openChannels = audits.reduce((acc, audit) => acc + audit.activeChannels.length, 0);
 
@@ -561,15 +488,88 @@ function ChannelStatusPill({
   );
 }
 
-function PressureConstellationWall({
-  nodes,
-  clusters,
-  insights,
-}: {
-  nodes: PressureConstellationNode[];
-  clusters: PressureClusterSummary[];
-  insights: PressureInsight[];
-}) {
+type IntentOverlapEntry = {
+  cluster: string;
+  channels: ChannelKey[];
+  avgSentiment: number;
+  unresolvedPct: number;
+  volume: number;
+  summary: string;
+};
+
+export function IntentOverlapPanel({ data = intentOverlapMock }: { data?: IntentOverlapEntry[] } = {}) {
+  return (
+    <Card>
+      <CardHeader className="flex items-start justify-between">
+        <div>
+          <CardTitle>Intent Overlap ✨</CardTitle>
+          <CardDescription>Clusters appearing across multiple channels.</CardDescription>
+        </div>
+        <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
+          Emerging Overlap
+        </span>
+      </CardHeader>
+      <CardContent className="space-y-4 px-6 pb-6">
+        <ScrollArea className="h-[320px] rounded-xl border border-white/10 bg-black/30 p-4">
+          <div className="grid gap-3">
+            {data.map((overlap) => (
+              <div
+                key={overlap.cluster}
+                className="rounded-lg border border-white/10 bg-black/40 p-4 shadow-inner transition hover:border-amber-400/40 hover:bg-amber-500/5"
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-white">{overlap.cluster}</h4>
+                  <span className="text-[10px] uppercase tracking-wide text-gray-400">Sent {overlap.avgSentiment.toFixed(1)}</span>
+                </div>
+                <p className="mt-1 text-xs text-gray-400">{overlap.summary}</p>
+                <div className="mt-3 flex items-center gap-2">
+                  {CHANNEL_ORDER.map((channel) => (
+                    <span
+                      key={`${overlap.cluster}-${channel}`}
+                      className={`h-2.5 w-2.5 rounded-full transition ${
+                        overlap.channels.includes(channel)
+                          ? channelDotClass[channel]
+                          : "bg-white/10"
+                      }`}
+                      title={CHANNEL_LABELS[channel]}
+                    />
+                  ))}
+                </div>
+                <div className="mt-3 grid gap-1 text-[11px] text-gray-300">
+                  <span>
+                    <strong className="text-gray-100">Active Channels:</strong> {overlap.channels.map((c) => CHANNEL_LABELS[c]).join(" • ")}
+                  </span>
+                  <span>
+                    <strong className="text-gray-100">Average Sentiment:</strong> {overlap.avgSentiment.toFixed(1)}
+                  </span>
+                  <span>
+                    <strong className="text-gray-100">Unresolved:</strong> {overlap.unresolvedPct}% • <strong>Volume:</strong> {overlap.volume}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+
+        <div className="rounded-lg border border-indigo-400/30 bg-indigo-500/10 p-4 text-sm text-indigo-100">
+          💬 Mortgage Rate Lock surfaced across Email, Chat, and Voice. Average sentiment 3.1, 41% awaiting underwriting review. Chat conversations resolve fastest (avg 2.8 h).
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+type PressureConstellationProps = {
+  nodes?: PressureConstellationNode[];
+  clusters?: PressureClusterSummary[];
+  insights?: PressureInsight[];
+};
+
+export function PressureConstellationWall({
+  nodes = pressureConstellationNodes,
+  clusters = pressureConstellationClusters,
+  insights = pressureConstellationInsights,
+}: PressureConstellationProps = {}) {
   const totalIntents = nodes.length;
   const averagePressure =
     nodes.reduce((acc, node) => acc + node.pressureScore, 0) / Math.max(1, nodes.length);
@@ -844,14 +844,7 @@ const channelDotClass: Record<ChannelKey, string> = {
   voice: "bg-orange-400",
 };
 
-const intentOverlapMock: Array<{
-  cluster: string;
-  channels: ChannelKey[];
-  avgSentiment: number;
-  unresolvedPct: number;
-  volume: number;
-  summary: string;
-}> = [
+const intentOverlapMock: IntentOverlapEntry[] = [
   {
     cluster: "Mortgage Rate Lock",
     channels: ["email", "chat", "voice"],

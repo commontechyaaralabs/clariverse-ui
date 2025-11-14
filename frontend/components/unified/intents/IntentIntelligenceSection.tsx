@@ -49,7 +49,13 @@ type ResolutionIssue = {
   tone: ResolutionIssueTone;
 };
 
-function EmotionShockboard({ bars, events }: { bars: ShockBar[]; events: ShockEvent[] }) {
+export function EmotionShockboard({
+  bars = emotionShockBars,
+  events = emotionShockEvents,
+}: {
+  bars?: ShockBar[];
+  events?: ShockEvent[];
+} = {}) {
   const chartData = useMemo(
     () =>
       bars.map((entry) => ({
@@ -157,15 +163,15 @@ function EmotionShockboard({ bars, events }: { bars: ShockBar[]; events: ShockEv
   );
 }
 
-function ResolutionIntegrityMonitor({
-  score,
-  delta,
-  issues,
+export function ResolutionIntegrityMonitor({
+  score = resolutionIntegrityScore.score,
+  delta = resolutionIntegrityScore.delta,
+  issues = resolutionIntegrityIssues,
 }: {
-  score: number;
-  delta: number;
-  issues: ResolutionIssue[];
-}) {
+  score?: number;
+  delta?: number;
+  issues?: ResolutionIssue[];
+} = {}) {
   const scoreRotation = (Math.max(0, Math.min(score, 100)) / 100) * 360;
   const deltaColor = delta >= 0 ? "text-emerald-300" : "text-rose-300";
   const deltaLabel = delta >= 0 ? `▲ ${delta}` : `▼ ${Math.abs(delta)}`;
@@ -233,12 +239,8 @@ export function IntentIntelligenceSection({
 }: IntentIntelligenceSectionProps) {
   return (
     <div className="space-y-6">
-      <EmotionShockboard bars={emotionShockBars} events={emotionShockEvents} />
-      <ResolutionIntegrityMonitor
-        score={resolutionIntegrityScore.score}
-        delta={resolutionIntegrityScore.delta}
-        issues={resolutionIntegrityIssues}
-      />
+      <EmotionShockboard />
+      <ResolutionIntegrityMonitor />
     </div>
   );
 }

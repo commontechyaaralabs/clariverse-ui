@@ -5,9 +5,16 @@ import { UnifiedFiltersBar } from "@/components/unified/filters/UnifiedFiltersBa
 import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { GaugeInsightsPanel } from "@/components/unified/charts/GaugeInsightsPanel";
-import { IntentIntelligenceSection } from "@/components/unified/intents/IntentIntelligenceSection";
+import { EmotionShockboard, ResolutionIntegrityMonitor } from "@/components/unified/intents/IntentIntelligenceSection";
 import { AIDayGeneratorChat } from "@/components/unified/AIDayGeneratorChat";
-import { UnifiedIntelligenceWall, AISummaryRail } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
+import {
+  UnifiedIntelligenceWall,
+  AISummaryRail,
+  IntentOverlapPanel,
+  PressureConstellationWall,
+  ToneDriftWall,
+  PrematureClosureAuditWall,
+} from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -697,15 +704,6 @@ export default function HomePage() {
             <UnifiedIntelligenceWall actionGrid={actionGrid} />
           </section>
 
-          <section id="intent-analysis" className="space-y-6 scroll-mt-20">
-            <IntentIntelligenceSection
-              clusters={intentClusters}
-              severityMatrix={severityMatrix}
-              selectedIntentId={selectedIntentId}
-              onIntentSelect={setSelectedIntentId}
-            />
-          </section>
-
           <AIDayGeneratorChat
             isOpen={isChatOpen}
             onClose={() => setIsChatOpen(false)}
@@ -713,13 +711,22 @@ export default function HomePage() {
         </>
       )}
 
-      {activePrimarySection !== "operational-indicators" && (
-        <div className="rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--card)]/40 p-10 text-center text-sm text-gray-400">
-          <p className="mb-2 text-base font-semibold text-white">
-            {activePrimarySection === "channel-analysis" ? "Channel Analysis" : "Intent Analysis"}
-          </p>
-          <p>Coming soon. We’re still wiring up this surface.</p>
-        </div>
+      {activePrimarySection === "channel-analysis" && (
+        <section id="channel-analysis-view" className="space-y-6 scroll-mt-20">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <ToneDriftWall />
+            <PrematureClosureAuditWall />
+          </div>
+          <EmotionShockboard />
+          <ResolutionIntegrityMonitor />
+        </section>
+      )}
+
+      {activePrimarySection === "intent-analysis" && (
+        <section id="intent-analysis" className="space-y-6 scroll-mt-20">
+          <IntentOverlapPanel />
+          <PressureConstellationWall />
+        </section>
       )}
     </div>
   );
