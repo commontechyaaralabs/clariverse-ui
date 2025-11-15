@@ -113,6 +113,7 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
     setSelectedActionType(null);
     setSelectedDate(null);
   };
+
   const CustomTooltip = ({ active, payload, label, coordinate }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -200,10 +201,10 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
 
       return (
         <div 
-          className="border border-gray-600 rounded-lg p-4 shadow-xl min-w-[480px] max-w-[600px] bg-gray-900"
+          className="border border-gray-600 rounded-lg p-2.5 shadow-xl min-w-[500px] max-w-[640px] bg-gray-900"
           style={tooltipStyle}
         >
-          <p className="font-semibold text-white text-base mb-3 text-center">
+          <p className="font-semibold text-white text-sm mb-1.5 text-center">
             {new Date(label).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
@@ -211,63 +212,64 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
             })}
           </p>
           
-          <div className="flex gap-4">
+          <div className="grid gap-2.5 md:grid-cols-[145px_minmax(0,1fr)]">
             {/* Left Column - Pie Chart and Thread Status */}
-            <div className="flex-shrink-0">
+            <div className="space-y-1">
               {/* Cluster Distribution Pie Chart */}
               {clusterDistribution.length > 0 && (
-                <div className="h-32 w-32 mb-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={clusterDistribution}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={50}
-                        fill="#8884d8"
-                        dataKey="count"
-                        animationDuration={200}
-                      >
-                        {clusterDistribution.map((entry, index) => (
-                          <Cell 
-                            key={`${entry.cluster}-${index}`} 
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
+                <div className="rounded-lg border border-white/10 bg-black/30 px-1.5 shadow-inner flex flex-col items-center w-[130px] mx-auto -my-0.5">
+                  <PieChart width={80} height={70} className="-my-2">
+                    <Pie
+                      data={clusterDistribution}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={33}
+                      innerRadius={16}
+                      stroke="#0f172a"
+                      strokeWidth={2}
+                      dataKey="count"
+                      animationDuration={200}
+                    >
+                      {clusterDistribution.map((entry, index) => (
+                        <Cell 
+                          key={`${entry.cluster}-${index}`} 
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                  <p className="text-center text-[8px] uppercase tracking-[0.3em] text-gray-500 -mt-2 pb-1">
+                    Cluster share
+                  </p>
                 </div>
               )}
               
               {/* Thread Status Legend */}
-              <div className="space-y-1 mb-4">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#5332ff]" />
-                    <span className="text-gray-300">Open - Customer</span>
+              <div className="rounded-lg border border-white/10 bg-black/40 p-1.5 space-y-1 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#5332ff]" />
+                    <span className="text-gray-300 text-[10px]">Open - Customer</span>
                   </div>
-                  <span className="text-white font-medium">{data.openCustomer}</span>
+                  <span className="text-white font-semibold text-[11px]">{data.openCustomer}</span>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-orange-500" />
-                    <span className="text-gray-300">Open - Company</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                    <span className="text-gray-300 text-[10px]">Open - Company</span>
                   </div>
-                  <span className="text-white font-medium">{data.openCompany}</span>
+                  <span className="text-white font-semibold text-[11px]">{data.openCompany}</span>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-gray-300">Closed</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span className="text-gray-300 text-[10px]">Closed</span>
                   </div>
-                  <span className="text-white font-medium">{data.closed}</span>
+                  <span className="text-white font-semibold text-[11px]">{data.closed}</span>
                 </div>
-                <div className="border-t border-gray-600 pt-1 mt-2">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="text-gray-300">Total</span>
-                    <span className="text-white">{total}</span>
-                  </div>
+                <div className="border-t border-gray-700 pt-1 mt-1 flex items-center justify-between font-semibold text-white">
+                  <span className="text-gray-300 text-[10px]">Total</span>
+                  <span className="text-[11px]">{total}</span>
                 </div>
               </div>
             </div>
@@ -276,23 +278,21 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
             <div className="flex-1 min-w-0">
               {/* Cluster Distribution Details */}
               {clusterDistribution.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="text-xs font-medium text-gray-300 mb-2">Dominant Clusters</h4>
-                  <div className="grid grid-cols-2 gap-2">
+                <div className="mb-2">
+                  <h4 className="text-[10px] font-medium text-gray-300 mb-1">Dominant Clusters</h4>
+                  <div className="grid grid-cols-2 gap-1">
                     {clusterDistribution.map((item, index) => (
-                      <div key={item.cluster} className="flex items-center justify-between text-xs bg-gray-800/30 rounded p-2">
-                        <div className="flex items-center gap-2 min-w-0">
+                      <div key={item.cluster} className="flex items-center justify-between text-[10px] bg-gray-800/30 rounded p-1">
+                        <div className="flex items-center gap-1 min-w-0">
                           <div 
-                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                             style={{ 
                               backgroundColor: `hsl(${(index * 60) % 360}, 70%, 50%)` 
                             }}
                           />
-                          <span className="text-gray-300 truncate">{item.cluster}</span>
+                          <span className="text-gray-300 truncate text-[10px]">{item.cluster}</span>
                         </div>
-                        <div className="flex items-center gap-1 flex-shrink-0">
-                          <span className="text-white font-medium">{item.count}</span>
-                        </div>
+                        <span className="text-white font-medium flex-shrink-0 ml-1">{item.count}</span>
                       </div>
                     ))}
                   </div>
@@ -302,22 +302,22 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
               {/* Topic Breakdown */}
               {topicBreakdown.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-300 mb-2">Topic Breakdown</h4>
-                  <div className="grid grid-cols-2 gap-2">
+                  <h4 className="text-[10px] font-medium text-gray-300 mb-1">Topic Breakdown</h4>
+                  <div className="grid grid-cols-2 gap-1">
                     {topicBreakdown.map((item, index) => (
-                      <div key={item.topic} className="bg-gray-800/50 rounded-lg p-2">
-                        <div className="flex items-center justify-between mb-1">
-                          <h5 className="text-xs font-medium text-white truncate">{item.topic}</h5>
-                          <span className="text-xs text-gray-400 flex-shrink-0 ml-1">{item.percentage}%</span>
+                      <div key={item.topic} className="bg-gray-800/50 rounded p-1">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <h5 className="text-[10px] font-medium text-white truncate">{item.topic}</h5>
+                          <span className="text-[9px] text-gray-400 flex-shrink-0 ml-1">{item.percentage}%</span>
                         </div>
-                        <div className="flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-between text-[10px]">
+                          <div className="flex items-center gap-1">
                             <span className="text-white font-bold">{item.count}</span>
                             {item.urgentCount > 0 && (
-                              <span className="text-red-400">{item.urgentCount}</span>
+                              <span className="text-red-400 text-[9px]">{item.urgentCount}</span>
                             )}
                           </div>
-                          <span className={`text-xs font-medium ${
+                          <span className={`text-[9px] font-medium ${
                             item.avgSentiment > 0.2 ? 'text-green-400' : 
                             item.avgSentiment < -0.2 ? 'text-red-400' : 'text-yellow-400'
                           }`}>
@@ -336,7 +336,6 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
     }
     return null;
   };
-
 
   if (selectedActionType && selectedDate) {
     return (
@@ -495,90 +494,90 @@ export function ThreadsOverTimeChart({ data, threads = [], onDataPointClick }: T
 
   return (
     <div className="space-y-6">
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-[#b90abd]" />
-          Threads Over Time
-        </CardTitle>
-        <CardDescription>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-[#b90abd]" />
+            Threads Over Time
+          </CardTitle>
+          <CardDescription>
             Daily thread creation trends and action pending analysis. Click on lines to drill down.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-              onClick={handleLineClick}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis
-                dataKey="date"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                axisLine={{ stroke: '#4b5563' }}
-                tickLine={{ stroke: '#4b5563' }}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return `${date.getMonth() + 1}/${date.getDate()}`;
-                }}
-              />
-              <YAxis
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                axisLine={{ stroke: '#4b5563' }}
-                tickLine={{ stroke: '#4b5563' }}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend 
-                wrapperStyle={{ 
-                  paddingTop: '20px',
-                  fontSize: '12px',
-                  lineHeight: '1.5'
-                }}
-                iconType="line"
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-                formatter={(value, entry) => (
-                  <span style={{ 
-                    marginRight: '20px',
-                    whiteSpace: 'nowrap',
-                    display: 'inline-block'
-                  }}>
-                    {value}
-                  </span>
-                )}
-              />
-              <Line
-                type="monotone"
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                onClick={handleLineClick}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  axisLine={{ stroke: '#4b5563' }}
+                  tickLine={{ stroke: '#4b5563' }}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    return `${date.getMonth() + 1}/${date.getDate()}`;
+                  }}
+                />
+                <YAxis
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  axisLine={{ stroke: '#4b5563' }}
+                  tickLine={{ stroke: '#4b5563' }}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend 
+                  wrapperStyle={{ 
+                    paddingTop: '20px',
+                    fontSize: '12px',
+                    lineHeight: '1.5'
+                  }}
+                  iconType="line"
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                  formatter={(value, entry) => (
+                    <span style={{ 
+                      marginRight: '20px',
+                      whiteSpace: 'nowrap',
+                      display: 'inline-block'
+                    }}>
+                      {value}
+                    </span>
+                  )}
+                />
+                <Line
+                  type="monotone"
                   dataKey="openCustomer"
-                stroke="#5332ff"
-                strokeWidth={2}
-                dot={{ fill: '#5332ff', strokeWidth: 2, r: 4 }}
+                  stroke="#5332ff"
+                  strokeWidth={2}
+                  dot={{ fill: '#5332ff', strokeWidth: 2, r: 4 }}
                   name="Open - Customer"
-              />
-              <Line
-                type="monotone"
+                />
+                <Line
+                  type="monotone"
                   dataKey="openCompany"
                   stroke="#f97316"
-                strokeWidth={2}
+                  strokeWidth={2}
                   dot={{ fill: '#f97316', strokeWidth: 2, r: 4 }}
                   name="Open - Company"
-              />
-              <Line
-                type="monotone"
-                dataKey="closed"
-                stroke="#10b981"
-                strokeWidth={2}
-                dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
-                name="Closed"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+                />
+                <Line
+                  type="monotone"
+                  dataKey="closed"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                  name="Closed"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
