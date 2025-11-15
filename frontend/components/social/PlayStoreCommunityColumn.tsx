@@ -1,6 +1,7 @@
 import { PlayStoreViralityTopic, PLAYSTORE_SENTIMENT_LEVELS } from '@/lib/social/playstore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -14,6 +15,7 @@ import {
   Cell,
 } from 'recharts';
 import type { LabelProps } from 'recharts';
+import { SOCIAL_CARD_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface PlayStoreCommunityColumnProps {
   viralityTopics: PlayStoreViralityTopic[];
@@ -50,7 +52,8 @@ const GRADIENT_COLORS: Record<(typeof PLAYSTORE_SENTIMENT_LEVELS)[number]['key']
 };
 
 export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityColumnProps) {
-  const chartData = viralityTopics.map(topic => {
+  const [viralitySortOrder, setViralitySortOrder] = useState<'desc' | 'asc'>('desc');
+  const chartData = useMemo(() => viralityTopics.map(topic => {
     const total = topic.star1 + topic.star2 + topic.star3 + topic.star4 + topic.star5 || 1;
 
     const breakdown = PLAYSTORE_SENTIMENT_LEVELS.map(level => {
@@ -98,7 +101,17 @@ export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityC
       gradientStops,
       breakdown,
     };
-  });
+  }), [viralityTopics]);
+
+  const sortedChartData = useMemo(() => {
+    const copy = [...chartData];
+    copy.sort((a, b) =>
+      viralitySortOrder === 'desc'
+        ? (b.helpfulVotes ?? 0) - (a.helpfulVotes ?? 0)
+        : (a.helpfulVotes ?? 0) - (b.helpfulVotes ?? 0)
+    );
+    return copy;
+  }, [chartData, viralitySortOrder]);
 
   const renderLegend = () => (
     <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-300 mt-2">
@@ -114,10 +127,10 @@ export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityC
   const renderTooltipContent = ({ active, payload }: any) => {
     if (!active || !payload?.length) return null;
 
-    const topic = payload[0].payload as (typeof chartData)[number];
+    const topic = payload[0].payload as (typeof sortedChartData)[number];
 
     return (
-      <div className="rounded-xl border border-white/10 bg-gray-900/95 px-4 py-3 shadow-xl text-xs text-gray-200 space-y-2 min-w-[220px]">
+      <div className={SOCIAL_TOOLTIP_SURFACE}>
         <div className="flex items-center justify-between gap-4">
           <div className="text-sm font-semibold text-white leading-tight">{topic.name}</div>
           <div className="flex flex-col items-end gap-0.5">
@@ -144,12 +157,21 @@ export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityC
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white text-lg">
-            <TrendingUp className="h-5 w-5 text-purple-400" />
-            Top 10 Dominant Topics by Virality
-          </CardTitle>
+          <div className="flex items-center justify-between gap-4">
+            <CardTitle className="flex items-center gap-2 text-white text-lg">
+              <TrendingUp className="h-5 w-5 text-purple-400" />
+              Top 10 Dominant Topics by Virality
+            </CardTitle>
+            <button
+              type="button"
+              onClick={() => setViralitySortOrder(prev => (prev === 'desc' ? 'asc' : 'desc'))}
+              className="text-xs font-semibold uppercase tracking-wide text-purple-200 border border-white/15 bg-white/5 px-3 py-1 rounded-full hover:border-white/30 hover:text-white transition-colors"
+            >
+              Viral {viralitySortOrder === 'desc' ? '↓' : '↑'}
+            </button>
+          </div>
           <CardDescription className="text-gray-400">
             Star mix for the most viral Play Store review themes this week
           </CardDescription>
@@ -157,14 +179,14 @@ export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityC
         <CardContent className="pt-2 pb-6">
           <ResponsiveContainer width="100%" height={480}>
             <BarChart
-              data={chartData}
+              data={sortedChartData}
               layout="vertical"
               barCategoryGap="28%"
               barGap={8}
               margin={{ top: 20, right: 120, bottom: 20, left: 12 }}
             >
               <defs>
-                {chartData.map((topic, index) => (
+                {sortedChartData.map((topic, index) => (
                   <linearGradient
                     key={topic.name}
                     id={`playstore-topic-gradient-${index}`}
@@ -205,7 +227,7 @@ export function PlayStoreCommunityColumn({ viralityTopics }: PlayStoreCommunityC
               <Tooltip content={renderTooltipContent} />
               <Legend verticalAlign="bottom" height={48} content={renderLegend} />
               <Bar dataKey="totalPercent" radius={[8, 8, 8, 8]} isAnimationActive={false}>
-                {chartData.map((topic, index) => (
+                {sortedChartData.map((topic, index) => (
                   <Cell key={`${topic.name}-bar`} fill={`url(#playstore-topic-gradient-${index})`} />
                 ))}
                 <LabelList dataKey="helpfulVotes" content={HelpfulLabel} />

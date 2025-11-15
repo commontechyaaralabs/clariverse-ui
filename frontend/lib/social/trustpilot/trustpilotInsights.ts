@@ -108,6 +108,18 @@ export interface AITrustForecastData {
   summary: string;
 }
 
+export interface TrustpilotPositiveNegativePoint {
+  day: number;
+  positive: number;
+  negative: number;
+}
+
+export interface TrustpilotTopicVolumeSplitEntry {
+  name: string;
+  volume: number;
+  sentiment: 'positive' | 'negative';
+}
+
 interface BuildTrustpilotInsightsOptions {
   enhancedData: TrustpilotEnhancedDashboardData | null;
   legacyData: TrustpilotDashboardData | null;
@@ -961,4 +973,65 @@ export const getAITrustForecastData = (): AITrustForecastData => {
     summary,
   };
 };
+
+const POSITIVE_NEGATIVE_SERIES: TrustpilotPositiveNegativePoint[] = [
+  { day: 1, positive: 2, negative: -1 },
+  { day: 2, positive: 6, negative: -2 },
+  { day: 3, positive: 4, negative: -5 },
+  { day: 4, positive: 9, negative: -8 },
+  { day: 5, positive: 5, negative: -3 },
+  { day: 6, positive: 12, negative: -9 },
+  { day: 7, positive: 8, negative: -4 },
+  { day: 8, positive: 15, negative: -12 },
+  { day: 9, positive: 7, negative: -2 },
+  { day: 10, positive: 18, negative: -11 },
+  { day: 11, positive: 11, negative: -3 },
+  { day: 12, positive: 22, negative: -7 },
+  { day: 13, positive: 14, negative: -4 },
+  { day: 14, positive: 26, negative: -1 },
+  { day: 15, positive: 19, negative: -6 },
+  { day: 16, positive: 30, negative: -10 },
+  { day: 17, positive: 24, negative: -2 },
+  { day: 18, positive: 32, negative: -14 },
+  { day: 19, positive: 28, negative: -9 },
+  { day: 20, positive: 38, negative: -6 },
+  { day: 21, positive: 20, negative: -15 },
+  { day: 22, positive: 45, negative: -12 },
+  { day: 23, positive: 48, negative: -25 },
+  { day: 24, positive: 52, negative: -8 },
+  { day: 25, positive: 54, negative: -6 },
+  { day: 26, positive: 42, negative: -3 },
+  { day: 27, positive: 36, negative: -18 },
+  { day: 28, positive: 29, negative: -10 },
+  { day: 29, positive: 33, negative: -5 },
+  { day: 30, positive: 25, negative: -4 },
+];
+
+export const getTrustpilotPositiveNegativeSeries = (): TrustpilotPositiveNegativePoint[] => POSITIVE_NEGATIVE_SERIES;
+
+const TRUSTPILOT_TOPIC_VOLUME_SPLIT: TrustpilotTopicVolumeSplitEntry[] = [
+  { name: 'SEPA Transfer Reliability', volume: 54, sentiment: 'negative' },
+  { name: 'PSD2 Authentication UX', volume: 48, sentiment: 'negative' },
+  { name: 'Mortgage Retention Loyalty', volume: 45, sentiment: 'negative' },
+  { name: 'ATM & Branch Capacity', volume: 42, sentiment: 'negative' },
+  { name: 'Digital Trust & Security', volume: 40, sentiment: 'negative' },
+  { name: 'EuroBank Green Finance', volume: 38, sentiment: 'positive' },
+  { name: 'Instant Card Freeze', volume: 36, sentiment: 'positive' },
+  { name: 'KYC Verification Backlog', volume: 34, sentiment: 'negative' },
+  { name: 'Treasury FX Hedging', volume: 33, sentiment: 'negative' },
+  { name: 'Climate Savings Accelerators', volume: 31, sentiment: 'positive' },
+  { name: 'Payments Outage Comms', volume: 30, sentiment: 'negative' },
+  { name: 'AI Relationship Manager', volume: 28, sentiment: 'positive' },
+  { name: 'Regulatory Reporting Portal', volume: 27, sentiment: 'negative' },
+  { name: 'SME Lending Journey', volume: 26, sentiment: 'negative' },
+  { name: 'Fee Transparency Hub', volume: 25, sentiment: 'positive' },
+  { name: 'Cross-Border Payroll Team', volume: 24, sentiment: 'negative' },
+  { name: 'FX Markup Comparisons', volume: 23, sentiment: 'negative' },
+  { name: 'Card Personalisation', volume: 22, sentiment: 'positive' },
+  { name: 'Instant SEPA Pilot (Italy)', volume: 21, sentiment: 'positive' },
+  { name: 'Wealth Advisory Access', volume: 20, sentiment: 'negative' },
+];
+
+export const getTrustpilotTopicVolumeSplit = (): TrustpilotTopicVolumeSplitEntry[] =>
+  TRUSTPILOT_TOPIC_VOLUME_SPLIT;
 

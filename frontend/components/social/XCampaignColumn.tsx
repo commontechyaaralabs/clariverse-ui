@@ -1,6 +1,7 @@
 import { XTopTweet } from '@/lib/social/x';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { MessageSquareQuote, ArrowUpCircle, BarChart3 } from 'lucide-react';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE } from './theme';
 
 interface XCampaignColumnProps {
   topTweets: XTopTweet[];
@@ -19,7 +20,7 @@ export function XCampaignColumn({ topTweets }: XCampaignColumnProps) {
   };
 
   return (
-    <Card className="bg-gray-900 border-gray-800">
+    <Card className={SOCIAL_CARD_BASE}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white text-lg">
           <MessageSquareQuote className="h-5 w-5 text-sky-400" />
@@ -31,10 +32,7 @@ export function XCampaignColumn({ topTweets }: XCampaignColumnProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {topTweets.map((tweet) => (
-          <div
-            key={tweet.id}
-            className="rounded-xl border border-gray-800 bg-gray-900/60 p-4 hover:border-sky-500/40 transition-colors"
-          >
+          <div key={tweet.id} className={`${SOCIAL_PANEL_BASE} hover:border-sky-400/60`}>
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 text-sm text-white font-semibold">

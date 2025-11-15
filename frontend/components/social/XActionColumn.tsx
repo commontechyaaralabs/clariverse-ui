@@ -2,6 +2,7 @@ import { XResponseAlert, XCreatorWatch } from '@/lib/social/x';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Users, AlertTriangle, TrendingUp, Clock, Hash, Star, Repeat2, Eye, Heart } from 'lucide-react';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface XActionColumnProps {
   responseAlerts: XResponseAlert[];
@@ -22,7 +23,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
 
   return (
     <div className="flex flex-col gap-6 h-full min-h-0">
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white text-lg">
             <AlertTriangle className="h-5 w-5 text-red-400" />
@@ -38,7 +39,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
               {responseAlerts.map((alert) => (
                 <UITooltip key={alert.id}>
                   <TooltipTrigger asChild>
-                    <div className="p-4 rounded-lg border border-gray-800 bg-gray-900/50 hover:bg-gray-900 hover:border-red-500/40 transition-all cursor-pointer">
+                    <div className={`${SOCIAL_PANEL_BASE} cursor-pointer`}>
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -87,12 +88,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
                       </div>
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent
-                    side="left"
-                    align="start"
-                    className="max-w-md p-4 bg-gray-900 border border-red-500/40 shadow-xl text-gray-200"
-                    sideOffset={10}
-                  >
+                  <TooltipContent side="left" align="start" className={SOCIAL_TOOLTIP_SURFACE} sideOffset={10}>
                     <div className="space-y-3">
                       <div>
                         <div className="flex items-center justify-between mb-2">
@@ -116,12 +112,12 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-800 pt-2">
+                      <div className="border-t border-white/10 pt-2">
                         <h4 className="text-xs font-semibold text-gray-300 mb-1">Live Thread Summary</h4>
                         <p className="text-xs text-gray-400 leading-relaxed">{alert.summary}</p>
                       </div>
 
-                      <div className="border-t border-gray-800 pt-2 grid grid-cols-2 gap-3 text-[11px] text-gray-300">
+                      <div className="border-t border-white/10 pt-2 grid grid-cols-2 gap-3 text-[11px] text-gray-300">
                         <div>
                           <span className="text-gray-400">Sentiment Level:</span>{' '}
                           <span className={alert.sentimentLevel >= 4 ? 'text-red-300 font-semibold' : 'text-yellow-300 font-semibold'}>
@@ -142,7 +138,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-800 pt-2">
+                      <div className="border-t border-white/10 pt-2">
                         <h4 className="text-xs font-semibold text-red-300 mb-1">Recommended Action</h4>
                         <p className="text-xs text-gray-300 leading-relaxed">{alert.recommendedAction}</p>
                       </div>
@@ -155,7 +151,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800 flex flex-col flex-1 min-h-[420px]">
+      <Card className={`${SOCIAL_CARD_BASE} flex flex-col flex-1 min-h-[420px]`}>
         <CardHeader className="px-6 pt-6 pb-3">
           <CardTitle className="flex items-center gap-2 text-white text-lg">
             <Users className="h-5 w-5 text-sky-400" />
@@ -167,7 +163,7 @@ export function XActionColumn({ responseAlerts, creatorWatchlist }: XActionColum
         </CardHeader>
         <CardContent className="px-6 pb-6 space-y-3 overflow-y-auto flex-1 min-h-0">
           {creatorWatchlist.map((creator) => (
-            <div key={creator.id} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
+            <div key={creator.id} className={`${SOCIAL_PANEL_BASE} space-y-3`}>
               <div className="grid grid-cols-[minmax(0,_1fr)_auto] gap-4 items-start">
                 <div>
                   <h4 className="text-sm font-semibold text-white">{creator.name}</h4>

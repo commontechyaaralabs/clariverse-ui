@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { SOCIAL_CARD_BASE } from './theme';
 
 export function PlayStoreEngagementColumn() {
   return (
-    <Card className="bg-gray-900 border-gray-800 h-full">
+    <Card className={`${SOCIAL_CARD_BASE} h-full`}>
       <CardHeader>
         <CardTitle className="text-white text-lg">Play Store Engagement</CardTitle>
         <CardDescription className="text-gray-400">

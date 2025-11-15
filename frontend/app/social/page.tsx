@@ -50,11 +50,20 @@ import {
   Heart,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ReferenceLine, ScatterChart, Scatter, Cell, PieChart, Pie, AreaChart, Area, ComposedChart, LabelList } from 'recharts';
-import { TrustpilotDashboard } from './trustpilot/TrustpilotDashboard';
+import TrustpilotDashboard from './trustpilot/page';
 import XDashboard from './x/page';
 import RedditDashboard from './reddit/page';
 import AppStoreDashboard from './appstore/page';
 import PlayStoreDashboard from './playstore/page';
+import {
+  getTrustpilotTopicVolumeSplit,
+  TrustpilotTopicVolumeSplitEntry,
+} from '@/lib/social/trustpilot/trustpilotInsights';
+import { getXTopicVolumeSplit, XTopicVolumeSplitEntry } from '@/lib/social/x';
+import { getRedditTopicVolumeSplit, RedditTopicVolumeSplitEntry } from '@/lib/social/reddit';
+import { getPlayStoreTopicVolumeSplit, PlayStoreTopicVolumeSplitEntry } from '@/lib/social/playstore';
+import { getAppStoreTopicVolumeSplit, AppStoreTopicVolumeSplitEntry } from '@/lib/social/appstore';
+import { ChannelSentimentSplitChart, ChannelSentimentSplitEntry } from '@/components/social/ChannelSentimentSplitChart';
 
 type Channel = 'all' | 'trustpilot' | 'x' | 'reddit' | 'appstore' | 'playstore';
 type DisplayChannel = Exclude<Channel, 'all'>;
@@ -175,6 +184,23 @@ export default function SocialMediaDashboard() {
   >({});
   // Track expanded review in explorer
   const [expandedReviewId, setExpandedReviewId] = useState<string | null>(null);
+  const trustpilotTopicVolumeSplit = useMemo<TrustpilotTopicVolumeSplitEntry[]>(
+    () => getTrustpilotTopicVolumeSplit(),
+    []
+  );
+  const xTopicVolumeSplit = useMemo<XTopicVolumeSplitEntry[]>(() => getXTopicVolumeSplit(), []);
+  const redditTopicVolumeSplit = useMemo<RedditTopicVolumeSplitEntry[]>(
+    () => getRedditTopicVolumeSplit(),
+    []
+  );
+  const appStoreTopicVolumeSplit = useMemo<AppStoreTopicVolumeSplitEntry[]>(
+    () => getAppStoreTopicVolumeSplit(),
+    []
+  );
+  const playStoreTopicVolumeSplit = useMemo<PlayStoreTopicVolumeSplitEntry[]>(
+    () => getPlayStoreTopicVolumeSplit(),
+    []
+  );
 
   // Calculate date range based on preset
   const calculateDateRange = useCallback((preset: string) => {
@@ -1272,6 +1298,50 @@ export default function SocialMediaDashboard() {
     ];
   }, [calculateBrandHealthKPIs, trustpilotData]);
 
+  const channelSentimentSplitData = useMemo<ChannelSentimentSplitEntry[]>(() => {
+    const summarize = (
+      entries:
+        | TrustpilotTopicVolumeSplitEntry[]
+        | XTopicVolumeSplitEntry[]
+        | RedditTopicVolumeSplitEntry[]
+        | AppStoreTopicVolumeSplitEntry[]
+        | PlayStoreTopicVolumeSplitEntry[],
+      label: string
+    ): ChannelSentimentSplitEntry => {
+      const positives = entries.filter(entry => entry.sentiment === 'positive');
+      const negatives = entries.filter(entry => entry.sentiment === 'negative');
+      const sumVolume = (list: typeof entries) =>
+        list.reduce((sum, item) => sum + Math.max(0, item.volume), 0);
+      const extractTop = (list: typeof entries) =>
+        list
+          .slice()
+          .sort((a, b) => b.volume - a.volume)
+          .slice(0, 3)
+          .map(item => item.name);
+      return {
+        channel: label,
+        positive: sumVolume(positives),
+        negative: sumVolume(negatives),
+        topPositive: extractTop(positives),
+        topNegative: extractTop(negatives),
+      };
+    };
+
+    return [
+      summarize(trustpilotTopicVolumeSplit, 'Trustpilot'),
+      summarize(xTopicVolumeSplit, 'X (Twitter)'),
+      summarize(redditTopicVolumeSplit, 'Reddit'),
+      summarize(appStoreTopicVolumeSplit, 'App Store'),
+      summarize(playStoreTopicVolumeSplit, 'Play Store'),
+    ];
+  }, [
+    trustpilotTopicVolumeSplit,
+    xTopicVolumeSplit,
+    redditTopicVolumeSplit,
+    appStoreTopicVolumeSplit,
+    playStoreTopicVolumeSplit,
+  ]);
+
   const channelMetadata: Array<{ key: DisplayChannel; label: string; color: string }> = [
     { key: 'appstore', label: 'App Store', color: '#22c55e' },
     { key: 'playstore', label: 'Play Store', color: '#3b82f6' },
@@ -1463,42 +1533,6 @@ export default function SocialMediaDashboard() {
       data: matrix,
       channels: channelMetadata,
     };
-  }, [trustpilotData]);
-
-  const positiveChampionTopics = useMemo(() => {
-    const LIMIT = 10;
-    const fallbackPositive = [
-      { topic: 'Customer Support', volume: 320, sentiment: 0.7 },
-      { topic: 'Security Features', volume: 190, sentiment: 0.8 },
-      { topic: 'User Interface', volume: 160, sentiment: 0.6 },
-      { topic: 'Fast Processing', volume: 140, sentiment: 0.7 },
-      { topic: 'Easy Setup', volume: 120, sentiment: 0.65 },
-      { topic: 'Reliable Service', volume: 110, sentiment: 0.75 },
-      { topic: 'Great Features', volume: 95, sentiment: 0.6 },
-      { topic: 'Helpful Documentation', volume: 85, sentiment: 0.7 },
-    ].slice(0, LIMIT);
-
-    if (!trustpilotData?.topicBubbles?.length) {
-      return fallbackPositive.slice(0, LIMIT);
-    }
-
-    const derived = trustpilotData.topicBubbles
-      .filter(topic => topic.sentiment !== undefined && topic.sentiment > 0.2)
-      .map(topic => ({
-        topic: topic.topic,
-        volume: topic.volume,
-        sentiment: Math.max(-1, Math.min(1, topic.sentiment)),
-      }))
-      .sort((a, b) => b.volume - a.volume);
-
-    const seen = new Set(derived.map(entry => entry.topic));
-    fallbackPositive.forEach(entry => {
-      if (!seen.has(entry.topic)) {
-        derived.push(entry);
-      }
-    });
-
-    return derived.slice(0, LIMIT);
   }, [trustpilotData]);
 
   const renderChannelTopicTooltip = useCallback(
@@ -1824,45 +1858,18 @@ export default function SocialMediaDashboard() {
               </CardContent>
             </Card>
 
-              {/* Positive Champion Drivers */}
               <Card className="bg-app-black/60 border border-white/10 shadow-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
-                    <ThumbsUp className="h-5 w-5 text-green-400" />
-                    Positive Champion Drivers
+                    <ThumbsUp className="h-5 w-5 text-emerald-400" />
+                    Positive vs Negative Topic Volume by Channel
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
-                    What people love about your brand
+                    Compare uplifting versus detracting narrative volume across each platform
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
-                    {positiveChampionTopics.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No positive topics found
-                      </div>
-                    ) : (
-                      positiveChampionTopics.map(topic => (
-                        <div
-                          key={topic.topic}
-                          className="flex items-center justify-between rounded-lg border border-green-500/30 bg-app-black/60 p-2.5"
-                        >
-                          <div className="flex items-center gap-3 flex-1">
-                            <div className="w-2 h-2 rounded-full bg-green-400" />
-                            <span className="text-[13px] text-white font-medium">{topic.topic}</span>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-[11px] text-green-400 font-semibold">
-                              {Math.round((topic.sentiment + 1) * 50)}% positive
-                            </span>
-                            <span className="text-[11px] text-muted-foreground w-16 text-right">
-                              {topic.volume.toLocaleString()} posts
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
+                  <ChannelSentimentSplitChart data={channelSentimentSplitData} height={380} />
                 </CardContent>
               </Card>
             </div>

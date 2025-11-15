@@ -2,6 +2,7 @@ import { AppStoreReviewAlert } from '@/lib/social/appstore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { AlertTriangle, Star } from 'lucide-react';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface AppStoreActionColumnProps {
   alerts: AppStoreReviewAlert[];
@@ -20,7 +21,7 @@ const tagTone = (tag: AppStoreReviewAlert['sentimentTag']) => {
 
 export function AppStoreActionColumn({ alerts }: AppStoreActionColumnProps) {
   return (
-    <Card className="bg-gray-900 border-gray-800 flex flex-col min-h-[420px]">
+    <Card className={`${SOCIAL_CARD_BASE} flex flex-col min-h-[420px]`}>
       <CardHeader className="px-6 pt-6 pb-3">
         <CardTitle className="flex items-center gap-2 text-white text-lg">
           <AlertTriangle className="h-5 w-5 text-red-400" />
@@ -35,7 +36,7 @@ export function AppStoreActionColumn({ alerts }: AppStoreActionColumnProps) {
           {alerts.map(alert => (
             <UITooltip key={alert.id}>
               <TooltipTrigger asChild>
-                <div className="p-3 rounded-lg border border-gray-800 bg-gray-900/60 hover:bg-gray-900 hover:border-red-500/40 transition-all cursor-pointer">
+                <div className={`${SOCIAL_PANEL_BASE} cursor-pointer`}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 space-y-1">
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-gray-400">
@@ -60,12 +61,7 @@ export function AppStoreActionColumn({ alerts }: AppStoreActionColumnProps) {
                   </div>
                 </div>
               </TooltipTrigger>
-              <TooltipContent
-                side="left"
-                align="start"
-                className="max-w-md p-4 bg-gray-900 border border-red-500/40 shadow-xl text-gray-200"
-                sideOffset={10}
-              >
+              <TooltipContent side="left" align="start" className={SOCIAL_TOOLTIP_SURFACE} sideOffset={10}>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white">{alert.title}</h3>
@@ -81,7 +77,7 @@ export function AppStoreActionColumn({ alerts }: AppStoreActionColumnProps) {
                       <p className="text-gray-300 leading-relaxed">{alert.summary}</p>
                     </div>
                   </div>
-                  <div className="border-t border-gray-800 pt-2 text-xs text-gray-300 space-y-2">
+                  <div className="border-t border-white/10 pt-2 text-xs text-gray-300 space-y-2">
                     <h4 className="text-xs font-semibold text-red-300 mb-1">Recommended Action</h4>
                     <p>{alert.recommendedAction}</p>
                   </div>

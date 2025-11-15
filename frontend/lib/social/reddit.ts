@@ -387,6 +387,37 @@ export function getRedditViralityTopics(): RedditViralityTopic[] {
   ];
 }
 
+export interface RedditTopicVolumeSplitEntry {
+  name: string;
+  volume: number;
+  sentiment: 'positive' | 'negative';
+}
+
+const REDDIT_TOPIC_VOLUME_SPLIT: RedditTopicVolumeSplitEntry[] = [
+  { name: 'SEPA Transfer Reliability', volume: 46, sentiment: 'negative' },
+  { name: 'PSD2 Authentication UX', volume: 42, sentiment: 'negative' },
+  { name: 'Cross-Border Payroll Team', volume: 37, sentiment: 'negative' },
+  { name: 'Card Personalisation', volume: 32, sentiment: 'positive' },
+  { name: 'Community Bug Reports', volume: 30, sentiment: 'negative' },
+  { name: 'Instant SEPA Pilot (Italy)', volume: 28, sentiment: 'positive' },
+  { name: 'KYC Verification Backlog', volume: 27, sentiment: 'negative' },
+  { name: 'Climate Savings Accelerators', volume: 25, sentiment: 'positive' },
+  { name: 'Fee Transparency Hub', volume: 24, sentiment: 'positive' },
+  { name: 'Mortgage Retention Loyalty', volume: 23, sentiment: 'negative' },
+  { name: 'SME Lending Journey', volume: 22, sentiment: 'negative' },
+  { name: 'Instant Card Freeze', volume: 21, sentiment: 'positive' },
+  { name: 'FX Markup Comparisons', volume: 20, sentiment: 'negative' },
+  { name: 'AI Relationship Manager', volume: 19, sentiment: 'positive' },
+  { name: 'Digital Trust & Security', volume: 18, sentiment: 'negative' },
+  { name: 'EuroBank Green Finance', volume: 17, sentiment: 'positive' },
+  { name: 'Payments Outage Comms', volume: 16, sentiment: 'negative' },
+  { name: 'Wealth Advisory Access', volume: 15, sentiment: 'negative' },
+  { name: 'Community Coaching Stories', volume: 14, sentiment: 'positive' },
+  { name: 'Treasury FX Hedging', volume: 13, sentiment: 'negative' },
+];
+
+export const getRedditTopicVolumeSplit = (): RedditTopicVolumeSplitEntry[] => REDDIT_TOPIC_VOLUME_SPLIT;
+
 export function getRedditComplianceFeatureDataset(): RedditComplianceFeatureDataset {
   return {
     summaries: [
