@@ -1,7 +1,8 @@
 import { RedditInfluencer, RedditModerationAlert } from '@/lib/social/reddit';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Users, AlertTriangle, Hash, MessageSquare, ThumbsUp, Eye, Clock, Star } from 'lucide-react';
+import { Users, AlertTriangle, Clock, Star } from 'lucide-react';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface RedditActionColumnProps {
   moderationAlerts: RedditModerationAlert[];
@@ -11,7 +12,7 @@ interface RedditActionColumnProps {
 export function RedditActionColumn({ moderationAlerts, influencers }: RedditActionColumnProps) {
   return (
     <div className="flex flex-col gap-6 h-full min-h-0">
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className={SOCIAL_CARD_BASE}>
         <CardHeader className="px-6 pt-6 pb-3">
           <CardTitle className="flex items-center gap-2 text-white text-lg">
             <AlertTriangle className="h-5 w-5 text-red-400" />
@@ -26,7 +27,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
             {moderationAlerts.map(alert => (
               <UITooltip key={alert.id}>
                 <TooltipTrigger asChild>
-                  <div className="p-4 rounded-lg border border-gray-800 bg-gray-900/60 hover:bg-gray-900 hover:border-red-500/40 transition-all cursor-pointer">
+                  <div className={`${SOCIAL_PANEL_BASE} cursor-pointer`}>
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex-1 space-y-1.5">
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400 uppercase tracking-wide">
@@ -61,12 +62,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
                     </div>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent
-                  side="left"
-                  align="start"
-                  className="max-w-md p-4 bg-gray-900 border border-red-500/40 shadow-xl text-gray-200"
-                  sideOffset={10}
-                >
+                <TooltipContent side="left" align="start" className={SOCIAL_TOOLTIP_SURFACE} sideOffset={10}>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="text-sm font-bold text-white leading-snug">{alert.topic}</h3>
@@ -88,7 +84,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
                       <p>Severity: {alert.severity}</p>
                       <p>{alert.summary}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 text-[11px] text-gray-300 border-t border-gray-800 pt-2">
+                    <div className="grid grid-cols-2 gap-3 text-[11px] text-gray-300 border-t border-white/10 pt-2">
                       <div>
                         <span className="text-gray-400">Threads flagged:</span>{' '}
                         <span>{(alert.flaggedCount ?? 0).toLocaleString()}</span>
@@ -114,7 +110,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
                         </span>
                       </div>
                     </div>
-                    <div className="border-t border-gray-800 pt-2 space-y-2 text-xs text-gray-300">
+                    <div className="border-t border-white/10 pt-2 space-y-2 text-xs text-gray-300">
                       <h4 className="text-xs font-semibold text-red-300">Recommended Action</h4>
                       <p>{alert.recommendedAction}</p>
                     </div>
@@ -126,7 +122,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800 flex flex-col flex-1 min-h-[420px]">
+      <Card className={`${SOCIAL_CARD_BASE} flex flex-col flex-1 min-h-[420px]`}>
         <CardHeader className="px-6 pt-6 pb-3">
           <CardTitle className="flex items-center gap-2 text-white text-lg">
             <Users className="h-5 w-5 text-purple-400" />
@@ -138,7 +134,7 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
         </CardHeader>
         <CardContent className="px-6 pb-6 space-y-3 overflow-y-auto flex-1 min-h-0">
           {influencers.map(profile => (
-            <div key={profile.id} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
+            <div key={profile.id} className={`${SOCIAL_PANEL_BASE} space-y-3`}>
               <div className="grid grid-cols-[minmax(0,_1fr)_auto] gap-4 items-start">
                 <div>
                   <p className="text-sm font-semibold text-white">u/{profile.username}</p>

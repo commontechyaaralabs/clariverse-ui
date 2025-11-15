@@ -8,17 +8,19 @@ import {
   getPlayStoreModerationDataset,
   getPlayStoreModerationAreaData,
   getPlayStoreSentimentLevelTimeline,
+  getPlayStoreTopicVolumeSplit,
   PLAYSTORE_SENTIMENT_LEVELS,
   PlayStoreKPI,
   PlayStoreViralityTopic,
   PlayStoreReviewAlert,
+  PlayStoreTopicVolumeSplitEntry,
 } from '@/lib/social/playstore';
 import { PlayStoreKPIRibbon } from '@/components/social/PlayStoreKPIRibbon';
 import { PlayStoreCommunityColumn } from '@/components/social/PlayStoreCommunityColumn';
 import { PlayStoreActionColumn } from '@/components/social/PlayStoreActionColumn';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AlertTriangle, X as XIcon } from 'lucide-react';
+import { AlertTriangle, ThumbsUp, X as XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   ResponsiveContainer,
@@ -33,6 +35,8 @@ import {
   Line,
   ReferenceLine,
 } from 'recharts';
+import { PositiveNegativeTopicVolumeChart } from '@/components/social/PositiveNegativeTopicVolumeChart';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_CHART_SURFACE } from '@/components/social/theme';
 
 export default function PlayStoreDashboard() {
   const [kpis, setKpis] = useState<PlayStoreKPI[]>([]);
@@ -44,6 +48,10 @@ export default function PlayStoreDashboard() {
   const moderationDataset = useMemo(() => getPlayStoreModerationDataset(), []);
   const moderationAreaData = useMemo(() => getPlayStoreModerationAreaData(), []);
   const sentimentLevelTimeline = useMemo(() => getPlayStoreSentimentLevelTimeline(), []);
+  const topicVolumeSplit = useMemo<PlayStoreTopicVolumeSplitEntry[]>(
+    () => getPlayStoreTopicVolumeSplit(),
+    []
+  );
 
   const selectedCategory = useMemo(
     () =>
@@ -142,7 +150,7 @@ export default function PlayStoreDashboard() {
           </div>
         </div>
 
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className={SOCIAL_CARD_BASE}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <AlertTriangle className="h-5 w-5 text-red-400" />
@@ -162,7 +170,7 @@ export default function PlayStoreDashboard() {
                     className={`text-left rounded-xl border transition-all duration-200 ${
                       summary.key === selectedCategoryKey
                         ? 'border-purple-500/60 bg-gray-900 shadow-lg shadow-purple-500/10'
-                        : 'border-gray-700 bg-gray-900/40 hover:border-gray-600'
+                        : 'border-gray-700 bg-gray-900/40 hover:border-white/30'
                     } p-4 space-y-2`}
                   >
                     <div className="flex items-center justify-between text-xs uppercase tracking-wide text-gray-500">
@@ -191,13 +199,15 @@ export default function PlayStoreDashboard() {
               <div className="flex flex-col xl:flex-row xl:items-stretch gap-6">
                 <div
                   className={[
-                    'w-full bg-gray-800/60 border border-gray-700 rounded-xl p-4 h-[420px]',
+                    SOCIAL_PANEL_BASE,
+                    'w-full h-[420px] p-4',
                     selectedCategory ? 'xl:w-2/3' : '',
                   ].join(' ')}
                 >
                   {moderationAreaData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={320}>
-                      <AreaChart data={moderationAreaData} margin={{ top: 12, right: 24, left: 0, bottom: 12 }}>
+                    <div className={SOCIAL_CHART_SURFACE}>
+                      <ResponsiveContainer width="100%" height={320}>
+                        <AreaChart data={moderationAreaData} margin={{ top: 12, right: 24, left: 0, bottom: 12 }}>
                         <defs>
                           <linearGradient id="playStoreModerationGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#f97316" stopOpacity={0.6} />
@@ -259,8 +269,9 @@ export default function PlayStoreDashboard() {
                           onClick={() => setSelectedCategoryKey('appreciation')}
                           cursor="pointer"
                         />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
                   ) : (
                     <div className="text-xs text-gray-400 italic">
                       Not enough review signals yet to visualise moderation, feature demand, and appreciation themes.
@@ -269,7 +280,12 @@ export default function PlayStoreDashboard() {
                 </div>
 
                 {selectedCategory && (
-                  <div className="relative w-full xl:w-[420px] bg-gray-800/60 border border-gray-700 rounded-xl p-6 shadow-inner h-[420px] flex flex-col overflow-hidden">
+                  <div
+                    className={[
+                      SOCIAL_PANEL_BASE,
+                      'relative w-full xl:w-[420px] p-6 h-[420px] flex flex-col overflow-hidden',
+                    ].join(' ')}
+                  >
                     <Button
                       variant="ghost"
                       size="icon"
@@ -382,7 +398,22 @@ export default function PlayStoreDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className={SOCIAL_CARD_BASE}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <ThumbsUp className="h-5 w-5 text-emerald-400" />
+              Positive vs Negative Topic Volume
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Play Store review clusters ranked by volume of uplifting versus detracting narratives
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-2 pb-6">
+            <PositiveNegativeTopicVolumeChart data={topicVolumeSplit} />
+          </CardContent>
+        </Card>
+
+        <Card className={SOCIAL_CARD_BASE}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white text-lg">
               Daily Play Store Reviews by Sentiment Level
@@ -393,9 +424,16 @@ export default function PlayStoreDashboard() {
           </CardHeader>
           <CardContent className="pt-2 pb-6">
             <div className="flex flex-col xl:flex-row gap-6">
-              <div className={`w-full ${selectedDetail ? 'xl:w-2/3' : ''}`}>
-                <ResponsiveContainer width="100%" height={360}>
-                  <LineChart
+              <div
+                className={[
+                  SOCIAL_PANEL_BASE,
+                  'w-full p-4',
+                  selectedDetail ? 'xl:w-2/3' : '',
+                ].join(' ')}
+              >
+                <div className={SOCIAL_CHART_SURFACE}>
+                  <ResponsiveContainer width="100%" height={360}>
+                    <LineChart
                     data={sentimentLevelTimeline.map(point => ({
                       ...point,
                       dateLabel: new Date(point.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -461,11 +499,12 @@ export default function PlayStoreDashboard() {
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
+                </div>
               </div>
 
               {selectedDetail && (
                 <div className="w-full xl:w-1/3">
-                  <div className="h-full rounded-xl border border-white/10 bg-gray-900/70 p-5 flex flex-col">
+                  <div className={[SOCIAL_PANEL_BASE, 'h-full p-5 flex flex-col'].join(' ')}>
                     <div className="flex items-start justify-between gap-3 mb-6">
                       <div className="flex items-start gap-3">
                         <span

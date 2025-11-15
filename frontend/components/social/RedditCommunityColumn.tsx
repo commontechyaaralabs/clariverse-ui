@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   RedditCommunitySignal,
   RedditViralityTopic,
@@ -19,6 +19,7 @@ import {
   Cell,
 } from 'recharts';
 import type { LabelProps } from 'recharts';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface RedditCommunityColumnProps {
   communitySignals: RedditCommunitySignal[];
@@ -33,7 +34,23 @@ const GRADIENT_COLORS: Record<(typeof REDDIT_SENTIMENT_LEVELS)[number]['key'], s
   level5: '#b91c1c',
 };
 
+const MOMENTUM_STYLES = {
+  risk: {
+    label: 'NEGATIVE',
+    badgeClass: 'text-red-400',
+  },
+  neutral: {
+    label: 'NEUTRAL',
+    badgeClass: 'text-slate-300',
+  },
+  advocacy: {
+    label: 'POSITIVE',
+    badgeClass: 'text-emerald-400',
+  },
+} satisfies Record<RedditCommunitySignal['momentumType'], { label: string; badgeClass: string }>;
+
 export function RedditCommunityColumn({ communitySignals, viralityTopics }: RedditCommunityColumnProps) {
+  const [viralitySortOrder, setViralitySortOrder] = useState<'desc' | 'asc'>('desc');
   const chartViralityTopics = useMemo(
     () =>
       viralityTopics.map(topic => {
@@ -86,6 +103,16 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
     [viralityTopics]
   );
 
+  const sortedViralityTopics = useMemo(() => {
+    const copy = [...chartViralityTopics];
+    copy.sort((a, b) =>
+      viralitySortOrder === 'desc'
+        ? (b.helpfulVotes ?? 0) - (a.helpfulVotes ?? 0)
+        : (a.helpfulVotes ?? 0) - (b.helpfulVotes ?? 0)
+    );
+    return copy;
+  }, [chartViralityTopics, viralitySortOrder]);
+
   const ViralityLabel = ({ x = 0, y = 0, width = 0, height = 0, value }: LabelProps) => {
     if (value === undefined || value === null) return null;
     const numeric = Number(value);
@@ -127,10 +154,10 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
       return null;
     }
 
-    const topic = payload[0].payload as (typeof chartViralityTopics)[number];
+    const topic = payload[0].payload as (typeof sortedViralityTopics)[number];
 
     return (
-      <div className="rounded-xl border border-white/10 bg-gray-900/95 px-4 py-3 shadow-xl text-xs text-gray-200 space-y-2 min-w-[220px]">
+      <div className={SOCIAL_TOOLTIP_SURFACE}>
         <div className="flex items-center justify-between gap-4">
           <div className="text-sm font-semibold text-white leading-tight">{topic.name}</div>
           <div className="flex items-center gap-1 text-emerald-300 font-semibold">
@@ -156,30 +183,85 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
 
   return (
     <div className="flex flex-col gap-6">
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-lg text-white flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-purple-400" />
-              Top 10 Dominant Topics by Virality
-            </CardTitle>
-            <CardDescription>
-              Sentiment mix for the most viral Reddit banking threads this week
-            </CardDescription>
+      <Card className={SOCIAL_CARD_BASE}>
+        <CardHeader>
+          <CardTitle className="text-lg text-white">Community Signals</CardTitle>
+          <CardDescription>Key topics and their sentiment mix from Reddit banking threads</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {communitySignals.map((signal, index) => {
+              const style = MOMENTUM_STYLES[signal.momentumType];
+              return (
+                <div key={index} className={SOCIAL_PANEL_BASE}>
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm font-semibold text-white uppercase tracking-wide">{signal.signalLabel}</p>
+                    <span className={`text-xs uppercase tracking-wide font-semibold ${style.badgeClass}`}>
+                      {style.label}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-300">{signal.subreddit}</p>
+                  <div className="flex items-end gap-3">
+                    <span className="text-4xl text-white font-semibold">
+                      {signal.growthPercent.toLocaleString()}%
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      Momentum · {(signal.threadVolume ?? 0).toLocaleString()} threads
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">{signal.insight}</p>
+                  {signal.topMentions && signal.topMentions.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {signal.topMentions.map(tag => (
+                        <span
+                          key={`${signal.subreddit}-${tag}`}
+                          className="text-[11px] text-purple-200 bg-purple-500/10 border border-purple-500/30 rounded-full px-2 py-0.5"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className={SOCIAL_CARD_BASE}>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-lg text-white flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-purple-400" />
+                Top 10 Dominant Topics by Virality
+              </CardTitle>
+              <CardDescription>
+                Sentiment mix for the most viral Reddit banking threads this week
+              </CardDescription>
+            </div>
+            <button
+              type="button"
+              onClick={() => setViralitySortOrder(prev => (prev === 'desc' ? 'asc' : 'desc'))}
+              className="text-xs font-semibold uppercase tracking-wide text-purple-200 border border-white/15 bg-white/5 px-3 py-1 rounded-full hover:border-white/30 hover:text-white transition-colors"
+            >
+              Viral {viralitySortOrder === 'desc' ? '↓' : '↑'}
+            </button>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="h-[420px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={chartViralityTopics}
+                data={sortedViralityTopics}
                 layout="vertical"
                 barCategoryGap="24%"
                 barGap={8}
                 margin={{ top: 12, right: 110, bottom: 12, left: 16 }}
               >
                 <defs>
-                  {chartViralityTopics.map((topic, index) => (
+                  {sortedViralityTopics.map((topic, index) => (
                     <linearGradient
                       key={topic.name}
                       id={`reddit-topic-gradient-${index}`}
@@ -216,66 +298,16 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
                   axisLine={false}
                   interval={0}
                 />
-                <Tooltip
-                  content={renderTooltipContent}
-                />
+                <Tooltip content={renderTooltipContent} />
                 <Legend verticalAlign="bottom" height={52} content={renderLegend} />
-                <Bar
-                  dataKey="totalPercent"
-                  radius={[8, 8, 8, 8]}
-                  isAnimationActive={false}
-                >
-                  {chartViralityTopics.map((topic, index) => (
-                    <Cell
-                      key={`${topic.name}-cell`}
-                      fill={`url(#reddit-topic-gradient-${index})`}
-                    />
+                <Bar dataKey="totalPercent" radius={[8, 8, 8, 8]} isAnimationActive={false}>
+                  {sortedViralityTopics.map((topic, index) => (
+                    <Cell key={`${topic.name}-cell`} fill={`url(#reddit-topic-gradient-${index})`} />
                   ))}
                   <LabelList dataKey="helpfulVotes" content={ViralityLabel} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-lg text-white">Community Signals</CardTitle>
-          <CardDescription>Key topics and their sentiment mix from Reddit banking threads</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {communitySignals.map((signal, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div>
-                  <p className="text-[11px] uppercase tracking-wide text-gray-500">{signal.signalLabel}</p>
-                  <p className="text-sm font-semibold text-white mt-1">{signal.subreddit}</p>
-                </div>
-                <div className="flex items-end gap-3">
-                  <span className="text-3xl text-white font-semibold">
-                    {signal.growthPercent.toLocaleString()}
-                    <span className="text-lg text-gray-400 align-text-top ml-1">%</span>
-                  </span>
-                  <div className="flex flex-col text-xs text-gray-400 gap-1">
-                    <span>Momentum · {(signal.threadVolume ?? 0).toLocaleString()} threads</span>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400 leading-relaxed">{signal.insight}</p>
-                {signal.topMentions && signal.topMentions.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {signal.topMentions.map(tag => (
-                      <span
-                        key={`${signal.subreddit}-${tag}`}
-                        className="text-[11px] text-purple-200 bg-purple-500/10 border border-purple-500/30 rounded-full px-2 py-0.5"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
           </div>
         </CardContent>
       </Card>

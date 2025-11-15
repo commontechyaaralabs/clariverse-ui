@@ -10,6 +10,7 @@ import {
   Flame,
   ShieldCheck,
 } from 'lucide-react';
+import { SOCIAL_CARD_BASE } from './theme';
 
 interface RedditKPIRibbonProps {
   data: RedditKPI[];
@@ -46,8 +47,8 @@ export function RedditKPIRibbon({ data }: RedditKPIRibbonProps) {
         return (
           <Card
             key={kpi.id}
-            className={`relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl ${
-              showAI ? 'border-l-4 border-l-[#b90abd] hover:border-l-[#a009b3]' : 'hover:border-[#b90abd]/30'
+            className={`${SOCIAL_CARD_BASE} relative overflow-hidden group transition-all duration-300 hover:shadow-2xl ${
+              showAI ? 'border-l-4 border-l-[#b90abd] hover:border-l-[#a009b3]' : 'hover:border-white/30'
             } hover:scale-[1.02] hover:-translate-y-1`}
           >
             {/* AI Sparkle Indicator */}
@@ -67,7 +68,7 @@ export function RedditKPIRibbon({ data }: RedditKPIRibbonProps) {
                 <div className="text-xs uppercase tracking-wider text-slate-400 font-medium">
                   {kpi.label}
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1e293b] text-purple-400 group-hover:scale-110 transition-transform duration-200">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-purple-400 group-hover:scale-110 transition-transform duration-200 border border-white/10">
                   {iconMap[kpi.id] ?? <Activity className="h-5 w-5" />}
                 </div>
               </div>
@@ -79,9 +80,13 @@ export function RedditKPIRibbon({ data }: RedditKPIRibbonProps) {
                    kpi.label.includes('Time') ? 'h' : '%'}
                 </div>
               </div>
-              <div className={`mt-3 p-2 rounded-md text-xs ${
-                showAI ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
-              }`}>
+              <div
+                className={`mt-3 p-2 rounded-md text-xs border ${
+                  showAI
+                    ? 'bg-[#b90abd]/10 border-[#b90abd]/30 text-[#f0b0ff]'
+                    : 'bg-white/5 border-white/10 text-gray-300'
+                }`}
+              >
                 {kpi.description}
               </div>
             </CardContent>

@@ -680,6 +680,38 @@ export function getAppStoreChecklist(): AppStoreChecklistItem[] {
   ];
 }
 
+export interface AppStoreTopicVolumeSplitEntry {
+  name: string;
+  volume: number;
+  sentiment: 'positive' | 'negative';
+}
+
+const APPSTORE_TOPIC_VOLUME_SPLIT: AppStoreTopicVolumeSplitEntry[] = [
+  { name: 'App Stability Trust', volume: 48, sentiment: 'negative' },
+  { name: 'PSD2 Authentication UX', volume: 44, sentiment: 'negative' },
+  { name: 'Card Personalisation', volume: 40, sentiment: 'positive' },
+  { name: 'SEPA Transfer Reliability', volume: 38, sentiment: 'negative' },
+  { name: 'Instant Refund Engine', volume: 36, sentiment: 'positive' },
+  { name: 'FX Markup Comparisons', volume: 34, sentiment: 'negative' },
+  { name: 'EuroBank Green Finance', volume: 32, sentiment: 'positive' },
+  { name: 'Mortgage Retention Loyalty', volume: 31, sentiment: 'negative' },
+  { name: 'Digital Trust & Security', volume: 30, sentiment: 'negative' },
+  { name: 'Fee Transparency Hub', volume: 29, sentiment: 'positive' },
+  { name: 'Instant SEPA Pilot (Italy)', volume: 28, sentiment: 'positive' },
+  { name: 'Cross-Border Payroll Team', volume: 27, sentiment: 'negative' },
+  { name: 'KYC Verification Backlog', volume: 26, sentiment: 'negative' },
+  { name: 'AI Relationship Manager', volume: 25, sentiment: 'positive' },
+  { name: 'Creator Kickstart', volume: 24, sentiment: 'positive' },
+  { name: 'Wealth Advisory Access', volume: 23, sentiment: 'negative' },
+  { name: 'Climate Savings Accelerators', volume: 22, sentiment: 'positive' },
+  { name: 'Payments Outage Comms', volume: 21, sentiment: 'negative' },
+  { name: 'Travel Mode Upgrades', volume: 20, sentiment: 'positive' },
+  { name: 'Treasury FX Hedging', volume: 19, sentiment: 'negative' },
+];
+
+export const getAppStoreTopicVolumeSplit = (): AppStoreTopicVolumeSplitEntry[] =>
+  APPSTORE_TOPIC_VOLUME_SPLIT;
+
 export function getAppStoreReviewAlerts(): AppStoreReviewAlert[] {
   return [
     {

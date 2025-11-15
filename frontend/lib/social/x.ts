@@ -419,6 +419,37 @@ export function getXResponseAlerts(): XResponseAlert[] {
   ];
 }
 
+export interface XTopicVolumeSplitEntry {
+  name: string;
+  volume: number;
+  sentiment: 'positive' | 'negative';
+}
+
+const X_TOPIC_VOLUME_SPLIT: XTopicVolumeSplitEntry[] = [
+  { name: 'SEPA Transfer Reliability', volume: 52, sentiment: 'negative' },
+  { name: 'PSD2 Authentication UX', volume: 49, sentiment: 'negative' },
+  { name: 'FX Markup Comparisons', volume: 47, sentiment: 'negative' },
+  { name: 'Card Personalisation', volume: 43, sentiment: 'positive' },
+  { name: 'Instant SEPA Pilot (Italy)', volume: 41, sentiment: 'positive' },
+  { name: 'Treasury FX Hedging', volume: 39, sentiment: 'negative' },
+  { name: 'Climate Savings Accelerators', volume: 37, sentiment: 'positive' },
+  { name: 'Cross-Border Payroll Team', volume: 35, sentiment: 'negative' },
+  { name: 'EuroBank Green Finance', volume: 33, sentiment: 'positive' },
+  { name: 'Mortgage Retention Loyalty', volume: 32, sentiment: 'negative' },
+  { name: 'Instant Card Freeze', volume: 31, sentiment: 'positive' },
+  { name: 'Fee Transparency Hub', volume: 30, sentiment: 'positive' },
+  { name: 'Digital Trust & Security', volume: 29, sentiment: 'negative' },
+  { name: 'KYC Verification Backlog', volume: 28, sentiment: 'negative' },
+  { name: 'AI Relationship Manager', volume: 27, sentiment: 'positive' },
+  { name: 'Creator Kickstart', volume: 26, sentiment: 'positive' },
+  { name: 'Payments Outage Comms', volume: 25, sentiment: 'negative' },
+  { name: 'Travel Mode Upgrades', volume: 24, sentiment: 'positive' },
+  { name: 'Wealth Advisory Access', volume: 23, sentiment: 'negative' },
+  { name: 'Customer Delight Spotlights', volume: 22, sentiment: 'positive' },
+];
+
+export const getXTopicVolumeSplit = (): XTopicVolumeSplitEntry[] => X_TOPIC_VOLUME_SPLIT;
+
 export function getXCreatorWatchlist(): XCreatorWatch[] {
   return [
     {

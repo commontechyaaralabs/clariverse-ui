@@ -685,3 +685,35 @@ export function getPlayStoreSentimentLevelTimeline(): PlayStoreSentimentLevelTim
   });
 }
 
+export interface PlayStoreTopicVolumeSplitEntry {
+  name: string;
+  volume: number;
+  sentiment: 'positive' | 'negative';
+}
+
+const PLAYSTORE_TOPIC_VOLUME_SPLIT: PlayStoreTopicVolumeSplitEntry[] = [
+  { name: 'Instant Refund Engine', volume: 44, sentiment: 'positive' },
+  { name: 'App Crash Hotfix Queue', volume: 41, sentiment: 'negative' },
+  { name: 'SEPA Transfer Reliability', volume: 39, sentiment: 'negative' },
+  { name: 'PSD2 Authentication UX', volume: 37, sentiment: 'negative' },
+  { name: 'EU Sandbox Features', volume: 35, sentiment: 'positive' },
+  { name: 'Card Personalisation', volume: 33, sentiment: 'positive' },
+  { name: 'FX Markup Comparisons', volume: 32, sentiment: 'negative' },
+  { name: 'EuroBank Green Finance', volume: 30, sentiment: 'positive' },
+  { name: 'Cross-Border Payroll Team', volume: 29, sentiment: 'negative' },
+  { name: 'Mortgage Retention Loyalty', volume: 28, sentiment: 'negative' },
+  { name: 'Digital Trust & Security', volume: 27, sentiment: 'negative' },
+  { name: 'Wealth Advisory Access', volume: 26, sentiment: 'negative' },
+  { name: 'Instant SEPA Pilot (Italy)', volume: 25, sentiment: 'positive' },
+  { name: 'Fee Transparency Hub', volume: 24, sentiment: 'positive' },
+  { name: 'Creator Kickstart', volume: 23, sentiment: 'positive' },
+  { name: 'KYC Verification Backlog', volume: 22, sentiment: 'negative' },
+  { name: 'Travel Mode Upgrades', volume: 21, sentiment: 'positive' },
+  { name: 'Treasury FX Hedging', volume: 20, sentiment: 'negative' },
+  { name: 'AI Relationship Manager', volume: 19, sentiment: 'positive' },
+  { name: 'Payments Outage Comms', volume: 18, sentiment: 'negative' },
+];
+
+export const getPlayStoreTopicVolumeSplit = (): PlayStoreTopicVolumeSplitEntry[] =>
+  PLAYSTORE_TOPIC_VOLUME_SPLIT;
+

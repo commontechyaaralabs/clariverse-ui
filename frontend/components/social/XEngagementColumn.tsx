@@ -1,9 +1,10 @@
 import { XHashtagTrend, XTrendingPost, getXViralityTopics, X_SENTIMENT_LEVELS } from '@/lib/social/x';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Hash, Grid3x3 } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend, LabelList, Cell } from 'recharts';
 import type { LabelProps } from 'recharts';
+import { SOCIAL_CARD_BASE, SOCIAL_PANEL_BASE, SOCIAL_TOOLTIP_SURFACE } from './theme';
 
 interface XEngagementColumnProps {
   hashtagTrends: XHashtagTrend[];
@@ -19,9 +20,8 @@ const GRADIENT_COLORS: Record<(typeof X_SENTIMENT_LEVELS)[number]['key'], string
 };
 
 export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementColumnProps) {
-
+  const [viralitySortOrder, setViralitySortOrder] = useState<'desc' | 'asc'>('desc');
   const viralityTopics = useMemo(() => getXViralityTopics(), []);
-
   const chartViralityTopics = useMemo(
     () =>
       viralityTopics.map(topic => {
@@ -70,6 +70,16 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
     [viralityTopics]
   );
 
+  const sortedViralityTopics = useMemo(() => {
+    const copy = [...chartViralityTopics];
+    copy.sort((a, b) =>
+      viralitySortOrder === 'desc'
+        ? (b.helpfulVotes ?? b.likes ?? 0) - (a.helpfulVotes ?? a.likes ?? 0)
+        : (a.helpfulVotes ?? a.likes ?? 0) - (b.helpfulVotes ?? b.likes ?? 0)
+    );
+    return copy;
+  }, [chartViralityTopics, viralitySortOrder]);
+
   const ViralityLabel = ({ x = 0, y = 0, width = 0, height = 0, value }: LabelProps) => {
     if (value === undefined || value === null) return null;
     const numeric = Number(value);
@@ -108,10 +118,10 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
       return null;
     }
 
-    const topic = payload[0].payload as (typeof chartViralityTopics)[number];
+    const topic = payload[0].payload as (typeof sortedViralityTopics)[number];
 
     return (
-      <div className="rounded-xl border border-white/10 bg-gray-900/95 px-4 py-3 shadow-xl text-xs text-gray-200 space-y-2 min-w-[220px]">
+      <div className={SOCIAL_TOOLTIP_SURFACE}>
         <div className="flex items-center justify-between gap-4">
           <div className="text-sm font-semibold text-white leading-tight">{topic.name}</div>
           <div className="flex flex-col items-end gap-0.5">
@@ -140,7 +150,7 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white text-lg">
             <Hash className="h-5 w-5 text-purple-400" />
@@ -152,7 +162,7 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2">
           {hashtagTrends.map((hashtag) => (
-            <div key={hashtag.hashtag} className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-2">
+            <div key={hashtag.hashtag} className={`${SOCIAL_PANEL_BASE} space-y-2`}>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-white">{hashtag.hashtag}</p>
                 <span className={`text-xs uppercase tracking-wide ${hashtag.sentiment === 'positive' ? 'text-emerald-400' : hashtag.sentiment === 'negative' ? 'text-red-400' : 'text-gray-400'}`}>
@@ -169,12 +179,21 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white text-lg">
-            <Grid3x3 className="h-5 w-5 text-purple-400" />
-            Top 10 Dominant Topics by Virality
-          </CardTitle>
+          <div className="flex items-center justify-between gap-4">
+            <CardTitle className="flex items-center gap-2 text-white text-lg">
+              <Grid3x3 className="h-5 w-5 text-purple-400" />
+              Top 10 Dominant Topics by Virality
+            </CardTitle>
+            <button
+              type="button"
+              onClick={() => setViralitySortOrder(prev => (prev === 'desc' ? 'asc' : 'desc'))}
+              className="text-xs font-semibold uppercase tracking-wide text-purple-200 border border-white/15 bg-white/5 px-3 py-1 rounded-full hover:border-white/30 hover:text-white transition-colors"
+            >
+              Viral {viralitySortOrder === 'desc' ? '↓' : '↑'}
+            </button>
+          </div>
           <CardDescription className="text-gray-400">
             Sentiment distribution (5 levels) for the most viral X conversations this week
           </CardDescription>
@@ -182,14 +201,14 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
         <CardContent className="pt-2 pb-6">
           <ResponsiveContainer width="100%" height={480}>
             <BarChart
-              data={chartViralityTopics}
+              data={sortedViralityTopics}
               layout="vertical"
               barCategoryGap="28%"
               barGap={8}
               margin={{ top: 20, right: 120, bottom: 20, left: 12 }}
             >
               <defs>
-                {chartViralityTopics.map((topic, index) => (
+                {sortedViralityTopics.map((topic, index) => (
                   <linearGradient
                     key={topic.name}
                     id={`x-topic-gradient-${index}`}
@@ -229,7 +248,7 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
               <Tooltip content={renderTooltipContent} />
               <Legend verticalAlign="bottom" height={48} content={renderLegend} />
               <Bar dataKey="totalPercent" radius={[8, 8, 8, 8]} isAnimationActive={false}>
-                {chartViralityTopics.map((topic, index) => (
+                {sortedViralityTopics.map((topic, index) => (
                   <Cell key={`${topic.name}-bar`} fill={`url(#x-topic-gradient-${index})`} />
                 ))}
                 <LabelList dataKey="helpfulVotes" content={ViralityLabel} />
