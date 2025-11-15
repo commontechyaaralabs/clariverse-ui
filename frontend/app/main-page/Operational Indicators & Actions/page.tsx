@@ -15,6 +15,7 @@ import {
   ToneDriftWall,
   PrematureClosureAuditWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
+import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -586,10 +587,7 @@ export default function HomePage() {
       {activePrimarySection === "operational-indicators" && (
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
-            {systemHealth.length > 0 && (
-              <SystemHealthRibbon data={systemHealth} explanations={metricExplanations} onChannelSelect={setSelectedIntentId} />
-            )}
-
+            <AIRiskSpikeMonitor />
             {trendData.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 xl:grid-cols-[380px_minmax(0,1fr)_360px] items-stretch">
                 <div className="h-full">
@@ -713,6 +711,10 @@ export default function HomePage() {
 
       {activePrimarySection === "channel-analysis" && (
         <section id="channel-analysis-view" className="space-y-6 scroll-mt-20">
+          {systemHealth.length > 0 && (
+            <SystemHealthRibbon data={systemHealth} explanations={metricExplanations} onChannelSelect={setSelectedIntentId} />
+          )}
+          {trendData.length > 0 && <CrossChannelTrendChart data={trendData} />}
           <div className="grid gap-6 lg:grid-cols-2">
             <ToneDriftWall />
             <PrematureClosureAuditWall />
