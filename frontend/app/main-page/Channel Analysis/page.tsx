@@ -5,22 +5,29 @@ import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unifie
 import {
   ToneDriftWall,
   PrematureClosureAuditWall,
+  UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { EmotionShockboard, ResolutionIntegrityMonitor } from "@/components/unified/intents/IntentIntelligenceSection";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { fetchTrendData, type TrendPointResponse } from "@/lib/unified/adapters";
 import { fetchSystemHealth, type SystemHealthResponse } from "@/lib/unified/adapters";
+import { fetchCrossChannelActionGrid, type CrossChannelActionGridResponse } from "@/lib/unified/adapters";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
 
 export default function ChannelAnalysisPage() {
   const [systemHealth, setSystemHealth] = useState<SystemHealthMetric[]>([]);
   const [metricExplanations, setMetricExplanations] = useState<Record<string, string>>({});
   const [trendData, setTrendData] = useState<TrendPointResponse[]>([]);
+  const [actionGrid, setActionGrid] = useState<CrossChannelActionGridResponse | null>(null);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
-      const [health, trend] = await Promise.all([fetchSystemHealth(), fetchTrendData()]);
+      const [health, trend, actionGridData] = await Promise.all([
+        fetchSystemHealth(),
+        fetchTrendData(),
+        fetchCrossChannelActionGrid(),
+      ]);
       if (!mounted) return;
 
       const mappedHealth = health.map<SystemHealthMetric>((item: SystemHealthResponse) => ({
@@ -52,6 +59,7 @@ export default function ChannelAnalysisPage() {
       setSystemHealth(mappedHealth);
       setMetricExplanations(explanationMap);
       setTrendData(trend);
+      setActionGrid(actionGridData);
     }
     load();
     return () => {
@@ -78,6 +86,8 @@ export default function ChannelAnalysisPage() {
       {trendData.length > 0 && (
         <CrossChannelTrendChart data={trendData} />
       )}
+
+      <UnifiedIntelligenceWall actionGrid={actionGrid} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <ToneDriftWall />

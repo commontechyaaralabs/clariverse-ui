@@ -335,15 +335,7 @@ export default function HomePage() {
   useEffect(() => {
     let mounted = true;
     async function load() {
-      const [
-        health,
-        trend,
-        clusters,
-        matrix,
-        actionGridData,
-        aiSummaryData,
-        eisenhowerThreadsData,
-      ] = await Promise.all([
+      const [health, trend, clusters, matrix, actionGridData, aiSummaryData, eisenhowerThreadsData] = await Promise.all([
         fetchSystemHealth(),
         fetchTrendData(),
         fetchIntentClusters(),
@@ -543,10 +535,6 @@ export default function HomePage() {
 
   const handlePrimarySectionSelect = useCallback((sectionId: string) => {
     setActivePrimarySection(sectionId);
-    const target = document.getElementById(sectionId);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }, []);
 
   return (
@@ -686,7 +674,6 @@ export default function HomePage() {
               </Tabs>
             )}
 
-            <UnifiedIntelligenceWall actionGrid={actionGrid} />
           </section>
 
           <AIDayGeneratorChat
@@ -702,6 +689,7 @@ export default function HomePage() {
             <SystemHealthRibbon data={systemHealth} explanations={metricExplanations} onChannelSelect={setSelectedIntentId} />
           )}
           {trendData.length > 0 && <CrossChannelTrendChart data={trendData} />}
+          <UnifiedIntelligenceWall actionGrid={actionGrid} />
           <div className="grid gap-6 lg:grid-cols-2">
             <ToneDriftWall />
             <PrematureClosureAuditWall />
