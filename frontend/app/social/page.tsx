@@ -2287,4 +2287,3 @@ export default function SocialMediaDashboard() {
     </div>
   );
 }
-
