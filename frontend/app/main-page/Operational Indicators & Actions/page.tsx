@@ -588,25 +588,12 @@ export default function HomePage() {
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
             <AIRiskSpikeMonitor />
-            {trendData.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 xl:grid-cols-[380px_minmax(0,1fr)_360px] items-stretch">
-                <div className="h-full">
-                  <AISummaryRail aiSummary={aiSummary} />
-                </div>
-                <div className="h-full">
-                  <CrossChannelTrendChart data={trendData} />
-                </div>
-                <GaugeInsightsPanel className="h-full" data={gaugeData.values} insights={gaugeData.insights} />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[380px_minmax(0,1fr)] items-stretch">
+              <div className="h-full">
+                <AISummaryRail aiSummary={aiSummary} />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 xl:grid-cols-[380px_minmax(0,1fr)_360px] items-stretch">
-                <div className="h-full">
-                  <AISummaryRail aiSummary={aiSummary} />
-                </div>
-                <div className="h-full" />
-                <GaugeInsightsPanel className="h-full" data={gaugeData.values} insights={gaugeData.insights} />
-              </div>
-            )}
+              <GaugeInsightsPanel className="h-full" data={gaugeData.values} insights={gaugeData.insights} />
+            </div>
           </section>
 
           <section id="channel-analysis" className="space-y-6 scroll-mt-20">
